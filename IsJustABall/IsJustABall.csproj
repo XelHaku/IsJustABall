@@ -64,12 +64,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PCL\GameAppDelegate.cs" />
     <Compile Include="PCL\GameScene.cs" />
+    <Compile Include="PCL\GameSceneTest.cs" />
+    <Compile Include="PCL\GoneBananas\GameLayer.cs" />
+    <Compile Include="PCL\GoneBananas\GameOverLayer.cs" />
+    <Compile Include="PCL\GoneBananas\GameStartLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="packages.config" />
     <None Include="Properties\AndroidManifest.xml" />
+    <None Include="PCL\GoneBananas\GoneBananas App Delegate.html" />
+    <None Include="PCL\Notes\Touch Notes.html" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -80,10 +86,13 @@
   <ItemGroup>
     <Folder Include="Assets\Content\" />
     <Folder Include="PCL\" />
+    <Folder Include="PCL\GoneBananas\" />
+    <Folder Include="PCL\Notes\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\ball.png" />
     <AndroidAsset Include="Assets\Content\paddle.png" />
     <AndroidAsset Include="Assets\Content\fonts\arial-22.xnb" />
+    <AndroidAsset Include="Assets\Content\blueball.png" />
   </ItemGroup>
 </Project>

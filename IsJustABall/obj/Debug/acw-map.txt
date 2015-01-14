@@ -1,4 +1,4 @@
-test.MainActivity;test.MainActivity
+IsJustABall.MainActivity;isjustaball.MainActivity
 Microsoft.Xna.Framework.AndroidGameActivity;microsoft.xna.framework.AndroidGameActivity
 Microsoft.Xna.Framework.MonoGameAndroidGameView;microsoft.xna.framework.MonoGameAndroidGameView
 Microsoft.Devices.Sensors.Accelerometer.SensorListener;microsoft.devices.sensors.Accelerometer_SensorListener

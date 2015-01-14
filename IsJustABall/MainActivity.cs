@@ -11,7 +11,7 @@ using Android.Content.PM;
 using Microsoft.Xna.Framework;
 
 
-namespace test
+namespace IsJustABall
 {
 	[Activity(
 		Label = "BouncingGame",

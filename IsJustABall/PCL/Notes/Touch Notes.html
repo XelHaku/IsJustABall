@@ -1,0 +1,135 @@
+﻿
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+	using System;
+using Microsoft.Xna.Framework;
+using CocosDenshion;
+using System.Collections.Generic;
+using System.Linq;
+using CocosSharp;
+namespace SkyDefense.Common
+{
+
+	public class IntroLayer : CCLayerColor
+	{
+
+			//listen for touches
+			//TouchEnabled = true;
+
+			CCEventListenerTouchAllAtOnce tListener = new CCEventListenerTouchAllAtOnce();
+			tListener.OnTouchesBegan = TouchesBegan;
+			//tListener.OnTouchesCancelled = TouchesCancelled;
+			//tListener.OnTouchesEnded = TouchesEnded;
+			//tListener.OnTouchesMoved = TouchesMoved;
+			AddEventListener(tListener, this);
+
+			//create main loop
+			Schedule(Update);
+
+			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("music/background", true);
+
+		}
+
+
+
+		void TouchesBegan(List<CCTouch> touches, CCEvent touchEvent)
+		{
+
+			// base.TouchesBegan(touches, touchEvent);
+
+			if (!_running)
+			{
+
+				//if intro, hide intro message
+				if (_introMessage.Visible)
+				{
+					_introMessage.Visible = false;
+
+					//if game over, hide game over message          
+				}
+				else if (_gameOverMessage.Visible)
+				{
+					CCSimpleAudioEngine.SharedEngine.StopAllEffects();
+					_gameOverMessage.Visible = false;
+
+				}
+
+				resetGame();
+				return;
+			}
+
+			CCTouch touch = touches.FirstOrDefault();
+
+			if (touch != null)
+			{
+
+				//if bomb already growing...
+				if (_bomb.Visible)
+				{
+					//stop all actions on bomb, halo and sparkle
+					_bomb.StopAllActions();
+					CCSprite child;
+					child = (CCSprite)_bomb.GetChildByTag(kSpriteHalo);
+					ProcessSprite(child);
+					//child.BlendFunc = new CCBlendFunc(blendSrc, blendDst);
+					child.StopAllActions();
+					child = (CCSprite)_bomb.GetChildByTag(kSpriteSparkle);
+					ProcessSprite(child);
+					//child.BlendFunc = new CCBlendFunc(blendSrc, blendDst);
+					child.StopAllActions();
+
+					//if bomb is the right size, then create shockwave
+					if (_bomb.ScaleX > 0.3f)
+					{
+
+						_shockWave.Scale = 0.1f;
+						_shockWave.Position = _bomb.Position;
+						_shockWave.Visible = true;
+						_shockWave.RunAction(new CCScaleTo(0.5f, _bomb.ScaleX * 2.0f));
+						_shockWave.RunAction((CCFiniteTimeAction)_shockwaveSequence);
+						CCSimpleAudioEngine.SharedEngine.PlayEffect("music/bombRelease");
+
+					}
+					else
+					{
+						CCSimpleAudioEngine.SharedEngine.PlayEffect("music/bombFail");
+					}
+					_bomb.Visible = false;
+					//reset hits with shockwave, so we can count combo hits
+					_shockwaveHits = 0;
+
+					//if no bomb currently on screen, create one
+				}
+				else
+				{
+
+					CCPoint tap = touch.LocationOnScreen; ; ; //??¿¿?¿?
+					tap.Y = Window.WindowSizeInPixels.Height - tap.Y;
+
+					_bomb.StopAllActions();
+					_bomb.Scale = 0.1f;
+					_bomb.Position = tap;
+					_bomb.Visible = true;
+					_bomb.Opacity = 50;
+					_bomb.RunAction(_growBomb);
+
+					CCSprite child;
+					child = (CCSprite)_bomb.GetChildByTag(kSpriteHalo);
+					ProcessSprite(child);
+					//child.BlendFunc = new CCBlendFunc(blendSrc, blendDst);
+					child.RunAction(_rotateSprite);
+					child = (CCSprite)_bomb.GetChildByTag(kSpriteSparkle);
+					ProcessSprite(child);
+					//child.BlendFunc = new CCBlendFunc(blendSrc, blendDst);
+					child.RunAction(_rotateSprite);
+				}
+			}
+
+		}
+
+
+	</body>
+</html>

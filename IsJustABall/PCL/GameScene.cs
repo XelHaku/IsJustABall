@@ -1,7 +1,7 @@
 ﻿using System;
 using CocosSharp;
 
-namespace test
+namespace IsJustABall
 {
 	public class GameScene : CCScene
 	{
@@ -30,9 +30,9 @@ namespace test
 			paddleSprite.PositionY = 100;
 			mainLayer.AddChild (paddleSprite);
 
-			ballSprite = new CCSprite ("ball");
+			ballSprite = new CCSprite ("blueball");
 			ballSprite.PositionX = 320;
-			ballSprite.PositionY = 600;
+			ballSprite.PositionY = 1200;
 			mainLayer.AddChild (ballSprite);
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);

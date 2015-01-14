@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="test.test">
   <uses-sdk android:minSdkVersion="19" />
   <application android:label="test" android:name="mono.android.app.Application" android:debuggable="true">
-    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="BouncingGame" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="test.MainActivity">
+    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="BouncingGame" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="isjustaball.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
