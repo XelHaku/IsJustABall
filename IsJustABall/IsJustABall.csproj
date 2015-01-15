@@ -68,6 +68,7 @@
     <Compile Include="PCL\GoneBananas\GameLayer.cs" />
     <Compile Include="PCL\GoneBananas\GameOverLayer.cs" />
     <Compile Include="PCL\GoneBananas\GameStartLayer.cs" />
+    <Compile Include="PCL\Notes\HookedParticle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -94,5 +95,6 @@
     <AndroidAsset Include="Assets\Content\paddle.png" />
     <AndroidAsset Include="Assets\Content\fonts\arial-22.xnb" />
     <AndroidAsset Include="Assets\Content\blueball.png" />
+    <AndroidAsset Include="Assets\Content\pivot.png" />
   </ItemGroup>
 </Project>
