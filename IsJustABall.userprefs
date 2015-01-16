@@ -1,12 +1,10 @@
 ﻿<Properties StartupItem="IsJustABall\IsJustABall.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.5e353f50" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall\PCL\GoneBananas\GameLayer.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.kk" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall\PCL\GameSceneTest.cs">
     <Files>
-      <File FileName="IsJustABall\PCL\GameScene.cs" Line="21" Column="21" />
-      <File FileName="IsJustABall\PCL\GameSceneTest.cs" Line="46" Column="46" />
-      <File FileName="IsJustABall\PCL\GameAppDelegate.cs" Line="47" Column="47" />
-      <File FileName="IsJustABall\PCL\GoneBananas\GameLayer.cs" Line="1" Column="1" />
-      <File FileName="IsJustABall\PCL\Notes\Touch Notes.html" Line="14" Column="14" />
+      <File FileName="IsJustABall\PCL\GameScene.cs" Line="1" Column="1" />
+      <File FileName="IsJustABall\PCL\GameSceneTest.cs" Line="10" Column="10" />
+      <File FileName="IsJustABall\PCL\Notes\HookedParticle.cs" Line="3" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
