@@ -1,2 +1,0 @@
-# IsJustABall
-Mobile game
