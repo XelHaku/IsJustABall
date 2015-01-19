@@ -16,10 +16,11 @@ namespace IsJustABall
 		CCSprite pivotSprite;
 		CCLabelTtf scoreLabel;
 
-		float ballXVelocity =600 ;
-		float ballYVelocity = 800;
+
+		float ballXVelocity =300 ;
+		float ballYVelocity = 300;
 		// How much to modify the ball's y velocity per second:
-		float gravity = 140;
+		float gravity = 130;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		bool hookTouchBool = true;
 
@@ -35,7 +36,7 @@ namespace IsJustABall
 		double SinAlpha;
 		double theta=0;
 		double ThetaZero=0;
-		double Multiplier =1.5f;
+		double Multiplier =1.05f;
 		double wZero;
 		double ballSpeedFinal;
 		bool ClockwiseRotation = true;
@@ -45,9 +46,11 @@ namespace IsJustABall
 		/// //////////////////
 		//needed for multiple Pivots
 		float hookedPivotPosX,hookedPivotPosY;
+		int indexHookPivot;
 		/// 
 
-
+		//Movementson Pivots
+		  
 
 		CCEventListenerTouchAllAtOnce touchListener;
 
@@ -63,11 +66,9 @@ namespace IsJustABall
 			addBlueBall(mainWindow);
 
 			//addPivot(mainWindow);
-			visiblePivots.Add (AddPivots (mainWindow,0.15f*bounds.Width,0.25f*bounds.Height,0.0002f*bounds.Width));
-			visiblePivots.Add (AddPivots (mainWindow,0.85f*bounds.Width,0.75f*bounds.Height,0.0002f*bounds.Width));
-			visiblePivots.Add (AddPivots (mainWindow,0.15f*bounds.Width,0.75f*bounds.Height,0.0002f*bounds.Width));
-			visiblePivots.Add (AddPivots (mainWindow,0.85f*bounds.Width,0.25f*bounds.Height,0.0002f*bounds.Width));
-			visiblePivots.Add (AddPivots (mainWindow,0.5f*bounds.Width,0.5f*bounds.Height,0.0002f*bounds.Width));
+			// add ALL pivots of the level
+			addLevelPivots (mainWindow);
+
 
 
 
@@ -79,6 +80,7 @@ namespace IsJustABall
 			mainLayer.AddChild (scoreLabel);
 
 			Schedule (RunGameLogic);
+
 
 			// New code:
 			touchListener = new CCEventListenerTouchAllAtOnce ();
@@ -96,7 +98,20 @@ namespace IsJustABall
 				//void HookedParticle
 				hookedParticle (frameTimeInSeconds);
 			}
+			//movement on pivots over time
+			foreach (var pivotSprite in visiblePivots) {
+
+				pivotSprite.PositionY += -50 * frameTimeInSeconds;
+				//element.Rotation (1.0f);
+			
+
+			}
+
+
+		
 		}
+
+
 
 		void HandleTouchesMoved (System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
 		{
@@ -106,7 +121,7 @@ namespace IsJustABall
 		}
 		void HandleTouchesBegan(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
 			double closestPivot = 10000;
-			foreach (var pivotSprite in visiblePivots) {
+			/*foreach (var pivotSprite in visiblePivots) {
 				dRadius_X = ballSprite.PositionX - pivotSprite.PositionX;
 				dRadius_Y = ballSprite.PositionY - pivotSprite.PositionY;
 
@@ -122,16 +137,36 @@ namespace IsJustABall
 				
 				}
 
-			
+
+			}*/
+
+
+			for (int i =0; i < visiblePivots.Count;i++) {
+				dRadius_X = ballSprite.PositionX - visiblePivots[i].PositionX;
+				dRadius_Y = ballSprite.PositionY - visiblePivots[i].PositionY;
+
+
+				temp = Math.Pow ((double)dRadius_X, 2) + Math.Pow ((double)dRadius_Y, 2);
+				temp = Math.Pow (temp, 0.5);
+
+				if (temp < closestPivot) {
+					hookedPivotPosX = visiblePivots[i].PositionX;
+					hookedPivotPosY = visiblePivots[i].PositionY;
+					closestPivot = temp;
+					indexHookPivot = i;
+
+				}
+
+
 			}
 
 			if (closestPivot < minRotationRadius && hookTouchBool == true) {
 				hookTouchBool = false;//Toggle hook
-				scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
+				//scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
 
 			} else if (hookTouchBool == false) {
 				hookTouchBool = true;
-				scoreLabel.Text = "Free";
+				//scoreLabel.Text = "Free";
 			}
 
 
@@ -143,8 +178,8 @@ namespace IsJustABall
 				if (hookTouchBool == false) {
 					//Set values for spped and radius or rotation raound Pivot
 
-				dRadius_X = ballSprite.PositionX - hookedPivotPosX;
-				dRadius_Y = ballSprite.PositionY - hookedPivotPosY;
+				dRadius_X = ballSprite.PositionX - visiblePivots[indexHookPivot].PositionX;
+				dRadius_Y = ballSprite.PositionY - visiblePivots[indexHookPivot].PositionY;
 
 					Radius = Math.Pow ((double)dRadius_X, 2) + Math.Pow ((double)dRadius_Y, 2);
 					Radius = Math.Pow (Radius, 0.5);
@@ -166,7 +201,8 @@ namespace IsJustABall
 
 
 					wZero = ballSpeed / Radius;
-					ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
+					//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
+				ballSpeedFinal = Radius * Multiplier * wZero ;
 
 					ThetaZero = Math.Acos (CosThetaZero);
 
@@ -197,6 +233,8 @@ namespace IsJustABall
 
 					}
 				}
+
+	
 			
 		}
 
@@ -242,53 +280,59 @@ namespace IsJustABall
 				ballYVelocity *= -1;
 			}
 
-			//particle
-		//	CCPoint ParticleBallPoint = new CCPoint (ballSprite.PositionX, ballSprite.PositionY);
-			//BlueStella (ParticleBallPoint);
 
 		}
 
 		void hookedParticle(float frameTimeInSeconds){
 			gravity = 0;
 
-			// below is the iteration over time
-
-
-			//ballSprite.PositionX =(float)(Radius*Math.Cos(theta) + pivotSprite.PositionX);
-			//ballSprite.PositionY = (float)(Radius*Math.Sin(theta) + pivotSprite.PositionY);
-			//ConsolePrint
-//			Console.WriteLine( "\n Math.Sin({0} deg) == {1:E16}\n" + "Math.Cos({0} deg) == {2:E16}", Math.Sin(theta), Math.Cos(theta) );
+		
+			//multiplier on close radius\
+			//double multR = (10 / Radius);
 
 			if (ClockwiseRotation == true) {
-				theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+				//theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+				theta+= (double)(Multiplier*wZero*frameTimeInSeconds);
 
 				ballXVelocity = (float)(-ballSpeedFinal * Math.Sin (theta));
 				ballYVelocity = (float)(ballSpeedFinal * Math.Cos (theta));
 							}
 			else {
-				theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+				//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+				theta-= (double)(Multiplier*wZero*frameTimeInSeconds);
 
 				ballXVelocity = (float)(ballSpeedFinal * Math.Sin (theta));
 				ballYVelocity = (float)(-ballSpeedFinal * Math.Cos (theta));
 										}
 				/////////
-		    ballSprite.PositionX =(float)(Radius*Math.Cos(theta) + hookedPivotPosX);
-			ballSprite.PositionY = (float)(Radius*Math.Sin(theta) + hookedPivotPosY);
+			ballSprite.PositionX =(float)(Radius*Math.Cos(theta) + visiblePivots[indexHookPivot].PositionX);
+			ballSprite.PositionY = (float)(Radius*Math.Sin(theta) + visiblePivots[indexHookPivot].PositionY);
 
-			//CCPoint ParticleBallPoint = new CCPoint (ballSprite.PositionX, ballSprite.PositionY);
-		//	BlueStella (ParticleBallPoint);
+
+			///Remove gone far Pivots
+			/*for (int i =0; i < visiblePivots.Count;i++) {
+
+
+				if (visiblePivots[i].PositionY < -500) {
+					visiblePivots.RemoveAt (i);
+			}
+
+
+
+		}*/
+		
 		}
 
 
-
+		/// OBJECTS AND SPRITES
 
 		void addBlueBall(CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			ballSprite = new CCSprite ("blueball");
-			ballSprite.Scale = 0.0002f*bounds.Width;
-			ballSprite.PositionX = 0.05f*bounds.Width;
-			ballSprite.PositionY = 0.05f*bounds.Height;
+			ballSprite.Scale = 0.0004f*bounds.Width;
+			ballSprite.PositionX = 0.00f*bounds.Width;
+			ballSprite.PositionY = 0.00f*bounds.Height;
 		
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ballSprite);
@@ -298,50 +342,183 @@ namespace IsJustABall
 		}
 	
 
-		CCSprite AddPivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
-		{
+		CCSprite AddSTATIC_Pivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
+		{   
+
 			pivotSprite = new CCSprite ("pivot");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
-			var galaxy = new CCParticleGalaxy (pivotSprite.Position); //TODO: manage "better" for performance when "many" particles
-			//galaxy.TotalParticles = 1;
-			galaxy.AutoRemoveOnFinish = true;
-
-			mainLayer.AddChild (galaxy);
-			mainLayer.AddChild (pivotSprite);
-
+			float h= (float)pivotSprite.ContentSize.Height/2.0f;
+			CCPoint tempPos = new CCPoint(h,h);
+			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
 			var CircleDraw = new CCDrawNode();
 			var BlueColor = new CCColor4B (0, 0, 255, 1);
 			/* DrawCircle(CCPoint, float, CCColor4B)
 			)*/
-			CircleDraw.DrawCircle (pivotSprite.Position, minRotationRadius,BlueColor);
-			mainLayer.AddChild (CircleDraw);
-			//////Particle effect
+			var bounds = mainWindow.WindowSizeInPixels;
+			CircleDraw.DrawCircle (tempPos, 1.0f*bounds.Width,BlueColor);
+			//galaxy.Scale = 6.0f;
 
+
+			//pivotSprite.AddChild (galaxy);
+			pivotSprite.AddChild (CircleDraw);
+
+			//mainLayer.AddChild (pivotSprite);
+			mainLayer.AddChild(pivotSprite);
+
+			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+
+			pivotSprite.RepeatForever(rotatePivot);
 			return pivotSprite;
 		}
 
-	/*	void BlueStella (CCPoint pt)
-		{
-			var galaxy = new CCParticleFireworks (pt); //TODO: manage "better" for performance when "many" particles
-			galaxy.TotalParticles = 1;
-			galaxy.AutoRemoveOnFinish = true;
-			AddChild (galaxy);
-		}*/
+		CCSprite AddUP_Pivots(CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
+		{   
 
-		/*foreach (var banana in visibleBananas)
-			{
-				bool hit = banana.BoundingBoxTransformedToParent.IntersectsRect(monkey.BoundingBoxTransformedToParent);
-				if (hit)
-				{
-					hitBananas.Add(banana);
-					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-					Explode(banana.Position);
-					banana.RemoveFromParent();
+
+			pivotSprite = new CCSprite ("pivot");
+			pivotSprite.Scale = scale;
+			pivotSprite.PositionX = pivotPosX;
+			pivotSprite.PositionY = pivotPosY;
+			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
+			CCPoint tempPos = new CCPoint (h, h);
+			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
+			var CircleDraw = new CCDrawNode ();
+			var BlueColor = new CCColor4B (0, 0, 255, 1);
+			var bounds = mainWindow.WindowSizeInPixels;
+			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
+			pivotSprite.AddChild (CircleDraw);
+			mainLayer.AddChild (pivotSprite);
+			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.7f*bounds.Width,0.0f));
+			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
+			pivotSprite.RepeatForever (rotatePivot);
+			return pivotSprite;
+
+		}		
+
+
+		CCSprite AddDOWN_Pivots(CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
+		{   
+
+
+			pivotSprite = new CCSprite ("pivot");
+			pivotSprite.Scale = scale;
+			pivotSprite.PositionX = pivotPosX;
+			pivotSprite.PositionY = pivotPosY;
+			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
+			CCPoint tempPos = new CCPoint (h, h);
+			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
+			var CircleDraw = new CCDrawNode ();
+			var BlueColor = new CCColor4B (0, 0, 255, 1);
+			var bounds = mainWindow.WindowSizeInPixels;
+			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
+			pivotSprite.AddChild (CircleDraw);
+			mainLayer.AddChild (pivotSprite);
+			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(-0.7f*bounds.Width,0.0f));
+			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
+			pivotSprite.RepeatForever (rotatePivot);
+			return pivotSprite;
+
+		}CCSprite AddRIGHT_Pivots(CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
+		{   
+
+
+			pivotSprite = new CCSprite ("pivot");
+			pivotSprite.Scale = scale;
+			pivotSprite.PositionX = pivotPosX;
+			pivotSprite.PositionY = pivotPosY;
+			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
+			CCPoint tempPos = new CCPoint (h, h);
+			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
+			var CircleDraw = new CCDrawNode ();
+			var BlueColor = new CCColor4B (0, 0, 255, 1);
+			var bounds = mainWindow.WindowSizeInPixels;
+			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
+			pivotSprite.AddChild (CircleDraw);
+			mainLayer.AddChild (pivotSprite);
+			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
+			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
+			pivotSprite.RepeatForever (rotatePivot);
+			return pivotSprite;
+
+		}
+
+		CCSprite AddLEFT_Pivots(CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
+		{   
+
+
+			pivotSprite = new CCSprite ("pivot");
+			pivotSprite.Scale = scale;
+			pivotSprite.PositionX = pivotPosX;
+			pivotSprite.PositionY = pivotPosY;
+			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
+			CCPoint tempPos = new CCPoint (h, h);
+			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
+			var CircleDraw = new CCDrawNode ();
+			var BlueColor = new CCColor4B (0, 0, 255, 1);
+			var bounds = mainWindow.WindowSizeInPixels;
+			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
+			pivotSprite.AddChild (CircleDraw);
+			mainLayer.AddChild (pivotSprite);
+			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,0.7f*bounds.Width));
+			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
+			pivotSprite.RepeatForever (rotatePivot);
+			return pivotSprite;
+
+		}
+
+
+
+			void addLevelPivots (CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+			float pivotScale=0.0002f*bounds.Width;
+			String[] PivotMoveType = new String[100]; 
+			float[,] PivotPosArray = new float[100,2];
+
+			Level1Array levelArray = new Level1Array ();
+
+			PivotPosArray = levelArray.PosArray();
+			PivotMoveType = levelArray.moveArray();
+
+			//
+
+			//scoreLabel.Text = (PivotPosArray.Length/2.0f).ToString();
+			for(int i = 0;i<=17;i++){
+			PivotPosArray[i,0] = PivotPosArray[i,0]*bounds.Width;
+		    PivotPosArray[i,1] = PivotPosArray[i,1]*bounds.Height;
+            
+				switch(PivotMoveType[i]){
+				case "STATIC":
+				visiblePivots.Add (AddSTATIC_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+					break;
+				case "UP":
+					visiblePivots.Add (AddUP_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+					break;
+				case "DOWN":
+					visiblePivots.Add (AddDOWN_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+					break;
+				case "RIGHT":
+					visiblePivots.Add (AddRIGHT_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+					break;
+				case "LEFT":
+					visiblePivots.Add (AddLEFT_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+					break;
+				default:
+					visiblePivots.Add (AddSTATIC_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+
+					break;
+
 				}
+
+				}
+
 			}
-*/
+
 	
 
 

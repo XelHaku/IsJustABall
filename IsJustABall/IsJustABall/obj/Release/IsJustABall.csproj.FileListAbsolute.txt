@@ -10,3 +10,9 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release\MonoGame.Framework.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.pdb
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release\IsJustABall.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release\IsJustABall.pdb
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release\CocosSharp.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release\MonoGame.Framework.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.pdb

@@ -13,8 +13,9 @@ namespace IsJustABall
 
 			//application.ContentSearchPaths.Add("hd");
 
-			//CCSimpleAudioEngine.SharedEngine.PreloadEffect ("Sounds/tap");
-		//	CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundMusic");
+		//	CCSimpleAudioEngine.SharedEngine.PreloadEffect ("Sounds/tap");
+			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/Backgroundisjustaball1");
+			//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/Backgroundisjustaball1");
 
 
 			var bounds = mainWindow.WindowSizeInPixels;
@@ -40,7 +41,7 @@ namespace IsJustABall
 			application.Paused = true;
 
 			// if you use SimpleAudioEngine, your music must be paused
-			//CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
+			CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
 		}
 
 		public override void ApplicationWillEnterForeground (CCApplication application)
@@ -48,7 +49,7 @@ namespace IsJustABall
 			application.Paused = false;
 
 			// if you use SimpleAudioEngine, your background music track must resume here. 
-		//	CCSimpleAudioEngine.SharedEngine.ResumeBackgroundMusic ();
+			CCSimpleAudioEngine.SharedEngine.ResumeBackgroundMusic ();
 
 		}
 	}

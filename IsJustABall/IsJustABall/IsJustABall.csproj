@@ -34,6 +34,8 @@
     <Compile Include="GameAppDelegate.cs" />
     <Compile Include="GameScene.cs" />
     <Compile Include="IJABScrollerScene.cs" />
+    <Compile Include="Levels\Level1Array.cs" />
+    <Compile Include="Levels\Level2Array.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -46,5 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Levels\" />
   </ItemGroup>
 </Project>
