@@ -54,9 +54,25 @@ namespace IsJustABall
 */
 			return PivotMoveType;
 		}
-		
-		
+
+		////////JEWELS
+		public float[,]  JewelPosArray(){
+			float[,] JewelPosArray = new float[100,2];
+			/*X UP TO DOWN*/            /*Y LEFT TO RIGHT*/      
+			JewelPosArray[0,0] = 0.7f; JewelPosArray[0,1] =0.3f; 
+			JewelPosArray[1,0] = 0.7f; JewelPosArray[1,1] =0.6f; 
+			JewelPosArray[2,0] = 0.7f; JewelPosArray[2,1] =0.9f; 
+			JewelPosArray[3,0] = 0.7f; JewelPosArray[3,1] =1.2f; 
+			JewelPosArray[4,0] = 0.3f; JewelPosArray[4,1] =1.5f; 
+			JewelPosArray[5,0] = 0.7f; JewelPosArray[5,1] =1.8f; 
+			JewelPosArray[6,0] = 0.2f; JewelPosArray[6,1] =2.1f; 
+			JewelPosArray[7,0] = 0.7f; JewelPosArray[7,1] =2.4f; 
+			JewelPosArray[8,0] = 0.4f; JewelPosArray[8,1] =2.7f; 
+			JewelPosArray[9,0] = 0.1f; JewelPosArray[9,1] =3.0f; 
+
+			return JewelPosArray;
 		
 		}
 }
 
+}

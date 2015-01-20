@@ -8,12 +8,16 @@ namespace IsJustABall
 	public class IJABScrollerScene : CCScene
 	{
 		CCLayer mainLayer;
-		//CCParticleGalaxy particleEffetOnBall;
-
 
 		CCSprite ballSprite;
+
+		List<CCSprite> visibleJewels;
+		CCSprite ruby;
+		CCSprite diamond;
+
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
+
 		CCLabelTtf scoreLabel;
 
 
@@ -23,7 +27,8 @@ namespace IsJustABall
 		float gravity = 140;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		bool hookTouchBool = true;
-
+		//Speed for scroller level
+		int scrollerSpeed= 50;
 		//Declare variables for HookedParticle Method
 		double dRadius_X;
 		double dRadius_Y;
@@ -60,6 +65,8 @@ namespace IsJustABall
 			mainLayer = new CCLayer ();
 			AddChild (mainLayer);
 			visiblePivots = new List<CCSprite> ();
+			visibleJewels = new List<CCSprite> ();
+
 			var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.15f*bounds.Height;
 
@@ -68,6 +75,7 @@ namespace IsJustABall
 			//addPivot(mainWindow);
 			// add ALL pivots of the level
 			addLevelPivots (mainWindow);
+			addLevelJewels (mainWindow);
 
 
 
@@ -101,13 +109,16 @@ namespace IsJustABall
 			//movement on pivots over time
 			foreach (var pivotSprite in visiblePivots) {
 
-				pivotSprite.PositionY += -50 * frameTimeInSeconds;
+				pivotSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
 				//element.Rotation (1.0f);
-			
+						}
 
+			foreach (var ruby in visibleJewels) {
+
+				ruby.PositionY += -scrollerSpeed * frameTimeInSeconds;
+				//element.Rotation (1.0f);
 			}
-
-
+			checkJewel ();
 		
 		}
 
@@ -340,6 +351,36 @@ namespace IsJustABall
 
 
 		}
+
+		CCSprite addDiamond(CCWindow mainWindow, float diamondPosX,float diamondPosY,float scale){
+			var bounds = mainWindow.WindowSizeInPixels;
+
+			diamond = new CCSprite ("diamond");
+			diamond.Scale = scale;
+			diamond.PositionX = diamondPosX;
+			diamond.PositionY = diamondPosY;
+			CCRotateBy rotate = new CCRotateBy (0.0f, 90);
+			diamond.RunAction (rotate);
+
+			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
+			mainLayer.AddChild (diamond);
+			return diamond;
+		}
+
+		CCSprite addRuby(CCWindow mainWindow,float rubyPosX,float rubyPosY,float scale){
+			var bounds = mainWindow.WindowSizeInPixels;
+
+			ruby = new CCSprite ("ruby");
+			ruby.Scale = scale;
+			ruby.PositionX = rubyPosX;
+			ruby.PositionY = rubyPosY;
+			CCRotateBy rotate = new CCRotateBy (0.0f, 90);
+			ruby.RunAction (rotate);
+
+			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
+			mainLayer.AddChild (ruby);
+			return ruby;
+		}
 	
 
 		CCSprite AddSTATIC_Pivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
@@ -519,8 +560,59 @@ namespace IsJustABall
 
 			}
 
-	
 
+		void addLevelJewels (CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+			float jewelScale=0.0001f*bounds.Width;
+			float[,] JewelPosArray = new float[100,2];
+
+			Level1Array levelArray = new Level1Array ();
+
+			JewelPosArray = levelArray.JewelPosArray();
+
+
+			//
+
+			//scoreLabel.Text = (PivotPosArray.Length/2.0f).ToString();
+			for (int i = 0; i < JewelPosArray.Length/2; i++) {
+				JewelPosArray [i, 0] = JewelPosArray [i, 0] * bounds.Width;
+				JewelPosArray [i, 1] = JewelPosArray [i, 1] * bounds.Height;
+
+				//visiblePivots.Add (AddSTATIC_Pivots (mainWindow,PivotPosArray[i,0],PivotPosArray[i,1],pivotScale));
+				visibleJewels.Add (addRuby (mainWindow, JewelPosArray [i, 0], JewelPosArray [i, 1], jewelScale));
+
+			}
+		}
+
+
+		//Remove jewel and and Score Counter
+		void checkJewel(){
+			foreach (var ruby in visibleJewels) {
+				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
+				if (hit)
+				{
+					//hitBananas.Add(banana);
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//Explode(banana.Position);
+					ruby.RemoveFromParent();
+						
+
+ 				}
+			}
+			/*foreach (var banana in visibleBananas)
+            {
+#endif
+                bool hit = banana.BoundingBoxTransformedToParent.IntersectsRect(monkey.BoundingBoxTransformedToParent);
+                if (hit)
+                {
+                    hitBananas.Add(banana);
+                    CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+                    Explode(banana.Position);
+                    banana.RemoveFromParent();
+                }
+#if !NETFX_CORE
+            });*/
+		}
 
 
 	}

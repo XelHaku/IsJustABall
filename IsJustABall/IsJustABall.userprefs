@@ -1,12 +1,12 @@
 ﻿<Properties StartupItem="IsJustABall.Android\IsJustABall.Android.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.kk" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.5e353f50" />
   <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall\IJABScrollerScene.cs">
     <Files>
-      <File FileName="IsJustABall\IJABScrollerScene.cs" Line="27" Column="27" />
-      <File FileName="IsJustABall\Levels\Level1Array.cs" Line="33" Column="33" />
+      <File FileName="IsJustABall\IJABScrollerScene.cs" Line="3" Column="3" />
+      <File FileName="IsJustABall\Levels\Level1Array.cs" Line="2" Column="2" />
       <File FileName="IsJustABall\Levels\Level2Array.cs" Line="1" Column="1" />
       <File FileName="IsJustABall\packages.config" Line="1" Column="1" />
-      <File FileName="IsJustABall\GameAppDelegate.cs" Line="4" Column="4" />
+      <File FileName="IsJustABall\GameAppDelegate.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
