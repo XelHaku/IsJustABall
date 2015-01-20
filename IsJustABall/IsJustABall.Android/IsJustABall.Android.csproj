@@ -98,5 +98,6 @@
     <AndroidAsset Include="Assets\Content\Sounds\Backgroundisjustaball1.mp3" />
     <AndroidAsset Include="Assets\Content\diamond.png" />
     <AndroidAsset Include="Assets\Content\ruby.png" />
+    <AndroidAsset Include="Assets\Content\spike.png" />
   </ItemGroup>
 </Project>

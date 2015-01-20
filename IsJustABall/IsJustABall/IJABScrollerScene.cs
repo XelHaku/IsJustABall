@@ -12,11 +12,15 @@ namespace IsJustABall
 		CCSprite ballSprite;
 
 		List<CCSprite> visibleJewels;
+		List<CCSprite> hitJewels;
 		CCSprite ruby;
 		CCSprite diamond;
 
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
+
+		List<CCSprite> visibleTraps;
+		CCSprite spikeSprite;
 
 		CCLabelTtf scoreLabel;
 
@@ -24,11 +28,11 @@ namespace IsJustABall
 		float ballXVelocity =360 ;
 		float ballYVelocity = 360;
 		// How much to modify the ball's y velocity per second:
-		float gravity = 140;
+		float gravity = 0;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		bool hookTouchBool = true;
 		//Speed for scroller level
-		int scrollerSpeed= 50;
+		int scrollerSpeed= 100;
 		//Declare variables for HookedParticle Method
 		double dRadius_X;
 		double dRadius_Y;
@@ -41,7 +45,7 @@ namespace IsJustABall
 		double SinAlpha;
 		double theta=0;
 		double ThetaZero=0;
-		double Multiplier =1.05f;
+		double Multiplier =1.1f;
 		double wZero;
 		double ballSpeedFinal;
 		bool ClockwiseRotation = true;
@@ -53,6 +57,7 @@ namespace IsJustABall
 		float hookedPivotPosX,hookedPivotPosY;
 		int indexHookPivot;
 		/// 
+		int score = 0;
 
 		//Movementson Pivots
 		  
@@ -66,6 +71,9 @@ namespace IsJustABall
 			AddChild (mainLayer);
 			visiblePivots = new List<CCSprite> ();
 			visibleJewels = new List<CCSprite> ();
+			hitJewels = new List<CCSprite> ();
+			visibleTraps = new List<CCSprite>();
+
 
 			var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.15f*bounds.Height;
@@ -76,14 +84,15 @@ namespace IsJustABall
 			// add ALL pivots of the level
 			addLevelPivots (mainWindow);
 			addLevelJewels (mainWindow);
+			addLevelSpikes (mainWindow);
 
 
 
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
-			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MinX + 20;
+			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/2 ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
-			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
+			scoreLabel.AnchorPoint = CCPoint.AnchorUpperRight;
 
 			mainLayer.AddChild (scoreLabel);
 
@@ -118,8 +127,14 @@ namespace IsJustABall
 				ruby.PositionY += -scrollerSpeed * frameTimeInSeconds;
 				//element.Rotation (1.0f);
 			}
+
+			foreach (var spikeSprite in visibleTraps) {
+
+				spikeSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
+				//element.Rotation (1.0f);
+			}
 			checkJewel ();
-		
+			checkTrap ();
 		}
 
 
@@ -237,10 +252,10 @@ namespace IsJustABall
 
 					if (dRadius_X * ballYVelocity - dRadius_Y * ballXVelocity <= 0) {
 						ClockwiseRotation = false;
-						scoreLabel.Text += "ClockwiseRotation: false";
+						//scoreLabel.Text += "ClockwiseRotation: false";
 					} else {
 						ClockwiseRotation = true;
-						scoreLabel.Text += "ClockwiseRotation: true";
+						//scoreLabel.Text += "ClockwiseRotation: true";
 
 					}
 				}
@@ -252,7 +267,7 @@ namespace IsJustABall
 
 
 		void freeParticle(float frameTimeInSeconds){
-			gravity = 140;
+			gravity = 0;
 			// This is a linear approximation, so not 100% accurate
 			ballXVelocity += frameTimeInSeconds * gravity;
 			ballSprite.PositionX += ballXVelocity * frameTimeInSeconds;
@@ -374,8 +389,8 @@ namespace IsJustABall
 			ruby.Scale = scale;
 			ruby.PositionX = rubyPosX;
 			ruby.PositionY = rubyPosY;
-			CCRotateBy rotate = new CCRotateBy (0.0f, 90);
-			ruby.RunAction (rotate);
+			//CCRotateBy rotate = new CCRotateBy (0.0f, 90);
+			//ruby.RunAction (rotate);
 
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ruby);
@@ -518,18 +533,18 @@ namespace IsJustABall
 			void addLevelPivots (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0002f*bounds.Width;
-			String[] PivotMoveType = new String[100]; 
-			float[,] PivotPosArray = new float[100,2];
+			String[] PivotMoveType = new String[10]; 
+			float[,] PivotPosArray = new float[10,2];
 
 			Level1Array levelArray = new Level1Array ();
 
-			PivotPosArray = levelArray.PosArray();
-			PivotMoveType = levelArray.moveArray();
+			PivotPosArray = levelArray.PivotPosArray();
+			PivotMoveType = levelArray.PivotTypeArray();
 
 			//
 
 			//scoreLabel.Text = (PivotPosArray.Length/2.0f).ToString();
-			for(int i = 0;i<=8;i++){
+			for(int i = 0;i<PivotPosArray.Length/2;i++){
 			PivotPosArray[i,0] = PivotPosArray[i,0]*bounds.Width;
 		    PivotPosArray[i,1] = PivotPosArray[i,1]*bounds.Height;
             
@@ -560,11 +575,12 @@ namespace IsJustABall
 
 			}
 
+		//JEWELS
 
 		void addLevelJewels (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float jewelScale=0.0001f*bounds.Width;
-			float[,] JewelPosArray = new float[100,2];
+			float[,] JewelPosArray = new float[10,2];
 
 			Level1Array levelArray = new Level1Array ();
 
@@ -591,32 +607,163 @@ namespace IsJustABall
 				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
 				if (hit)
 				{
-					//hitBananas.Add(banana);
+					hitJewels.Add(ruby);
 					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
 					//Explode(banana.Position);
 					ruby.RemoveFromParent();
-						
+
+					score += 10;
+					scoreLabel.Text = "Score: " + score;
 
  				}
 			}
-			/*foreach (var banana in visibleBananas)
-            {
-#endif
-                bool hit = banana.BoundingBoxTransformedToParent.IntersectsRect(monkey.BoundingBoxTransformedToParent);
-                if (hit)
-                {
-                    hitBananas.Add(banana);
-                    CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-                    Explode(banana.Position);
-                    banana.RemoveFromParent();
-                }
-#if !NETFX_CORE
-            });*/
+
+
+			foreach (var ruby  in hitJewels)
+			{
+				visibleJewels.Remove(ruby);
+			}
+		}
+		//SPIKE
+
+		CCSprite AddSTATIC_Spike (CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
+		{   
+
+			spikeSprite = new CCSprite ("spike");
+			spikeSprite.Scale = scale;
+			spikeSprite.PositionX = spikePosX;
+			spikeSprite.PositionY = spikePosY;
+			var bounds = mainWindow.WindowSizeInPixels;
+
+			mainLayer.AddChild(spikeSprite);
+
+
+			return spikeSprite;
 		}
 
+		CCSprite AddUP_Spike(CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
+		{   
+
+			spikeSprite = new CCSprite ("spike");
+			spikeSprite.Scale = scale;
+			spikeSprite.PositionX = spikePosX;
+			spikeSprite.PositionY = spikePosY;
+			var bounds = mainWindow.WindowSizeInPixels;
+
+			mainLayer.AddChild(spikeSprite);
+
+			CCRotateBy rotateSpike = new CCRotateBy (4.0f, 360);
+
+			spikeSprite.RepeatForever(rotateSpike);
+			CCMoveBy moveBySpike_UP = new CCMoveBy (5.0f,new CCPoint(0.7f*bounds.Width,0.0f));
+			spikeSprite.RepeatForever(moveBySpike_UP,moveBySpike_UP.Reverse());
+			spikeSprite.RepeatForever (rotateSpike);
+
+			return spikeSprite;
+
+		}		
+
+
+
+		CCSprite AddRIGHT_Spike(CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
+		{   
+			spikeSprite = new CCSprite ("spike");
+			spikeSprite.Scale = scale;
+			spikeSprite.PositionX = spikePosX;
+			spikeSprite.PositionY = spikePosY;
+			var bounds = mainWindow.WindowSizeInPixels;
+
+			mainLayer.AddChild(spikeSprite);
+
+			CCRotateBy rotateSpike = new CCRotateBy (4.0f, 360);
+
+			spikeSprite.RepeatForever(rotateSpike);
+			CCMoveBy moveBySpike_UP = new CCMoveBy (5.0f,new CCPoint(0.0f,0.7f*bounds.Width));
+			spikeSprite.RepeatForever(moveBySpike_UP,moveBySpike_UP.Reverse());
+			spikeSprite.RepeatForever (rotateSpike);
+
+			return spikeSprite;
+
+
+
+
+		}
+
+	
+		void addLevelSpikes (CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+			float spikeScale=0.0001f*bounds.Width;
+			String[] SpikeMoveType = new String[10]; 
+			float[,] SpikePosArray = new float[10,2];
+
+			Level1Array levelArray = new Level1Array ();
+
+			SpikePosArray = levelArray.SpikePosArray();
+			SpikeMoveType = levelArray.SpikeTypeArray();
+
+
+			//
+
+			//scoreLabel.Text = (PivotPosArray.Length/2.0f).ToString();
+			for (int i = 0; i < SpikePosArray.Length/2; i++) {
+				SpikePosArray [i, 0] = SpikePosArray [i, 0] * bounds.Width;
+				SpikePosArray [i, 1] = SpikePosArray [i, 1] * bounds.Height;
+
+			
+				switch(SpikeMoveType[i]){
+					case "STATIC":
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow, SpikePosArray [i, 0], SpikePosArray [i, 1], spikeScale));
+						break;
+					case "UP":
+					visibleTraps.Add (AddUP_Spike (mainWindow, SpikePosArray [i, 0], SpikePosArray [i, 1], spikeScale));
+						break;
+				
+					case "RIGHT":
+					visibleTraps.Add (AddRIGHT_Spike (mainWindow, SpikePosArray [i, 0], SpikePosArray [i, 1], spikeScale));
+						break;
+					
+					default:
+					visibleTraps.Add (AddSTATIC_Spike (mainWindow, SpikePosArray [i, 0], SpikePosArray [i, 1], spikeScale));
+
+						break;
+
+					}
+
+				}
+
+			}
+
+		void checkTrap(){
+			foreach (var spikeSprite in visibleTraps) {
+				bool hit = spikeSprite.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
+				if (hit)
+				{
+					//hitJewels.Add(ruby);
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//Explode(banana.Position);
+					//ruby.RemoveFromParent();
+					//score += 10;
+					//scoreLabel.Text = "Score: " + score;
+
+					EndGame ();
+				}
+			}
+
+
+		}
+
+		//ENDGAME
+		 void EndGame (){
+
+			UnscheduleAll();
+			scoreLabel.Text="ENDGAME";
+
+		
+		}
+		//
+
+		}
 
 	}
 
-
-}
 

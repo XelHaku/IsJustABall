@@ -4,8 +4,8 @@ namespace IsJustABall
 {
 	public class Level1Array
 	{//public void StartEngine() {/* Method statements here */ }
-					public float[,]  PosArray(){
-			float[,] PivotPosArray = new float[100,2];
+					public float[,]  PivotPosArray(){
+			float[,] PivotPosArray = new float[9,2];
 			/*X UP TO DOWN*/            /*Y LEFT TO RIGHT*/      
 			PivotPosArray[0,0] = 0.5f; PivotPosArray[0,1] =0.3f; 
 			PivotPosArray[1,0] = 0.2f; PivotPosArray[1,1] =0.6f; 
@@ -31,8 +31,8 @@ namespace IsJustABall
 			return PivotPosArray;
 		              }
 
-		public String[]  moveArray(){
-			String[] PivotMoveType = new String[100]; 
+		public String[]  PivotTypeArray(){
+			String[] PivotMoveType = new String[9]; 
 			PivotMoveType [0] = "STATIC"; 
 			PivotMoveType [1] = "STATIC";
 			PivotMoveType [2] = "STATIC";
@@ -57,7 +57,7 @@ namespace IsJustABall
 
 		////////JEWELS
 		public float[,]  JewelPosArray(){
-			float[,] JewelPosArray = new float[100,2];
+			float[,] JewelPosArray = new float[10,2];
 			/*X UP TO DOWN*/            /*Y LEFT TO RIGHT*/      
 			JewelPosArray[0,0] = 0.7f; JewelPosArray[0,1] =0.3f; 
 			JewelPosArray[1,0] = 0.7f; JewelPosArray[1,1] =0.6f; 
@@ -72,6 +72,25 @@ namespace IsJustABall
 
 			return JewelPosArray;
 		
+		}
+		//SPIKES
+		public float[,]  SpikePosArray(){
+			float[,] SpikePosArray = new float[3,2];
+			/*X UP TO DOWN*/            /*Y LEFT TO RIGHT*/      
+			SpikePosArray[0,0] = 0.1f; SpikePosArray[0,1] =0.5f;
+			SpikePosArray[1,0] = 0.4f; SpikePosArray[1,1] =0.5f;
+			SpikePosArray[2,0] = 0.8f; SpikePosArray[2,1] =0.5f;
+			return SpikePosArray;
+		}
+
+		public String[]  SpikeTypeArray(){
+			String[] SpikeMoveType = new String[3]; 
+			SpikeMoveType [0] = "STATIC"; 
+			SpikeMoveType [1] = "UP"; 
+			SpikeMoveType [2] = "RIGHT";
+
+
+			return SpikeMoveType;
 		}
 }
 
