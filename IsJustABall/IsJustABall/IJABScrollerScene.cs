@@ -17,10 +17,10 @@ namespace IsJustABall
 		CCLabelTtf scoreLabel;
 
 
-		float ballXVelocity =300 ;
-		float ballYVelocity = 300;
+		float ballXVelocity =360 ;
+		float ballYVelocity = 360;
 		// How much to modify the ball's y velocity per second:
-		float gravity = 130;
+		float gravity = 140;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		bool hookTouchBool = true;
 
@@ -61,7 +61,7 @@ namespace IsJustABall
 			AddChild (mainLayer);
 			visiblePivots = new List<CCSprite> ();
 			var bounds = mainWindow.WindowSizeInPixels;
-			minRotationRadius = 0.20f*bounds.Width;
+			minRotationRadius = 0.15f*bounds.Height;
 
 			addBlueBall(mainWindow);
 
@@ -330,9 +330,9 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			ballSprite = new CCSprite ("blueball");
-			ballSprite.Scale = 0.0004f*bounds.Width;
-			ballSprite.PositionX = 0.00f*bounds.Width;
-			ballSprite.PositionY = 0.00f*bounds.Height;
+			ballSprite.Scale = 0.0005f*bounds.Width;
+			ballSprite.PositionX = 0.5f*bounds.Width;
+			ballSprite.PositionY = -0.2f*bounds.Height;
 		
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ballSprite);
@@ -440,7 +440,7 @@ namespace IsJustABall
 			pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
 			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
-			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,0.7f*bounds.Width));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
 			pivotSprite.RepeatForever (rotatePivot);
 			return pivotSprite;
@@ -465,7 +465,7 @@ namespace IsJustABall
 			pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
 			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
-			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,0.7f*bounds.Width));
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
 			pivotSprite.RepeatForever (rotatePivot);
 			return pivotSprite;
@@ -488,7 +488,7 @@ namespace IsJustABall
 			//
 
 			//scoreLabel.Text = (PivotPosArray.Length/2.0f).ToString();
-			for(int i = 0;i<=17;i++){
+			for(int i = 0;i<=8;i++){
 			PivotPosArray[i,0] = PivotPosArray[i,0]*bounds.Width;
 		    PivotPosArray[i,1] = PivotPosArray[i,1]*bounds.Height;
             

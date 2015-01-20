@@ -17,3 +17,9 @@ S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Debug\CocosSharp.dll
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Debug\MonoGame.Framework.dll
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.dll
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Debug\IsJustABall.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Debug\IsJustABall.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Debug\CocosSharp.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Debug\MonoGame.Framework.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.pdb
