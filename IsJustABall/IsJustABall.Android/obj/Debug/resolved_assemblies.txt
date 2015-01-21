@@ -1,10 +1,10 @@
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\IsJustABall.Android.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\box2d.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\CocosSharp.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\ICSharpCode.SharpZipLib.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Debug\IsJustABall.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\Lidgren.Network.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\MonoGame.Framework.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\IsJustABall.Android.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\box2d.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\CocosSharp.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\ICSharpCode.SharpZipLib.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Debug\IsJustABall.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\Lidgren.Network.dll
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\packages\CocosSharp.PCL.Shared.1.3.0.0\lib\MonoAndroid10\MonoGame.Framework.dll
 C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\MonoAndroid\v1.0\Facades\System.Collections.Concurrent.dll
 C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\MonoAndroid\v1.0\Facades\System.Collections.dll
 C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\MonoAndroid\v1.0\Facades\System.ComponentModel.Annotations.dll

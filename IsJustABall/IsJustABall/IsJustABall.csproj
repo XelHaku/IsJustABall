@@ -36,6 +36,7 @@
     <Compile Include="IJABScrollerScene.cs" />
     <Compile Include="Levels\Level1Array.cs" />
     <Compile Include="Levels\Level2Array.cs" />
+    <Compile Include="ScrollerSceneTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

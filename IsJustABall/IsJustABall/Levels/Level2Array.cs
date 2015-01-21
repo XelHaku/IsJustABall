@@ -1,60 +1,105 @@
-﻿using System;
-
+﻿//http://programmers.stackexchange.com/questions/196579/storing-data-in-code
+using System;
+using CocosSharp;
+using System.Collections.Generic;
+using CocosDenshion;
+using System.Linq;
 namespace IsJustABall
+
 {
-	public class Level2Array
-	{//public void StartEngine() {/* Method statements here */ }
-		public float[,]  PosArray(){
-			float[,] PivotPosArray = new float[100,2];
-			PivotPosArray[0,0] = 0.5f; PivotPosArray[0,1] =0.25f; 
-			PivotPosArray[1,0] = 0.15f; PivotPosArray[1,1] =0.5f; 
-			PivotPosArray[2,0] = 0.85f; PivotPosArray[2,1] =0.5f; 
-			PivotPosArray[3,0] = 0.5f; PivotPosArray[3,1] =0.75f; 
-			PivotPosArray[4,0] = 0.15f; PivotPosArray[4,1] =1.0f; 
-			PivotPosArray[5,0] = 0.85f; PivotPosArray[5,1] =1.0f; 
-			PivotPosArray[6,0] = 0.15f; PivotPosArray[6,1] =1.25f;
-			PivotPosArray[7,0] = 0.85f; PivotPosArray[7,1] =1.25f;
-			PivotPosArray[8,0] = 0.5f; PivotPosArray[8,1] =1.5f;
-			PivotPosArray[9,0] = 0.15f; PivotPosArray[9,1] =1.75f;
-			PivotPosArray[10,0] = 0.85f; PivotPosArray[10,1] =1.75f;
 
-			PivotPosArray[11,0] = 0.15f; PivotPosArray[11,1] =2.0f;
-			PivotPosArray[12,0] = 0.85f; PivotPosArray[12,1] =2.0f;
-			PivotPosArray[13,0] = 0.15f; PivotPosArray[13,1] =2.25f;
-			PivotPosArray[14,0] = 0.85f; PivotPosArray[14,1] =2.25f;
-			PivotPosArray[15,0] = 0.5f; PivotPosArray[15,1] =2.5f;
-			PivotPosArray[16,0] = 0.15f; PivotPosArray[16,1] =2.75f;
-			PivotPosArray[17,0] = 0.85f; PivotPosArray[17,1] =2.75f;
 
-			return PivotPosArray;
+	public class Level2Array{
+		//PIVOTS
+			public class Pivot
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string MoveType { get; set; }
+
 		}
 
-		public String[]  moveArray(){
-			String[] PivotMoveType = new String[100]; 
-			PivotMoveType [0] = "STATIC"; 
-			PivotMoveType [1] = "UP";
-			PivotMoveType [2] = "DOWN";
-			PivotMoveType [3] = "LEFT";
-			PivotMoveType [4] = "RIGHT";
-			PivotMoveType [5] = "STATIC"; 
-			PivotMoveType [6] = "UP";
-			PivotMoveType [7] = "DOWN";
-			PivotMoveType [8] = "LEFT";
-			PivotMoveType [9] = "RIGHT";
-			PivotMoveType [10] = "STATIC"; 
-			PivotMoveType [12] = "UP";
-			PivotMoveType [13] = "DOWN";
-			PivotMoveType [13] = "LEFT";
-			PivotMoveType [14] = "RIGHT";
-			PivotMoveType [15] = "DOWN";
-			PivotMoveType [16] = "LEFT";
-			PivotMoveType [17] = "RIGHT";
+	    public  List<Pivot> PivotMaker()
+		{
+		List<Pivot> PivotList = new List<Pivot>();
+			PivotList.Add ( new Pivot { PosX = 0.5f, PosY = 0.3f, MoveType = "STATIC" });
+			PivotList.Add( new Pivot { PosX = 0.2f, PosY = 0.6f, MoveType = "STATIC" } );
+			/*	new Pivot { PosX = 0.5f, PosY = 0.3f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.2f, PosY = 0.6f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.8f, PosY = 0.6f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.2f, PosY = 0.9f, MoveType = "UP" },
+			new Pivot { PosX = 0.8f, PosY = 0.9f, MoveType = "DOWN" },
+			new Pivot { PosX = 0.5f, PosY = 1.4f, MoveType = "LEFT" },
+			new Pivot { PosX = 0.5f, PosY = 1.5f, MoveType = "RIGHT" },
+			new Pivot { PosX = 0.2f, PosY = 1.5f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.8f, PosY = 1.5f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.15f, PosY = 1.75f, MoveType = "RIGHT" },
+			new Pivot { PosX = 0.85f, PosY = 1.75f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.15f, PosY = 2.0f, MoveType = "UP" },
+			new Pivot { PosX = 0.85f, PosY = 2.0f, MoveType = "DOWN" },
+			new Pivot { PosX = 0.15f, PosY = 2.25f, MoveType = "LEFT" },
+			new Pivot { PosX = 0.85f, PosY = 2.25f, MoveType = "RIGHT" },
+			new Pivot { PosX = 0.5f, PosY = 2.5f, MoveType = "DOWN" },
+			new Pivot { PosX = 0.15f, PosY = 2.75f, MoveType = "LEFT" },
+			new Pivot { PosX = 0.85f, PosY = 2.75f, MoveType = "RIGHT" }
+*/			return PivotList;
+						}
 
-			return PivotMoveType;
+		//JEWELS
+		public class Jewel
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string JewelType { get; set; }
+
 		}
 
+		public  List<Jewel> JewelMaker()
+		{
+			List<Jewel> JewelList = new List<Jewel>();
+			JewelList.Add ( new Jewel { PosX = 0.5f, PosY = 0.1f, JewelType = "RUBY" });
+			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 0.3f, JewelType = "RUBY" });
+			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 0.7f, JewelType = "DIAMOND" });
+			/*	new Pivot { PosX = 0.5f, PosY = 0.3f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.2f, PosY = 0.6f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.8f, PosY = 0.6f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.2f, PosY = 0.9f, MoveType = "UP" },
+			new Pivot { PosX = 0.8f, PosY = 0.9f, MoveType = "DOWN" },
+			new Pivot { PosX = 0.5f, PosY = 1.4f, MoveType = "LEFT" },
+			new Pivot { PosX = 0.5f, PosY = 1.5f, MoveType = "RIGHT" },
+			new Pivot { PosX = 0.2f, PosY = 1.5f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.8f, PosY = 1.5f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.15f, PosY = 1.75f, MoveType = "RIGHT" },
+			new Pivot { PosX = 0.85f, PosY = 1.75f, MoveType = "STATIC" },
+			new Pivot { PosX = 0.15f, PosY = 2.0f, MoveType = "UP" },
+			new Pivot { PosX = 0.85f, PosY = 2.0f, MoveType = "DOWN" },
+			new Pivot { PosX = 0.15f, PosY = 2.25f, MoveType = "LEFT" },
+			new Pivot { PosX = 0.85f, PosY = 2.25f, MoveType = "RIGHT" },
+			new Pivot { PosX = 0.5f, PosY = 2.5f, MoveType = "DOWN" },
+			new Pivot { PosX = 0.15f, PosY = 2.75f, MoveType = "LEFT" },
+			new Pivot { PosX = 0.85f, PosY = 2.75f, MoveType = "RIGHT" }
+*/			return JewelList;
+		}
 
+		//SPIKES
 
+		public class Spike
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string MoveType { get; set; }
+
+		}
+
+		public  List<Spike> SpikeMaker()
+		{
+			List<Spike> SpikeList = new List<Spike>();
+			SpikeList.Add ( new Spike { PosX = 0.5f, PosY = 0.5f, MoveType = "STATIC" });
+			SpikeList.Add( new Spike { PosX = 0.5f, PosY = 0.8f, MoveType = "STATIC" } );
+			/*	
+
+*/			return SpikeList;
+		}
 	}
 }
 

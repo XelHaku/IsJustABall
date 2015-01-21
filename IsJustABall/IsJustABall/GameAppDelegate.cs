@@ -21,7 +21,8 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 			CCScene.SetDefaultDesignResolution(bounds.Width, bounds.Height, CCSceneResolutionPolicy.ShowAll);
 
-			IJABScrollerScene gameScene = new IJABScrollerScene (mainWindow);
+			//IJABScrollerScene gameScene = new IJABScrollerScene (mainWindow);
+			ScrollerSceneTest gameScene = new ScrollerSceneTest (mainWindow);
 			mainWindow.RunWithScene (gameScene);
 
 
