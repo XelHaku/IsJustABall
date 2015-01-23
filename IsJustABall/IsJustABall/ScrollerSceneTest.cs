@@ -7,17 +7,22 @@ namespace IsJustABall
 {
 	public class ScrollerSceneTest : CCScene
 	{
+		CCWindow mainWindowAux;
 		CCLayer mainLayer;
 
 		CCSprite ballSprite;
 
 		List<CCSprite> visibleJewels;
 		List<CCSprite> hitJewels;
+		List<CCSprite> DeleteElement;
 		CCSprite ruby;
 		CCSprite diamond;
+		CCSprite background1;
+		CCSprite background2;
 
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
+		CCSprite shadow;
 
 		List<CCSprite> visibleTraps;
 		CCSprite spikeSprite;
@@ -25,14 +30,14 @@ namespace IsJustABall
 		CCLabelTtf scoreLabel;
 
 
-		float ballXVelocity =360 ;
-		float ballYVelocity = 360;
+		float ballXVelocity =0 ;
+		float ballYVelocity = 300;
 		// How much to modify the ball's y velocity per second:
 		float gravity = 0;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		bool hookTouchBool = true;
 		//Speed for scroller level
-		int scrollerSpeed= 50;
+		int scrollerSpeed= 150;
 		//Declare variables for HookedParticle Method
 		double dRadius_X;
 		double dRadius_Y;
@@ -45,7 +50,7 @@ namespace IsJustABall
 		double SinAlpha;
 		double theta=0;
 		double ThetaZero=0;
-		double Multiplier =1.1f;
+		double Multiplier =1.05f;
 		double wZero;
 		double ballSpeedFinal;
 		bool ClockwiseRotation = true;
@@ -66,14 +71,14 @@ namespace IsJustABall
 
 		public ScrollerSceneTest(CCWindow mainWindow) : base(mainWindow)
 		{
-
+			mainWindowAux = mainWindow;
 			mainLayer = new CCLayer ();
 			AddChild (mainLayer);
 			visiblePivots = new List<CCSprite> ();
 			visibleJewels = new List<CCSprite> ();
 			hitJewels = new List<CCSprite> ();
 			visibleTraps = new List<CCSprite>();
-
+			DeleteElement = new List<CCSprite> ();
 
 			var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.15f*bounds.Height;
@@ -82,11 +87,12 @@ namespace IsJustABall
 
 			//addPivot(mainWindow);
 			// add ALL pivots of the level
+
 			addLevelPivots (mainWindow);
 			addLevelJewels (mainWindow);
 			addLevelSpikes (mainWindow);
 			addBlueBall(mainWindow);
-
+			addBackground1 (mainWindow);addBackground2 (mainWindow);
 
 
 
@@ -95,9 +101,13 @@ namespace IsJustABall
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperRight;
 
+
 			mainLayer.AddChild (scoreLabel);
+			mainLayer.ReorderChild (scoreLabel, 101);
+
 
 			Schedule (RunGameLogic);
+
 
 
 			// New code:
@@ -109,7 +119,7 @@ namespace IsJustABall
 		}
 
 		void RunGameLogic(float frameTimeInSeconds)
-		{
+		{  
 			if (hookTouchBool == true) {//Void free Particle
 				freeParticle (frameTimeInSeconds);
 			} else {
@@ -136,6 +146,22 @@ namespace IsJustABall
 			}
 			checkJewel ();
 			checkTrap ();
+
+			//backgroundScoller
+			background1.PositionY += -scrollerSpeed * frameTimeInSeconds/10.0f;
+			background2.PositionY += -scrollerSpeed * frameTimeInSeconds/10.0f;
+
+			if (background1.PositionY + background1.ContentSize.Height == 0) {
+				background1.PositionY = background2.PositionY + background1.ContentSize.Height;
+			}
+
+			if (background2.PositionY + background2.ContentSize.Height == 0) {
+				background2.PositionY = background1.PositionY + background2.ContentSize.Height;
+
+			}
+
+			mainLayer.ReorderChild (scoreLabel, 101);
+
 		}
 
 
@@ -148,27 +174,7 @@ namespace IsJustABall
 		}
 		void HandleTouchesBegan(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
 			double closestPivot = 10000;
-			/*foreach (var pivotSprite in visiblePivots) {
-				dRadius_X = ballSprite.PositionX - pivotSprite.PositionX;
-				dRadius_Y = ballSprite.PositionY - pivotSprite.PositionY;
-
-
-				temp = Math.Pow ((double)dRadius_X, 2) + Math.Pow ((double)dRadius_Y, 2);
-				temp = Math.Pow (temp, 0.5);
-
-				if (temp < closestPivot) {
-					hookedPivotPosX = pivotSprite.PositionX;
-					hookedPivotPosY = pivotSprite.PositionY;
-					closestPivot = temp;
-				
-				
-				}
-
-
-			}*/
-
-
-			for (int i =0; i < visiblePivots.Count;i++) {
+				for (int i =0; i < visiblePivots.Count;i++) {
 				dRadius_X = ballSprite.PositionX - visiblePivots[i].PositionX;
 				dRadius_Y = ballSprite.PositionY - visiblePivots[i].PositionY;
 
@@ -337,16 +343,16 @@ namespace IsJustABall
 
 
 			///Remove gone far Pivots
-			/*for (int i =0; i < visiblePivots.Count;i++) {
+			for (int i =0; i < visibleJewels.Count;i++) {
 
 
-				if (visiblePivots[i].PositionY < -500) {
-					visiblePivots.RemoveAt (i);
+				if (visibleJewels[i].PositionY < -500) {
+					visibleJewels.RemoveAt (i);
 			}
 
 
 
-		}*/
+		}
 
 		}
 
@@ -358,8 +364,8 @@ namespace IsJustABall
 
 			ballSprite = new CCSprite ("blueball");
 			ballSprite.Scale = 0.0005f*bounds.Width;
-			ballSprite.PositionX = 0.5f*bounds.Width;
-			ballSprite.PositionY = -0.2f*bounds.Height;
+			ballSprite.PositionX = 0.6f*bounds.Width;
+			ballSprite.PositionY = -0.1f*bounds.Height;
 
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ballSprite);
@@ -398,35 +404,54 @@ namespace IsJustABall
 			return ruby;
 		}
 
+		void addBackground1(CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+
+			background1 = new CCSprite ("galaxybackground4");
+
+			background1.Scale = 1.8f;
+			background1.PositionX = bounds.Width/2;
+			background1.PositionY = background1.ContentSize.Height;
+
+			mainLayer.AddChild (background1);
+			mainLayer.ReorderChild (background1, -100);
+
+		}
+
+		void addBackground2(CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+				
+			background2 = new CCSprite ("galaxybackground4");
+			background2.Scale = 1.8f;
+			background2.PositionX = bounds.Width/2;
+			background2.PositionY = 2*background2.ContentSize.Height;
+
+			mainLayer.AddChild (background2);
+			mainLayer.ReorderChild (background2, -99);
+
+
+		}
+
+
 
 		CCSprite AddSTATIC_Pivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
 		{   
 
-			pivotSprite = new CCSprite ("pivot2");
+			pivotSprite = new CCSprite ("pivot3");
+
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
 			float h= (float)pivotSprite.ContentSize.Height/2.0f;
 			CCPoint tempPos = new CCPoint(h,h);
-			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
-			var CircleDraw = new CCDrawNode();
-			var BlueColor = new CCColor4B (0, 0, 255, 1);
-			/* DrawCircle(CCPoint, float, CCColor4B)
-			)*/
+
 			var bounds = mainWindow.WindowSizeInPixels;
-			CircleDraw.DrawCircle (tempPos, 1.0f*bounds.Width,BlueColor);
-			//galaxy.Scale = 6.0f;
 
-
-			//pivotSprite.AddChild (galaxy);
-			//pivotSprite.AddChild (CircleDraw);
-
-			//mainLayer.AddChild (pivotSprite);
 			mainLayer.AddChild(pivotSprite);
 
 			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 
-			pivotSprite.RepeatForever(rotatePivot);
+			//pivotSprite.RepeatForever(rotatePivot);
 			return pivotSprite;
 		}
 
@@ -434,7 +459,7 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot");
+			pivotSprite = new CCSprite ("pivot3");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -442,15 +467,16 @@ namespace IsJustABall
 			CCPoint tempPos = new CCPoint (h, h);
 			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
 			var CircleDraw = new CCDrawNode ();
-			var BlueColor = new CCColor4B (0, 0, 255, 1);
+			var BlueColor = new CCColor4B (0, 255, 255, 0.001f);
 			var bounds = mainWindow.WindowSizeInPixels;
-			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
-			pivotSprite.AddChild (CircleDraw);
+			CircleDraw.DrawSolidCircle (tempPos, 1.0f * bounds.Width, BlueColor);
+			//pivotSprite.AddChild (CircleDraw);
+			//pivotSprite.ReorderChild (CircleDraw, 10);
 			mainLayer.AddChild (pivotSprite);
-			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
-			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.7f*bounds.Width,0.0f));
+			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(-0.7f*bounds.Width,0.0f));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
-			pivotSprite.RepeatForever (rotatePivot);
+			//pivotSprite.RepeatForever (rotatePivot);
 			return pivotSprite;
 
 		}		
@@ -460,7 +486,7 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot");
+			pivotSprite = new CCSprite ("pivot3");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -471,19 +497,19 @@ namespace IsJustABall
 			var BlueColor = new CCColor4B (0, 0, 255, 1);
 			var bounds = mainWindow.WindowSizeInPixels;
 			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
-			pivotSprite.AddChild (CircleDraw);
+			//pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
-			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
-			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(-0.7f*bounds.Width,0.0f));
+			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.7f*bounds.Width,0.0f));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
-			pivotSprite.RepeatForever (rotatePivot);
+			//pivotSprite.RepeatForever (rotatePivot);
 			return pivotSprite;
 
 		}CCSprite AddRIGHT_Pivots(CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot");
+			pivotSprite = new CCSprite ("pivot3");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -494,12 +520,12 @@ namespace IsJustABall
 			var BlueColor = new CCColor4B (0, 0, 255, 1);
 			var bounds = mainWindow.WindowSizeInPixels;
 			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
-			pivotSprite.AddChild (CircleDraw);
+			//pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
-			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,0.7f*bounds.Width));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
-			pivotSprite.RepeatForever (rotatePivot);
+			//pivotSprite.RepeatForever (rotatePivot);
 			return pivotSprite;
 
 		}
@@ -508,7 +534,7 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot");
+			pivotSprite = new CCSprite ("pivot3");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -519,12 +545,12 @@ namespace IsJustABall
 			var BlueColor = new CCColor4B (0, 0, 255, 1);
 			var bounds = mainWindow.WindowSizeInPixels;
 			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
-			pivotSprite.AddChild (CircleDraw);
+			//pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
-			CCRotateBy rotatePivot = new CCRotateBy (1.0f, 360);
+			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
-			pivotSprite.RepeatForever (rotatePivot);
+			//pivotSprite.RepeatForever (rotatePivot);
 			return pivotSprite;
 
 		}
@@ -533,7 +559,7 @@ namespace IsJustABall
 
 		void addLevelPivots (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
-			float pivotScale=0.0006f*bounds.Width;
+			float pivotScale=0.0002f*bounds.Width;
 			Level2Array LevelClass = new Level2Array ();
 			List<Level2Array.Pivot> ClassList = new List<Level2Array.Pivot> ();
 
@@ -565,7 +591,7 @@ namespace IsJustABall
 					break;
 
 				}
-
+				 
 			}
 
 		}
@@ -574,7 +600,7 @@ namespace IsJustABall
 
 		void addLevelJewels (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
-			float jewelScale=0.0001f*bounds.Width;
+			float jewelScale=0.0004f*bounds.Width;
 
 			Level2Array LevelClass = new Level2Array ();
 			List<Level2Array.Jewel> ClassList = new List<Level2Array.Jewel> ();
@@ -609,8 +635,11 @@ namespace IsJustABall
 					hitJewels.Add(ruby);
 					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
 					//Explode(banana.Position);
-					ruby.RemoveFromParent();
-
+					ruby.RemoveFromParent(true);
+					visibleJewels.Remove (ruby);
+					score += 10;
+					DisplayScore (score);
+					break;
 
 				}
 			}
@@ -638,13 +667,14 @@ namespace IsJustABall
 			}
 			foreach (var ruby  in hitJewels)
 			{   
-				ruby.RemoveFromParent ();
+				ruby.RemoveFromParent(true);
+
 				score += 10;
 				scoreLabel.Text = "Score: " + score;
+				break;
 
-			}
+			}*/
 
-		*/
 			hitJewels.Clear();
 
 		
@@ -680,7 +710,7 @@ namespace IsJustABall
 			CCRotateBy rotateSpike = new CCRotateBy (4.0f, 360);
 
 			spikeSprite.RepeatForever(rotateSpike);
-			CCMoveBy moveBySpike_UP = new CCMoveBy (5.0f,new CCPoint(0.7f*bounds.Width,0.0f));
+			CCMoveBy moveBySpike_UP = new CCMoveBy (5.0f,new CCPoint(-0.7f*bounds.Width,0.0f));
 			spikeSprite.RepeatForever(moveBySpike_UP,moveBySpike_UP.Reverse());
 			spikeSprite.RepeatForever (rotateSpike);
 
@@ -714,7 +744,7 @@ namespace IsJustABall
 
 		void addLevelSpikes (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
-			float pivotScale=0.0002f*bounds.Width;
+			float pivotScale=0.0004f*bounds.Width;
 			Level2Array LevelClass = new Level2Array ();
 			List<Level2Array.Spike> ClassList = new List<Level2Array.Spike> ();
 
@@ -759,10 +789,10 @@ namespace IsJustABall
 					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
 					//Explode(banana.Position);
 					//ruby.RemoveFromParent();
-					//score += 10;
-					//scoreLabel.Text = "Score: " + score;
+					score -= 30;
+					DisplayScore (score);
 
-					EndGame ();
+					ShouldEndGame ();
 				}
 			}
 
@@ -770,15 +800,19 @@ namespace IsJustABall
 		}
 
 		//ENDGAME
-		void EndGame (){
+		void ShouldEndGame (){
 
 			//UnscheduleAll();
 			//scoreLabel.Text="ENDGAME";
 
 
 		}
-		//
 
+		void DisplayScore(float score ){
+
+			scoreLabel.Text = "Score: " + score;
+			//
+		}
 	}
 
 }

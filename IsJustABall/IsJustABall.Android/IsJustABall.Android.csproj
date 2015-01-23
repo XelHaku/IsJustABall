@@ -90,14 +90,17 @@
     <Folder Include="Assets\Content\Sounds\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\ball.png" />
     <AndroidAsset Include="Assets\Content\blueball.png" />
-    <AndroidAsset Include="Assets\Content\paddle.png" />
     <AndroidAsset Include="Assets\Content\pivot.png" />
     <AndroidAsset Include="Assets\Content\fonts\arial-22.xnb" />
     <AndroidAsset Include="Assets\Content\Sounds\Backgroundisjustaball1.mp3" />
     <AndroidAsset Include="Assets\Content\diamond.png" />
     <AndroidAsset Include="Assets\Content\ruby.png" />
     <AndroidAsset Include="Assets\Content\spike.png" />
+    <AndroidAsset Include="Assets\Content\pivot2.png" />
+    <AndroidAsset Include="Assets\Content\galaxybackground5.png" />
+    <AndroidAsset Include="Assets\Content\galaxybackground4.png" />
+    <AndroidAsset Include="Assets\Content\pivot3.png" />
+    <AndroidAsset Include="Assets\Content\pivotshadow.png" />
   </ItemGroup>
 </Project>
