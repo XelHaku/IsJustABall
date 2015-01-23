@@ -5,7 +5,7 @@ using CocosDenshion;
 using System.Linq;
 namespace IsJustABall
 {
-	public class ScrollerSceneTest : CCScene
+	public class OnePlayerScrollerScene : CCScene
 	{
 		CCWindow mainWindowAux;
 		CCLayer mainLayer;
@@ -69,7 +69,7 @@ namespace IsJustABall
 
 		CCEventListenerTouchAllAtOnce touchListener;
 
-		public ScrollerSceneTest(CCWindow mainWindow) : base(mainWindow)
+		public OnePlayerScrollerScene(CCWindow mainWindow) : base(mainWindow)
 		{
 			mainWindowAux = mainWindow;
 			mainLayer = new CCLayer ();
@@ -778,21 +778,36 @@ namespace IsJustABall
 		}
 
 
-
+		void Explode (CCPoint pt)
+		{
+			var explosion = new CCParticleExplosion (pt); //TODO: manage "better" for performance when "many" particles
+			explosion.TotalParticles = 18;
+			explosion.AutoRemoveOnFinish = true;
+			mainLayer.AddChild (explosion);
+		}
 
 		void checkTrap(){
 			foreach (var spikeSprite in visibleTraps) {
 				bool hit = spikeSprite.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
 				if (hit)
 				{
+
+
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					Explode(spikeSprite.Position);
+					spikeSprite.RemoveFromParent(true);
+					visibleTraps.Remove (spikeSprite);
+
+
 					//hitJewels.Add(ruby);
 					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
 					//Explode(banana.Position);
 					//ruby.RemoveFromParent();
-					score -= 30;
+					score -= 50;
 					DisplayScore (score);
 
 					ShouldEndGame ();
+					break;
 				}
 			}
 
@@ -801,10 +816,15 @@ namespace IsJustABall
 
 		//ENDGAME
 		void ShouldEndGame (){
+			if (score <= -100) {
+				EndGame ();
+			}
 
-			//UnscheduleAll();
-			//scoreLabel.Text="ENDGAME";
 
+		}
+		void EndGame(){
+			OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux);
+			mainWindowAux.RunWithScene (gameScene);
 
 		}
 

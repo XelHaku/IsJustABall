@@ -15,17 +15,20 @@ namespace IsJustABall
 
 		//	CCSimpleAudioEngine.SharedEngine.PreloadEffect ("Sounds/tap");
 			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/Backgroundisjustaball1");
-			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/Backgroundisjustaball1");
+			//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/Backgroundisjustaball1");
 
 
 			var bounds = mainWindow.WindowSizeInPixels;
 			CCScene.SetDefaultDesignResolution(bounds.Width, bounds.Height, CCSceneResolutionPolicy.ShowAll);
 
 			//IJABScrollerScene gameScene = new IJABScrollerScene (mainWindow);
-			ScrollerSceneTest gameScene = new ScrollerSceneTest (mainWindow);
+
+
+			//ScrollerSceneTest gameScene = new ScrollerSceneTest (mainWindow);
+			//mainWindow.RunWithScene (gameScene);
+
+			MainMenuScene gameScene = new MainMenuScene (mainWindow);
 			mainWindow.RunWithScene (gameScene);
-
-
 
 
 

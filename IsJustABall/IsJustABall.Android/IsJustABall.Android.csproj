@@ -102,5 +102,8 @@
     <AndroidAsset Include="Assets\Content\galaxybackground4.png" />
     <AndroidAsset Include="Assets\Content\pivot3.png" />
     <AndroidAsset Include="Assets\Content\pivotshadow.png" />
+    <AndroidAsset Include="Assets\Content\greenball.png" />
+    <AndroidAsset Include="Assets\Content\redball.png" />
+    <AndroidAsset Include="Assets\Content\yellowball.png" />
   </ItemGroup>
 </Project>
