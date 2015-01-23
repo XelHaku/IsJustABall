@@ -37,6 +37,7 @@
     <Compile Include="MainMenuScene.cs" />
     <Compile Include="OnePlayerScrollerScene.cs" />
     <Compile Include="MultiPlayerScrollerScene.cs" />
+    <Compile Include="ballPhysics.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

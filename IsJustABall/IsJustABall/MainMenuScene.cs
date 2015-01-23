@@ -55,7 +55,7 @@ namespace IsJustABall
 				
 		
 			var location = touches [0].LocationOnScreen;
-			bool hit =  location.IsNear(ballSprite.PositionWorldspace, 100.0f) ;
+			bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
 			if (hit)
 			{
 				OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux);
@@ -63,7 +63,7 @@ namespace IsJustABall
 
 			}
 
-			hit =  location.IsNear(MultiOption.PositionWorldspace, 100.0f) ;
+			hit =  location.IsNear(MultiOption.Position, 100.0f) ;
 			if (hit) {
 				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene);

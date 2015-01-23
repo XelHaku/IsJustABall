@@ -1,11 +1,12 @@
 ﻿<Properties StartupItem="IsJustABall.Android\IsJustABall.Android.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.kk" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall\MainMenuScene.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" PreferredExecutionTarget="Android.5e353f50" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall\GameAppDelegate.cs">
     <Files>
-      <File FileName="IsJustABall\MainMenuScene.cs" Line="5" Column="5" />
-      <File FileName="IsJustABall\ScrollerSceneTest.cs" Line="25" Column="25" />
-      <File FileName="IsJustABall\GameAppDelegate.cs" Line="40" Column="40" />
-      <File FileName="IsJustABall\IJABScrollerScene.cs" Line="1" Column="1" />
+      <File FileName="IsJustABall\MainMenuScene.cs" Line="12" Column="12" />
+      <File FileName="IsJustABall\OnePlayerScrollerScene.cs" Line="65" Column="65" />
+      <File FileName="IsJustABall\GameAppDelegate.cs" Line="94" Column="94" />
+      <File FileName="IsJustABall\GameScene.cs" Line="1" Column="1" />
+      <File FileName="IsJustABall\MultiPlayerScrollerScene.cs" Line="39" Column="39" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

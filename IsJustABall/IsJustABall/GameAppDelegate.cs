@@ -15,7 +15,7 @@ namespace IsJustABall
 
 		//	CCSimpleAudioEngine.SharedEngine.PreloadEffect ("Sounds/tap");
 			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/Backgroundisjustaball1");
-			//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/Backgroundisjustaball1");
+			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/Backgroundisjustaball1");
 
 
 			var bounds = mainWindow.WindowSizeInPixels;
