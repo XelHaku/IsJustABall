@@ -13,7 +13,7 @@ namespace IsJustABall
 		CCSprite ballSprite;
 
 		List<ballPhysics> ballPhysicsList;
-		List<CCSprite> ballList;
+
 		List<CCSprite> visibleJewels;
 		List<CCSprite> hitJewels;
 		List<CCSprite> DeleteElement;

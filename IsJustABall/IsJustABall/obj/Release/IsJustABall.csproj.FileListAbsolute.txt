@@ -28,3 +28,4 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Release\MonoGame.Framework.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.pdb
+S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.csprojResolveAssemblyReference.cache

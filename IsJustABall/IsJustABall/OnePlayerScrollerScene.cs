@@ -9,9 +9,9 @@ namespace IsJustABall
 	{
 		CCWindow mainWindowAux;
 		CCLayer mainLayer;
-
+		ballPhysics ballPhysicsSingle = new ballPhysics ();
 		CCSprite ballSprite;
-
+		List<ballPhysics> ballPhysicsList;
 		List<CCSprite> visibleJewels;
 		List<CCSprite> hitJewels;
 		List<CCSprite> DeleteElement;
@@ -19,10 +19,11 @@ namespace IsJustABall
 		CCSprite diamond;
 		CCSprite background1;
 		CCSprite background2;
-
+		CCSprite PauseButton;
+		CCSprite ResumeGame,Restart,MainMenu;
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
-		CCSprite shadow;
+
 
 		List<CCSprite> visibleTraps;
 		CCSprite spikeSprite;
@@ -30,47 +31,33 @@ namespace IsJustABall
 		CCLabelTtf scoreLabel;
 
 
-		float ballXVelocity =0 ;
-		float ballYVelocity = 300;
+
 		// How much to modify the ball's y velocity per second:
 		float gravity = 0;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
-		bool hookTouchBool = true;
+
 		//Speed for scroller level
 		int scrollerSpeed= 150;
 		//Declare variables for HookedParticle Method
-		double dRadius_X;
-		double dRadius_Y;
-		double Radius;
-		double temp;
-		double ballSpeed;
-		double SinThetaZero;
-		double CosThetaZero;
-		double CosAlpha;
-		double SinAlpha;
-		double theta=0;
-		double ThetaZero=0;
 		double Multiplier =1.05f;
-		double wZero;
-		double ballSpeedFinal;
-		bool ClockwiseRotation = true;
 		float minRotationRadius;
-
-
-		/// //////////////////
 		//needed for multiple Pivots
-		float hookedPivotPosX,hookedPivotPosY;
-		int indexHookPivot;
 		/// 
 		int score = 0;
+		bool PauseGame=true;
 
 		//Movementson Pivots
 
+	
 
 		CCEventListenerTouchAllAtOnce touchListener;
 
 		public OnePlayerScrollerScene(CCWindow mainWindow) : base(mainWindow)
 		{
+			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
+			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+
+
 			mainWindowAux = mainWindow;
 			mainLayer = new CCLayer ();
 			AddChild (mainLayer);
@@ -79,6 +66,7 @@ namespace IsJustABall
 			hitJewels = new List<CCSprite> ();
 			visibleTraps = new List<CCSprite>();
 			DeleteElement = new List<CCSprite> ();
+			ballPhysicsList = new List<ballPhysics> ();
 
 			var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.15f*bounds.Height;
@@ -93,6 +81,8 @@ namespace IsJustABall
 			addLevelSpikes (mainWindow);
 			addBlueBall(mainWindow);
 			addBackground1 (mainWindow);addBackground2 (mainWindow);
+			addPauseButton ();
+			addMenuOptions ();
 
 
 
@@ -112,93 +102,174 @@ namespace IsJustABall
 
 			// New code:
 			touchListener = new CCEventListenerTouchAllAtOnce ();
-			touchListener.OnTouchesMoved = HandleTouchesMoved; 
+
+
 			touchListener.OnTouchesBegan = HandleTouchesBegan; 
+			touchListener.OnTouchesEnded = HandleTouchesEnded;
 			AddEventListener (touchListener, this);
 
 		}
 
 		void RunGameLogic(float frameTimeInSeconds)
 		{  
-			if (hookTouchBool == true) {//Void free Particle
-				freeParticle (frameTimeInSeconds);
-			} else {
-				//void HookedParticle
-				hookedParticle (frameTimeInSeconds);
+			if (PauseGame) {
+				if (ballPhysicsSingle.hookTouchBool == true) {//Void free Particle
+					freeParticle (frameTimeInSeconds);
+				} else {
+					//void HookedParticle
+					hookedParticle (frameTimeInSeconds);
+				}
+				//movement on pivots over time
+				foreach (var pivotSprite in visiblePivots) {
+
+					pivotSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					//element.Rotation (1.0f);
+				}
+
+				foreach (var ruby in visibleJewels) {
+
+					ruby.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					//element.Rotation (1.0f);
+				}
+
+				foreach (var spikeSprite in visibleTraps) {
+
+					spikeSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					//element.Rotation (1.0f);
+				}
+				checkJewel ();
+				checkTrap ();
+
+				//backgroundScoller
+				background1.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
+				background2.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
+
+				if (background1.PositionY + background1.ContentSize.Height == 0) {
+					background1.PositionY = background2.PositionY + background1.ContentSize.Height;
+				}
+
+				if (background2.PositionY + background2.ContentSize.Height == 0) {
+					background2.PositionY = background1.PositionY + background2.ContentSize.Height;
+
+				}
+
+				mainLayer.ReorderChild (scoreLabel, 101);
 			}
-			//movement on pivots over time
-			foreach (var pivotSprite in visiblePivots) {
+		}
 
-				pivotSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
-				//element.Rotation (1.0f);
-			}
 
-			foreach (var ruby in visibleJewels) {
+		//handle TouchScreen
+		void HandleTouchesEnded(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			var locationInverted = touches [0].LocationOnScreen;
+			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
-				ruby.PositionY += -scrollerSpeed * frameTimeInSeconds;
-				//element.Rotation (1.0f);
-			}
+			bool hit =  location.IsNear(ResumeGame.Position, 50.0f) ;
+			if (hit)
+			{
+				//ResumeGame.Scale =  ResumeGame.Scale/1.2f;
 
-			foreach (var spikeSprite in visibleTraps) {
+				PauseGame = true;
+				ResumeGame.ScaleTo (new CCSize (ResumeGame.ScaledContentSize.Width/1.1f,ResumeGame.ScaledContentSize.Height/1.1f));
+				CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+				CCMoveBy SlideOut = new CCMoveBy (0.5f,new CCPoint(0.0f,- 0.3f*bounds.Height));
+				ResumeGame.RunAction(SlideOut);
+				Restart.RunAction(SlideOut);
+				MainMenu.RunAction(SlideOut);
 
-				spikeSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
-				//element.Rotation (1.0f);
-			}
-			checkJewel ();
-			checkTrap ();
-
-			//backgroundScoller
-			background1.PositionY += -scrollerSpeed * frameTimeInSeconds/10.0f;
-			background2.PositionY += -scrollerSpeed * frameTimeInSeconds/10.0f;
-
-			if (background1.PositionY + background1.ContentSize.Height == 0) {
-				background1.PositionY = background2.PositionY + background1.ContentSize.Height;
-			}
-
-			if (background2.PositionY + background2.ContentSize.Height == 0) {
-				background2.PositionY = background1.PositionY + background2.ContentSize.Height;
 
 			}
 
-			mainLayer.ReorderChild (scoreLabel, 101);
+			hit =  location.IsNear(Restart.Position, 50.0f) ;
+			if (hit) {
+				Restart.ScaleTo (new CCSize (Restart.ScaledContentSize.Width/1.1f,Restart.ScaledContentSize.Height/1.1f));
+				OnePlayerScrollerScene gameScene1 = new OnePlayerScrollerScene (mainWindowAux);
+				mainWindowAux.RunWithScene (gameScene1);
+			}
+
+			hit =  location.IsNear(MainMenu.Position, 50.0f) ;
+
+			if (hit) {
+				MainMenu.ScaleTo (new CCSize (MainMenu.ScaledContentSize.Width/1.1f,MainMenu.ScaledContentSize.Height/1.1f));
+				MainMenuScene gameScene2 = new MainMenuScene (mainWindowAux);
+				mainWindowAux.RunWithScene (gameScene2);
+
+			}
+
+			//BUG: calling walkRepeat separately as it doesn't run when called in RunActions or CCSpawn
+
 
 		}
 
 
 
-		void HandleTouchesMoved (System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
-		{
-			// we only care about the first touch:
-			//var locationOnScreen = touches [0].LocationOnScreen;
-			//paddleSprite.PositionX = locationOnScreen.X;
-		}
 		void HandleTouchesBegan(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
+			//Pause
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			var locationInverted = touches [0].LocationOnScreen;
+			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
+
+			bool hit =  location.IsNear(ResumeGame.Position, 50.0f) ;
+			if (hit)
+			{
+				ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
+
+			}
+
+			hit =  location.IsNear(Restart.Position, 50.0f) ;
+			if (hit) {
+				Restart.ScaleTo (new CCSize (1.1f*Restart.ScaledContentSize.Width,1.1f*Restart.ScaledContentSize.Height));
+			}
+
+			hit =  location.IsNear(MainMenu.Position, 50.0f) ;
+
+			if (hit) {
+				MainMenu.ScaleTo (new CCSize (1.1f*MainMenu.ScaledContentSize.Width,1.1f*MainMenu.ScaledContentSize.Height));
+			}
+
+
+			hit = location.IsNear (PauseButton.Position, 50.0f) ;
+
+			if (hit) {
+				CCMoveBy SlideIn = new CCMoveBy (0.5f,new CCPoint(0.0f,0.3f*bounds.Height));
+				ResumeGame.RunAction(SlideIn);
+				Restart.RunAction(SlideIn);
+				MainMenu.RunAction(SlideIn);
+				PauseGame = false;
+				CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic();
+
+				//MainMenu.Scale *= 1.2f * MainMenu.Scale;
+			}
+
+			//BUG: calling walkRepeat separately as it doesn't run when called in RunActions or CCSpawn
+
+			//Pause ended
+
+
 			double closestPivot = 10000;
-				for (int i =0; i < visiblePivots.Count;i++) {
-				dRadius_X = ballSprite.PositionX - visiblePivots[i].PositionX;
-				dRadius_Y = ballSprite.PositionY - visiblePivots[i].PositionY;
+			for (int i = 0; i < visiblePivots.Count; i++) {
+				ballPhysicsSingle.dRadius_X = ballSprite.PositionX - visiblePivots [i].PositionX;
+				ballPhysicsSingle.dRadius_Y = ballSprite.PositionY - visiblePivots [i].PositionY;
 
 
-				temp = Math.Pow ((double)dRadius_X, 2) + Math.Pow ((double)dRadius_Y, 2);
-				temp = Math.Pow (temp, 0.5);
+				ballPhysicsSingle.temp = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
+				ballPhysicsSingle.temp = Math.Pow (ballPhysicsSingle.temp, 0.5);
 
-				if (temp < closestPivot) {
-					hookedPivotPosX = visiblePivots[i].PositionX;
-					hookedPivotPosY = visiblePivots[i].PositionY;
-					closestPivot = temp;
-					indexHookPivot = i;
+				if (ballPhysicsSingle.temp < closestPivot) {
+					closestPivot = ballPhysicsSingle.temp;
+					ballPhysicsSingle.indexHookPivot = i;
 
 				}
 
 
 			}
 
-			if (closestPivot < minRotationRadius && hookTouchBool == true) {
-				hookTouchBool = false;//Toggle hook
+			if (closestPivot < minRotationRadius && ballPhysicsSingle.hookTouchBool == true) {
+				ballPhysicsSingle.hookTouchBool = false;//Toggle hook
 				//scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
 
-			} else if (hookTouchBool == false) {
-				hookTouchBool = true;
+			} else if (ballPhysicsSingle.hookTouchBool == false) {
+				ballPhysicsSingle.hookTouchBool = true;
 				//scoreLabel.Text = "Free";
 			}
 
@@ -208,65 +279,64 @@ namespace IsJustABall
 
 
 
-			if (hookTouchBool == false) {
+			if (ballPhysicsSingle.hookTouchBool == false) {
 				//Set values for spped and radius or rotation raound Pivot
 
-				dRadius_X = ballSprite.PositionX - visiblePivots[indexHookPivot].PositionX;
-				dRadius_Y = ballSprite.PositionY - visiblePivots[indexHookPivot].PositionY;
+				ballPhysicsSingle.dRadius_X = ballSprite.PositionX - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX;
+				ballPhysicsSingle.dRadius_Y = ballSprite.PositionY - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY;
 
-				Radius = Math.Pow ((double)dRadius_X, 2) + Math.Pow ((double)dRadius_Y, 2);
-				Radius = Math.Pow (Radius, 0.5);
+				ballPhysicsSingle.Radius = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
+				ballPhysicsSingle.Radius = Math.Pow (ballPhysicsSingle.Radius, 0.5);
 
 
-				ballSpeed = Math.Pow (ballXVelocity, 2) + Math.Pow (ballYVelocity, 2);
-				ballSpeed = Math.Pow (ballSpeed, 0.5d);
+				ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballXVelocity, 2) + Math.Pow (ballPhysicsSingle.ballYVelocity, 2);
+				ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballSpeed, 0.5d);
 
-				CosThetaZero = dRadius_X / Radius;
-				SinThetaZero = dRadius_Y / Radius;
+				ballPhysicsSingle.CosThetaZero = ballPhysicsSingle.dRadius_X / ballPhysicsSingle.Radius;
+				ballPhysicsSingle.SinThetaZero = ballPhysicsSingle.dRadius_Y / ballPhysicsSingle.Radius;
 
-				CosAlpha = (dRadius_X * ballXVelocity + dRadius_Y * ballYVelocity) / (Radius * ballSpeed);
+				ballPhysicsSingle.CosAlpha = (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballXVelocity + ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballYVelocity) / (ballPhysicsSingle.Radius * ballPhysicsSingle.ballSpeed);
 
-				if (Math.Pow (CosAlpha, 2) < 0.5) {
-					CosAlpha = Math.Pow (0.5, 0.5);
+				if (Math.Pow (ballPhysicsSingle.CosAlpha, 2) < 0.5) {
+					ballPhysicsSingle.CosAlpha = Math.Pow (0.5, 0.5);
 				}
-				SinAlpha = (1 - Math.Pow (CosAlpha, 2));
-				SinAlpha = Math.Pow (SinAlpha, 0.5f);
+				ballPhysicsSingle.SinAlpha = (1 - Math.Pow (ballPhysicsSingle.CosAlpha, 2));
+				ballPhysicsSingle.SinAlpha = Math.Pow (ballPhysicsSingle.SinAlpha, 0.5f);
 
 
-				wZero = ballSpeed / Radius;
+				ballPhysicsSingle.wZero = ballPhysicsSingle.ballSpeed / ballPhysicsSingle.Radius;
 				//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
-				ballSpeedFinal = Radius * Multiplier * wZero ;
+				ballPhysicsSingle.ballSpeedFinal = ballPhysicsSingle.Radius * Multiplier * ballPhysicsSingle.wZero;
 
-				ThetaZero = Math.Acos (CosThetaZero);
+				ballPhysicsSingle.ThetaZero = Math.Acos (ballPhysicsSingle.CosThetaZero);
 
 				//Second Quadrant
-				if (SinThetaZero > 0 && CosThetaZero < 0) {
-					ThetaZero = (1 / 2) * Math.PI + ThetaZero;
+				if (ballPhysicsSingle.SinThetaZero > 0 && ballPhysicsSingle.CosThetaZero < 0) {
+					ballPhysicsSingle.ThetaZero = (1 / 2) * Math.PI + ballPhysicsSingle.ThetaZero;
 				}
 				//Third Quadrant
-				if (SinThetaZero < 0 && CosThetaZero < 0) {
-					ThetaZero = (2) * Math.PI - ThetaZero;
+				if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero < 0) {
+					ballPhysicsSingle.ThetaZero = (2) * Math.PI - ballPhysicsSingle.ThetaZero;
 				}
 
 
 
 				//Fourth Quadrant
-				if (SinThetaZero < 0 && CosThetaZero > 0) {
-					ThetaZero = -ThetaZero;
+				if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero > 0) {
+					ballPhysicsSingle.ThetaZero = -ballPhysicsSingle.ThetaZero;
 				}
-				theta = ThetaZero;
+				ballPhysicsSingle.theta = ballPhysicsSingle.ThetaZero;
 				//Define if it is clockwise or anticlockwise rotation
 
-				if (dRadius_X * ballYVelocity - dRadius_Y * ballXVelocity <= 0) {
-					ClockwiseRotation = false;
+				if (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballYVelocity - ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballXVelocity <= 0) {
+					ballPhysicsSingle.ClockwiseRotation = false;
 					//scoreLabel.Text += "ClockwiseRotation: false";
 				} else {
-					ClockwiseRotation = true;
+					ballPhysicsSingle.ClockwiseRotation = true;
 					//scoreLabel.Text += "ClockwiseRotation: true";
 
 				}
 			}
-
 
 
 		}
@@ -276,86 +346,88 @@ namespace IsJustABall
 		void freeParticle(float frameTimeInSeconds){
 			gravity = 0;
 			// This is a linear approximation, so not 100% accurate
-			ballXVelocity += frameTimeInSeconds * gravity;
-			ballSprite.PositionX += ballXVelocity * frameTimeInSeconds;
-			ballSprite.PositionY += ballYVelocity * frameTimeInSeconds;
-			// New code:
-			//score++;
-			//scoreLabel.Text = "Score: " + score;
-			// Check if the ball is either too far to the right or left:
-			float ballRight = ballSprite.BoundingBoxTransformedToParent.MaxX;
-			float ballLeft = ballSprite.BoundingBoxTransformedToParent.MinX;
+			if (ballPhysicsSingle.hookTouchBool == true) {
+				// This is a linear approximation, so not 100% accurate
+				ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * gravity;
+				ballSprite.PositionX += ballPhysicsSingle.ballXVelocity * frameTimeInSeconds;
+				ballSprite.PositionY += ballPhysicsSingle.ballYVelocity * frameTimeInSeconds;
+				// New code:
+				//score++;
+				//scoreLabel.Text = "Score: " + score;
+				// Check if the ball is either too far to the right or left:
+				float ballRight = ballSprite.BoundingBoxTransformedToParent.MaxX;
+				float ballLeft = ballSprite.BoundingBoxTransformedToParent.MinX;
 
-			float screenRight = mainLayer.VisibleBoundsWorldspace.MaxX;
-			float screenLeft = mainLayer.VisibleBoundsWorldspace.MinX;
+				float screenRight = mainLayer.VisibleBoundsWorldspace.MaxX;
+				float screenLeft = mainLayer.VisibleBoundsWorldspace.MinX;
 
-			bool shouldReflectXVelocity = (ballRight > screenRight && ballXVelocity > 0) ||	(ballLeft < screenLeft && ballXVelocity < 0);
+				bool shouldReflectXVelocity = (ballRight > screenRight && ballPhysicsSingle.ballXVelocity > 0) ||	(ballLeft < screenLeft && ballPhysicsSingle.ballXVelocity < 0);
 
 
-			if (shouldReflectXVelocity)
-			{
-				ballXVelocity *= -1;
+				if (shouldReflectXVelocity) {
+					ballPhysicsSingle.ballXVelocity *= -1;
 
+				}
+
+				// Check if the ball is either too far to the right or left:
+
+				float ballTop = ballSprite.BoundingBoxTransformedToParent.MaxY;
+				float ballBottom = ballSprite.BoundingBoxTransformedToParent.MinY;
+
+				float screenTop = mainLayer.VisibleBoundsWorldspace.MaxY;
+				float screenBottom = mainLayer.VisibleBoundsWorldspace.MinY;
+
+				bool shouldReflectYVelocity = (ballTop > screenTop && ballPhysicsSingle.ballYVelocity > 0) ||	(ballBottom < screenBottom && ballPhysicsSingle.ballYVelocity < 0);
+
+				if (shouldReflectYVelocity) {
+					ballPhysicsSingle.ballYVelocity *= -1;
+				}
 			}
-
-			// Check if the ball is either too far to the right or left:
-
-			float ballTop = ballSprite.BoundingBoxTransformedToParent.MaxY;
-			float ballBottom = ballSprite.BoundingBoxTransformedToParent.MinY;
-
-			float screenTop = mainLayer.VisibleBoundsWorldspace.MaxY;
-			float screenBottom = mainLayer.VisibleBoundsWorldspace.MinY;
-
-			bool shouldReflectYVelocity = (ballTop > screenTop && ballYVelocity > 0) ||	(ballBottom < screenBottom && ballYVelocity < 0);
-
-			if (shouldReflectYVelocity)
-			{
-				ballYVelocity *= -1;
-			}
-
 
 		}
 
 		void hookedParticle(float frameTimeInSeconds){
 			gravity = 0;
 
+			if (ballPhysicsSingle.hookTouchBool == false) {
+				//multiplier on close radius\
+				//double multR = (10 / Radius);
 
-			//multiplier on close radius\
-			//double multR = (10 / Radius);
+				if (ballPhysicsSingle.ClockwiseRotation == true) {
+					//theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+					ballPhysicsSingle.theta += (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
 
-			if (ClockwiseRotation == true) {
-				//theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-				theta+= (double)(Multiplier*wZero*frameTimeInSeconds);
+					ballPhysicsSingle.ballXVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
+					ballPhysicsSingle.ballYVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+				} else {
+					//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+					ballPhysicsSingle.theta -= (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
 
-				ballXVelocity = (float)(-ballSpeedFinal * Math.Sin (theta));
-				ballYVelocity = (float)(ballSpeedFinal * Math.Cos (theta));
+					ballPhysicsSingle.ballXVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
+					ballPhysicsSingle.ballYVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+				}
+				/////////
+				ballSprite.PositionX = (float)(ballPhysicsSingle.Radius * Math.Cos (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX);
+				ballSprite.PositionY = (float)(ballPhysicsSingle.Radius * Math.Sin (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY);
+
+
+				///Remove gone far Pivots
+				for (int i = 0; i < visibleJewels.Count; i++) {
+
+
+					if (visibleJewels [i].PositionY < -500) {
+						visibleJewels.RemoveAt (i);
+					}
+
+
+
+				}
 			}
-			else {
-				//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-				theta-= (double)(Multiplier*wZero*frameTimeInSeconds);
-
-				ballXVelocity = (float)(ballSpeedFinal * Math.Sin (theta));
-				ballYVelocity = (float)(-ballSpeedFinal * Math.Cos (theta));
-			}
-			/////////
-			ballSprite.PositionX =(float)(Radius*Math.Cos(theta) + visiblePivots[indexHookPivot].PositionX);
-			ballSprite.PositionY = (float)(Radius*Math.Sin(theta) + visiblePivots[indexHookPivot].PositionY);
-
-
-			///Remove gone far Pivots
-			for (int i =0; i < visibleJewels.Count;i++) {
-
-
-				if (visibleJewels[i].PositionY < -500) {
-					visibleJewels.RemoveAt (i);
-			}
-
-
 
 		}
-
-		}
-
+		//////
+		/// 
+	
 
 		/// OBJECTS AND SPRITES
 
@@ -369,6 +441,16 @@ namespace IsJustABall
 
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ballSprite);
+
+			ballPhysicsSingle.index = 1;
+			ballPhysicsSingle.ballSprite= ballSprite;
+			ballPhysicsSingle.ballXVelocity = 0;
+			ballPhysicsSingle.ballYVelocity = 300;
+			ballPhysicsSingle.hookTouchBool = true;
+			ballPhysicsSingle.theta = 0;
+			ballPhysicsSingle.ThetaZero = 0;
+			ballPhysicsSingle.ClockwiseRotation = true;
+			ballPhysicsList.Add (ballPhysicsSingle);
 
 
 
@@ -833,6 +915,45 @@ namespace IsJustABall
 			scoreLabel.Text = "Score: " + score;
 			//
 		}
+
+		void addPauseButton(){
+			var bounds = mainWindowAux.WindowSizeInPixels;
+
+			float scale =0.0012f*bounds.Width;
+
+			PauseButton = new CCSprite ("PauseButton");
+			PauseButton.Scale = scale; 
+			PauseButton.PositionX = bounds.Width-40;
+			PauseButton.PositionY = bounds.Height-40;
+			mainLayer.AddChild (PauseButton);
+		}
+
+		void addMenuOptions (){
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			float scale =0.002f*bounds.Width;
+
+			ResumeGame = new CCSprite ("ResumeButton");
+			ResumeGame.Scale = scale; 
+			ResumeGame.PositionX = 0.5f*bounds.Width;
+			ResumeGame.PositionY = -0.2f*bounds.Height;
+			mainLayer.AddChild (ResumeGame);
+
+			Restart = new CCSprite ("RestartButton");
+			Restart.Scale = scale; 
+			Restart.PositionX = 0.75f*bounds.Width;
+			Restart.PositionY = -0.2f*bounds.Height;
+			AddChild (Restart);
+
+			MainMenu = new CCSprite ("MainMenuButton");
+			MainMenu.Scale = scale; 
+			MainMenu.PositionX = 0.25f*bounds.Width;
+			MainMenu.PositionY = -0.2f*bounds.Height;
+			AddChild (MainMenu);
+
+		
+		}
+
+
 	}
 
 }

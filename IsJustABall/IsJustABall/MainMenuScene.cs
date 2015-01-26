@@ -52,9 +52,11 @@ namespace IsJustABall
 				//paddleSprite.PositionX = locationOnScreen.X;
 			}
 		    void HandleTouchesBegan(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
-				
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			var locationInverted = touches [0].LocationOnScreen;
+			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 		
-			var location = touches [0].LocationOnScreen;
+
 			bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
 			if (hit)
 			{

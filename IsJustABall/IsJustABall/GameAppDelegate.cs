@@ -14,9 +14,8 @@ namespace IsJustABall
 			//application.ContentSearchPaths.Add("hd");
 
 		//	CCSimpleAudioEngine.SharedEngine.PreloadEffect ("Sounds/tap");
-			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/Backgroundisjustaball1");
-			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/Backgroundisjustaball1");
-
+			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/intro");
+			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/intro",true);
 
 			var bounds = mainWindow.WindowSizeInPixels;
 			CCScene.SetDefaultDesignResolution(bounds.Width, bounds.Height, CCSceneResolutionPolicy.ShowAll);
@@ -36,6 +35,11 @@ namespace IsJustABall
 			//mainWindow.SetDesignResolutionSize(winSize.Width, winSize.Height, CCSceneResolutionPolicy.ExactFit);
 			//CCScene scene = GameStartLayer.GameStartLayerScene(mainWindow);
 			//mainWindow.RunWithScene (scene);
+
+			/*
+
+
+*/
 
 		}
 
