@@ -29,11 +29,15 @@ namespace IsJustABall
 		List<CCSprite> visibleTraps;
 		CCSprite spikeSprite;
 
+		List<CCSprite> PlayerButtonList;
+		CCSprite PlayerButton;
+
+
 		CCLabelTtf scoreLabel;
 		float gravity = 0;
 		double Multiplier =1.05f;
 		float minRotationRadius;
-		int scrollerSpeed= 150;
+		int scrollerSpeed= 25;
 		/*
 		float ballXVelocity =0 ;
 		float ballYVelocity = 300;
@@ -85,7 +89,7 @@ namespace IsJustABall
 			visibleTraps = new List<CCSprite>();
 			DeleteElement = new List<CCSprite> ();
 			ballPhysicsList = new List<ballPhysics> ();
-
+			PlayerButtonList = new List<CCSprite> ();
 			var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.15f*bounds.Height;
 
@@ -93,13 +97,17 @@ namespace IsJustABall
 
 			//addPivot(mainWindow);
 			// add ALL pivots of the level
-
+			EmptyClass delete = new EmptyClass ();
 			addLevelPivots (mainWindow);
 			addLevelJewels (mainWindow);
 			addLevelSpikes (mainWindow);
-			addGameBalls(4);
+			delete.addGameBall(4, mainWindowAux, ballPhysicsList );////TESTING here
+			foreach (var ballPhysicsSingle in ballPhysicsList) {
+				mainLayer.AddChild (ballPhysicsSingle.ballSprite);
+			
+			}
 			addBackground1 (mainWindow);addBackground2 (mainWindow);
-
+			addPlayerButton ();
 
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
@@ -118,7 +126,7 @@ namespace IsJustABall
 
 			// New code:
 			touchListener = new CCEventListenerTouchAllAtOnce ();
-			touchListener.OnTouchesMoved = HandleTouchesMoved; 
+			 
 			touchListener.OnTouchesBegan = HandleTouchesBegan; 
 			AddEventListener (touchListener, this);
 
@@ -173,109 +181,49 @@ namespace IsJustABall
 		}
 
 
-		void HandleTouchesMoved (System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
+		void HandleTouchesBegan (System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
 		{
-			// we only care about the first touch:
-			//var locationOnScreen = touches [0].LocationOnScreen;
-			//paddleSprite.PositionX = locationOnScreen.X;
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			var locationInverted = touches [0].LocationOnScreen;
+			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
+
+			CCPoint touchPoint = new CCPoint (0.0f*bounds.Width, 0.0f*bounds.Height);
+			// 1 FIRST PLAYER
+			bool hit =  location.IsNear(touchPoint, 200.0f) ;
+			if (hit)
+			{
+				CalculateHookPhysics (1);
+
+			}
+			// 2 SECOND PLAYER
+			touchPoint.X = bounds.Width;
+			hit =  location.IsNear(touchPoint, 200.0f) ;
+			if (hit)
+			{
+				CalculateHookPhysics (2);
+
+			}
+			// 3 THIRD PLAYER
+			touchPoint.X = 0.0f;touchPoint.Y = bounds.Height;
+			hit =  location.IsNear(touchPoint, 200.0f) ;
+			if (hit)
+			{
+				CalculateHookPhysics (3);
+
+			}
+			// 4 FOURTH PLAYER
+			touchPoint.X =bounds.Width;touchPoint.Y = bounds.Height;
+			hit =  location.IsNear(touchPoint, 200.0f) ;
+			if (hit)
+			{
+				CalculateHookPhysics (4);
+
+			}
+
+
+
 		}
-		void HandleTouchesBegan(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
-			foreach(var ballPhysicsSingle in ballPhysicsList){
-			double closestPivot = 10000;
-			for (int i = 0; i < visiblePivots.Count; i++) {
-					ballPhysicsSingle.dRadius_X = ballSprite.PositionX - visiblePivots [i].PositionX;
-					ballPhysicsSingle.dRadius_Y = ballSprite.PositionY - visiblePivots [i].PositionY;
-
-
-					ballPhysicsSingle.temp = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
-					ballPhysicsSingle.temp = Math.Pow (ballPhysicsSingle.temp, 0.5);
-
-					if (ballPhysicsSingle.temp < closestPivot) {
-						closestPivot = ballPhysicsSingle.temp;
-						ballPhysicsSingle.indexHookPivot = i;
-
-				}
-
-
-			}
-
-				if (closestPivot < minRotationRadius && ballPhysicsSingle.hookTouchBool == true) {
-					ballPhysicsSingle.hookTouchBool = false;//Toggle hook
-				//scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
-
-				} else if (ballPhysicsSingle.hookTouchBool == false) {
-					ballPhysicsSingle.hookTouchBool = true;
-				//scoreLabel.Text = "Free";
-			}
-
-
-
-
-
-
-
-				if (ballPhysicsSingle.hookTouchBool == false) {
-				//Set values for spped and radius or rotation raound Pivot
-
-					ballPhysicsSingle.dRadius_X = ballSprite.PositionX - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX;
-					ballPhysicsSingle.dRadius_Y = ballSprite.PositionY - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY;
-
-					ballPhysicsSingle.Radius = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
-					ballPhysicsSingle.Radius = Math.Pow (ballPhysicsSingle.Radius, 0.5);
-
-
-					ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballXVelocity, 2) + Math.Pow (ballPhysicsSingle.ballYVelocity, 2);
-					ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballSpeed, 0.5d);
-
-					ballPhysicsSingle.CosThetaZero = ballPhysicsSingle.dRadius_X / ballPhysicsSingle.Radius;
-					ballPhysicsSingle.SinThetaZero = ballPhysicsSingle.dRadius_Y / ballPhysicsSingle.Radius;
-
-					ballPhysicsSingle.CosAlpha = (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballXVelocity + ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballYVelocity) / (ballPhysicsSingle.Radius * ballPhysicsSingle.ballSpeed);
-
-					if (Math.Pow (ballPhysicsSingle.CosAlpha, 2) < 0.5) {
-						ballPhysicsSingle.CosAlpha = Math.Pow (0.5, 0.5);
-				}
-					ballPhysicsSingle.SinAlpha = (1 - Math.Pow (ballPhysicsSingle.CosAlpha, 2));
-					ballPhysicsSingle.SinAlpha = Math.Pow (ballPhysicsSingle.SinAlpha, 0.5f);
-
-
-					ballPhysicsSingle.wZero = ballPhysicsSingle.ballSpeed / ballPhysicsSingle.Radius;
-				//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
-					ballPhysicsSingle.ballSpeedFinal = ballPhysicsSingle.Radius * Multiplier * ballPhysicsSingle.wZero;
-
-					ballPhysicsSingle.ThetaZero = Math.Acos (ballPhysicsSingle.CosThetaZero);
-
-				//Second Quadrant
-					if (ballPhysicsSingle.SinThetaZero > 0 && ballPhysicsSingle.CosThetaZero < 0) {
-						ballPhysicsSingle.ThetaZero = (1 / 2) * Math.PI + ballPhysicsSingle.ThetaZero;
-				}
-				//Third Quadrant
-					if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero < 0) {
-						ballPhysicsSingle.ThetaZero = (2) * Math.PI - ballPhysicsSingle.ThetaZero;
-				}
-
-
-
-				//Fourth Quadrant
-					if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero > 0) {
-						ballPhysicsSingle.ThetaZero = -ballPhysicsSingle.ThetaZero;
-				}
-					ballPhysicsSingle.theta = ballPhysicsSingle.ThetaZero;
-				//Define if it is clockwise or anticlockwise rotation
-
-					if (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballYVelocity - ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballXVelocity <= 0) {
-						ballPhysicsSingle.ClockwiseRotation = false;
-					//scoreLabel.Text += "ClockwiseRotation: false";
-				} else {
-						ballPhysicsSingle.ClockwiseRotation = true;
-					//scoreLabel.Text += "ClockwiseRotation: true";
-
-				}
-			}
-
-
-		}//foreach
-		}
+	
 
 
 
@@ -285,14 +233,14 @@ namespace IsJustABall
 				if (ballPhysicsSingle.hookTouchBool == true) {
 					// This is a linear approximation, so not 100% accurate
 					ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * gravity;
-					ballSprite.PositionX += ballPhysicsSingle.ballXVelocity * frameTimeInSeconds;
-					ballSprite.PositionY += ballPhysicsSingle.ballYVelocity * frameTimeInSeconds;
+					ballPhysicsSingle.ballSprite.PositionX += ballPhysicsSingle.ballXVelocity * frameTimeInSeconds;
+					ballPhysicsSingle.ballSprite.PositionY += ballPhysicsSingle.ballYVelocity * frameTimeInSeconds;
 					// New code:
 					//score++;
 					//scoreLabel.Text = "Score: " + score;
 					// Check if the ball is either too far to the right or left:
-					float ballRight = ballSprite.BoundingBoxTransformedToParent.MaxX;
-					float ballLeft = ballSprite.BoundingBoxTransformedToParent.MinX;
+					float ballRight = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MaxX;
+					float ballLeft = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MinX;
 
 					float screenRight = mainLayer.VisibleBoundsWorldspace.MaxX;
 					float screenLeft = mainLayer.VisibleBoundsWorldspace.MinX;
@@ -307,8 +255,8 @@ namespace IsJustABall
 
 					// Check if the ball is either too far to the right or left:
 
-					float ballTop = ballSprite.BoundingBoxTransformedToParent.MaxY;
-					float ballBottom = ballSprite.BoundingBoxTransformedToParent.MinY;
+					float ballTop = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MaxY;
+					float ballBottom = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MinY;
 
 					float screenTop = mainLayer.VisibleBoundsWorldspace.MaxY;
 					float screenBottom = mainLayer.VisibleBoundsWorldspace.MinY;
@@ -343,8 +291,8 @@ namespace IsJustABall
 						ballPhysicsSingle.ballYVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
 					}
 					/////////
-					ballSprite.PositionX = (float)(ballPhysicsSingle.Radius * Math.Cos (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX);
-					ballSprite.PositionY = (float)(ballPhysicsSingle.Radius * Math.Sin (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY);
+					ballPhysicsSingle.ballSprite.PositionX = (float)(ballPhysicsSingle.Radius * Math.Cos (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX);
+					ballPhysicsSingle.ballSprite.PositionY = (float)(ballPhysicsSingle.Radius * Math.Sin (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY);
 
 
 					///Remove gone far Pivots
@@ -403,22 +351,44 @@ namespace IsJustABall
 			return ballSprite;
 		}
 
-		void addGameBalls(int playersCount){
-			for (int i = 1; i <= playersCount; i++) {
 
-				ballPhysics ballPhysicsSingle = new ballPhysics ();
-				ballPhysicsSingle.index = i;
-				ballPhysicsSingle.ballSprite= addBall (mainWindowAux, i);
-				ballPhysicsSingle.ballXVelocity = 0;
-				ballPhysicsSingle.ballYVelocity = 300;
-				ballPhysicsSingle.hookTouchBool = true;
-				ballPhysicsSingle.theta = 0;
-				ballPhysicsSingle.ThetaZero = 0;
-				ballPhysicsSingle.ClockwiseRotation = true;
-				ballPhysicsList.Add (ballPhysicsSingle);
-		
-			}		
+		void addPlayerButton(int playerCount){
+			var bounds = mainWindowAux.WindowSizeInPixels;
+
+			for(){
+			switch (i) {
+			case 1:
+				ballSprite = new CCSprite ("blueball");
+				ballSprite.PositionX = 0.2f*bounds.Width;
+				ballSprite.PositionY = -0.1f*bounds.Height;
+				break;
+			case 2:
+				ballSprite = new CCSprite ("redball");
+				ballSprite.PositionX = 0.4f*bounds.Width;
+				ballSprite.PositionY = -0.1f*bounds.Height;
+				break;
+			case 3:
+				ballSprite = new CCSprite ("greenball");
+				ballSprite.PositionX = 0.6f*bounds.Width;
+				ballSprite.PositionY = -0.1f*bounds.Height;
+				break;
+			case 4:
+				ballSprite = new CCSprite ("yellowball");
+				ballSprite.PositionX = 0.8f*bounds.Width;
+				ballSprite.PositionY = -0.1f*bounds.Height;
+				break;
+			default:
+				ballSprite = new CCSprite ("blueball");
+				ballSprite.PositionX = 0.2f*bounds.Width;
+				ballSprite.PositionY = -0.1f*bounds.Height;
+				break;
+			}
+		ballSprite.Scale = 0.0005f*bounds.Width;
+		mainLayer.AddChild (ballSprite);
+			
+				}
 		}
+
 
 		CCSprite addDiamond(CCWindow mainWindow, float diamondPosX,float diamondPosY,float scale){
 			var bounds = mainWindow.WindowSizeInPixels;
@@ -477,6 +447,45 @@ namespace IsJustABall
 
 
 		}
+
+		CCSprite addPlayerButton(CCWindow mainWindow, int ballColor){
+			var bounds = mainWindow.WindowSizeInPixels;
+			switch (ballColor) {
+			case 1:
+				ballSprite = new CCSprite ("blueballButton");
+				ballSprite.PositionX = 0.0f*bounds.Width;
+				ballSprite.PositionY = 0.0f*bounds.Height;
+				break;
+			case 2:
+				ballSprite = new CCSprite ("redballButton");
+				ballSprite.PositionX = bounds.Width;
+				ballSprite.PositionY = -0.0f*bounds.Height;
+				break;
+			case 3:
+				ballSprite = new CCSprite ("greenballButton");
+				ballSprite.PositionX = 0.0f*bounds.Width;
+				ballSprite.PositionY = bounds.Height;
+				break;
+			case 4:
+				ballSprite = new CCSprite ("yellowballButton");
+				ballSprite.PositionX = bounds.Width;
+				ballSprite.PositionY = bounds.Height;
+				break;
+			default:
+				ballSprite = new CCSprite ("blueballButton");
+				ballSprite.PositionX = 0.2f * bounds.Width;
+				ballSprite.PositionY = -0.1f * bounds.Height;
+
+				break;
+			}
+			ballSprite.Scale = 0.0005f*bounds.Width;
+
+
+			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
+			mainLayer.AddChild (ballSprite);
+			return ballSprite;
+		}
+
 
 
 
@@ -606,8 +615,8 @@ namespace IsJustABall
 		void addLevelPivots (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0002f*bounds.Width;
-			Level2Array LevelClass = new Level2Array ();
-			List<Level2Array.Pivot> ClassList = new List<Level2Array.Pivot> ();
+			Multi4Level1 LevelClass = new Multi4Level1 ();
+			List<Multi4Level1.Pivot> ClassList = new List<Multi4Level1.Pivot> ();
 
 			ClassList = LevelClass.PivotMaker ();
 
@@ -648,8 +657,8 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 			float jewelScale=0.0004f*bounds.Width;
 
-			Level2Array LevelClass = new Level2Array ();
-			List<Level2Array.Jewel> ClassList = new List<Level2Array.Jewel> ();
+			Multi4Level1 LevelClass = new Multi4Level1 ();
+			List<Multi4Level1.Jewel> ClassList = new List<Multi4Level1.Jewel> ();
 
 			ClassList = LevelClass.JewelMaker ();
 
@@ -691,39 +700,7 @@ namespace IsJustABall
 				}
 			}
 
-			foreach (var diamond in visibleJewels) {
-				bool hit = diamond.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
-				if (hit)
-				{
-					hitJewels.Add(diamond);
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-					//Explode(banana.Position);
-					diamond.RemoveFromParent();
-
-
-
-				}
-			}
-
-			/*
-			foreach (var diamond  in hitJewels)
-			{
-
-				score += 50;
-				scoreLabel.Text = "Score: " + score;
-			}
-			foreach (var ruby  in hitJewels)
-			{   
-				ruby.RemoveFromParent(true);
-
-				score += 10;
-				scoreLabel.Text = "Score: " + score;
-				break;
-
-			}*/
-
-			hitJewels.Clear();
-
+	
 
 		}
 		//SPIKE
@@ -792,8 +769,8 @@ namespace IsJustABall
 		void addLevelSpikes (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0004f*bounds.Width;
-			Level2Array LevelClass = new Level2Array ();
-			List<Level2Array.Spike> ClassList = new List<Level2Array.Spike> ();
+			Multi4Level1 LevelClass = new Multi4Level1 ();
+			List<Multi4Level1.Spike> ClassList = new List<Multi4Level1.Spike> ();
 
 			ClassList = LevelClass.SpikeMaker ();
 
@@ -823,6 +800,110 @@ namespace IsJustABall
 			}
 
 		}
+
+
+
+		public void CalculateHookPhysics(int index){
+			foreach(var ballPhysicsSingle in ballPhysicsList){
+				if(ballPhysicsSingle.index==index){
+				double closestPivot = 10000;
+				for (int i = 0; i < visiblePivots.Count; i++) {
+					ballPhysicsSingle.dRadius_X = ballPhysicsSingle.ballSprite.PositionX - visiblePivots [i].PositionX;
+					ballPhysicsSingle.dRadius_Y = ballPhysicsSingle.ballSprite.PositionY - visiblePivots [i].PositionY;
+
+
+					ballPhysicsSingle.temp = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
+					ballPhysicsSingle.temp = Math.Pow (ballPhysicsSingle.temp, 0.5);
+
+					if (ballPhysicsSingle.temp < closestPivot) {
+						closestPivot = ballPhysicsSingle.temp;
+						ballPhysicsSingle.indexHookPivot = i;
+
+					}
+
+
+				}
+
+				if (closestPivot < minRotationRadius && ballPhysicsSingle.hookTouchBool == true) {
+					ballPhysicsSingle.hookTouchBool = false;//Toggle hook
+					//scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
+
+				} else if (ballPhysicsSingle.hookTouchBool == false) {
+					ballPhysicsSingle.hookTouchBool = true;
+					//scoreLabel.Text = "Free";
+				}
+
+
+
+
+
+
+
+				if (ballPhysicsSingle.hookTouchBool == false) {
+					//Set values for spped and radius or rotation raound Pivot
+
+					ballPhysicsSingle.dRadius_X = ballPhysicsSingle.ballSprite.PositionX - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX;
+					ballPhysicsSingle.dRadius_Y = ballPhysicsSingle.ballSprite.PositionY - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY;
+
+					ballPhysicsSingle.Radius = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
+					ballPhysicsSingle.Radius = Math.Pow (ballPhysicsSingle.Radius, 0.5);
+
+
+					ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballXVelocity, 2) + Math.Pow (ballPhysicsSingle.ballYVelocity, 2);
+					ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballSpeed, 0.5d);
+
+					ballPhysicsSingle.CosThetaZero = ballPhysicsSingle.dRadius_X / ballPhysicsSingle.Radius;
+					ballPhysicsSingle.SinThetaZero = ballPhysicsSingle.dRadius_Y / ballPhysicsSingle.Radius;
+
+					ballPhysicsSingle.CosAlpha = (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballXVelocity + ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballYVelocity) / (ballPhysicsSingle.Radius * ballPhysicsSingle.ballSpeed);
+
+					if (Math.Pow (ballPhysicsSingle.CosAlpha, 2) < 0.5) {
+						ballPhysicsSingle.CosAlpha = Math.Pow (0.5, 0.5);
+					}
+					ballPhysicsSingle.SinAlpha = (1 - Math.Pow (ballPhysicsSingle.CosAlpha, 2));
+					ballPhysicsSingle.SinAlpha = Math.Pow (ballPhysicsSingle.SinAlpha, 0.5f);
+
+
+					ballPhysicsSingle.wZero = ballPhysicsSingle.ballSpeed / ballPhysicsSingle.Radius;
+					//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
+					ballPhysicsSingle.ballSpeedFinal = ballPhysicsSingle.Radius * Multiplier * ballPhysicsSingle.wZero;
+
+					ballPhysicsSingle.ThetaZero = Math.Acos (ballPhysicsSingle.CosThetaZero);
+
+					//Second Quadrant
+					if (ballPhysicsSingle.SinThetaZero > 0 && ballPhysicsSingle.CosThetaZero < 0) {
+						ballPhysicsSingle.ThetaZero = (1 / 2) * Math.PI + ballPhysicsSingle.ThetaZero;
+					}
+					//Third Quadrant
+					if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero < 0) {
+						ballPhysicsSingle.ThetaZero = (2) * Math.PI - ballPhysicsSingle.ThetaZero;
+					}
+
+
+
+					//Fourth Quadrant
+					if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero > 0) {
+						ballPhysicsSingle.ThetaZero = -ballPhysicsSingle.ThetaZero;
+					}
+					ballPhysicsSingle.theta = ballPhysicsSingle.ThetaZero;
+					//Define if it is clockwise or anticlockwise rotation
+
+					if (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballYVelocity - ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballXVelocity <= 0) {
+						ballPhysicsSingle.ClockwiseRotation = false;
+						//scoreLabel.Text += "ClockwiseRotation: false";
+					} else {
+						ballPhysicsSingle.ClockwiseRotation = true;
+						//scoreLabel.Text += "ClockwiseRotation: true";
+
+					}
+				}
+
+				}
+			}//foreach
+			
+		}
+
+
 
 
 		void Explode (CCPoint pt)

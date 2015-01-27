@@ -110,5 +110,9 @@
     <AndroidAsset Include="Assets\Content\RestartButton.png" />
     <AndroidAsset Include="Assets\Content\ResumeButton.png" />
     <AndroidAsset Include="Assets\Content\PauseButton.png" />
+    <AndroidAsset Include="Assets\Content\blueballButton.png" />
+    <AndroidAsset Include="Assets\Content\greenballButton.png" />
+    <AndroidAsset Include="Assets\Content\redballButton.png" />
+    <AndroidAsset Include="Assets\Content\yellowballButton.png" />
   </ItemGroup>
 </Project>

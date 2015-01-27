@@ -1,12 +1,12 @@
 ﻿<Properties StartupItem="IsJustABall.Android\IsJustABall.Android.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" PreferredExecutionTarget="Android.5e353f50" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall\GameAppDelegate.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.S2" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="s:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\MultiPlayerScrollerScene.cs">
     <Files>
-      <File FileName="IsJustABall\MainMenuScene.cs" Line="12" Column="12" />
-      <File FileName="IsJustABall\OnePlayerScrollerScene.cs" Line="65" Column="65" />
-      <File FileName="IsJustABall\GameAppDelegate.cs" Line="94" Column="94" />
-      <File FileName="IsJustABall\GameScene.cs" Line="1" Column="1" />
-      <File FileName="IsJustABall\MultiPlayerScrollerScene.cs" Line="39" Column="39" />
+      <File FileName="s:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\MultiPlayerScrollerScene.cs" Line="1" Column="1" />
+      <File FileName="IsJustABall\FunctionsClasses\EmptyClass.cs" Line="45" Column="45" />
+      <File FileName="IsJustABall\Levels\Level2Array.cs" Line="27" Column="27" />
+      <File FileName="IsJustABall\Levels\Multi4Level1.cs" Line="21" Column="21" />
+      <File FileName="IsJustABall\ballPhysics.cs" Line="24" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
