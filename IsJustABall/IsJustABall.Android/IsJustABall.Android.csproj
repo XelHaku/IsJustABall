@@ -88,6 +88,7 @@
   <ItemGroup>
     <Folder Include="Assets\Content\" />
     <Folder Include="Assets\Content\Sounds\" />
+    <Folder Include="Assets\Content\plist\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\blueball.png" />
@@ -114,5 +115,9 @@
     <AndroidAsset Include="Assets\Content\greenballButton.png" />
     <AndroidAsset Include="Assets\Content\redballButton.png" />
     <AndroidAsset Include="Assets\Content\yellowballButton.png" />
+    <AndroidAsset Include="Assets\Content\fourplayermenubutton.png" />
+    <AndroidAsset Include="Assets\Content\menutitle.png" />
+    <AndroidAsset Include="Assets\Content\singleplayermenubutton.png" />
+    <AndroidAsset Include="Assets\Content\plist\fire.plist" />
   </ItemGroup>
 </Project>

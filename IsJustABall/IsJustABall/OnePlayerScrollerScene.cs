@@ -708,61 +708,6 @@ namespace IsJustABall
 		}
 
 
-		//Remove jewel and and Score Counter
-		void checkJewel(){
-			foreach (var ruby in visibleJewels) {
-				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
-				if (hit)
-				{
-					hitJewels.Add(ruby);
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-					//Explode(banana.Position);
-					ruby.RemoveFromParent(true);
-					visibleJewels.Remove (ruby);
-					score += 10;
-					DisplayScore (score);
-					break;
-
-				}
-			}
-
-			foreach (var diamond in visibleJewels) {
-				bool hit = diamond.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
-				if (hit)
-				{
-					hitJewels.Add(diamond);
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-					//Explode(banana.Position);
-					diamond.RemoveFromParent();
-
-
-
-				}
-			}
-
-			/*
-			foreach (var diamond  in hitJewels)
-			{
-
-				score += 50;
-				scoreLabel.Text = "Score: " + score;
-			}
-			foreach (var ruby  in hitJewels)
-			{   
-				ruby.RemoveFromParent(true);
-
-				score += 10;
-				scoreLabel.Text = "Score: " + score;
-				break;
-
-			}*/
-
-			hitJewels.Clear();
-
-		
-		}
-		//SPIKE
-
 		CCSprite AddSTATIC_Spike (CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
 		{   
 
@@ -859,6 +804,17 @@ namespace IsJustABall
 
 		}
 
+		#region PARTICLE EFFECTS
+		void ExplodeTEst (CCPoint pt)
+		{
+
+			var particles = new[] { "fire.plist" };
+			foreach (string p in particles) {
+				var ps = new CCParticleSystem (p);
+				ps.Position = pt;
+				AddChild (ps);
+			}
+		}
 
 		void Explode (CCPoint pt)
 		{
@@ -867,6 +823,48 @@ namespace IsJustABall
 			explosion.AutoRemoveOnFinish = true;
 			mainLayer.AddChild (explosion);
 		}
+
+
+		#endregion
+
+		#region CHECK COLLISION
+		//Remove jewel and and Score Counter
+		void checkJewel(){
+			foreach (var ruby in visibleJewels) {
+				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
+				if (hit)
+				{
+					hitJewels.Add(ruby);
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//Explode(banana.Position);
+					ruby.RemoveFromParent(true);
+					visibleJewels.Remove (ruby);
+					score += 10;
+					DisplayScore (score);
+					break;
+
+				}
+			}
+
+			foreach (var diamond in visibleJewels) {
+				bool hit = diamond.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
+				if (hit)
+				{
+					hitJewels.Add(diamond);
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//Explode(banana.Position);
+					diamond.RemoveFromParent();
+
+
+
+				}
+			}
+
+			hitJewels.Clear();
+
+
+		}
+		//SPIKE
 
 		void checkTrap(){
 			foreach (var spikeSprite in visibleTraps) {
@@ -895,7 +893,7 @@ namespace IsJustABall
 
 
 		}
-
+		#endregion
 		//ENDGAME
 		void ShouldEndGame (){
 			if (score <= -100) {

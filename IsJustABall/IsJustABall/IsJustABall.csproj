@@ -39,8 +39,8 @@
     <Compile Include="MultiPlayerScrollerScene.cs" />
     <Compile Include="ballPhysics.cs" />
     <Compile Include="LayerExample.cs" />
-    <Compile Include="FunctionsClasses\EmptyClass.cs" />
     <Compile Include="Levels\Multi4Level1.cs" />
+    <Compile Include="FunctionsClasses\addFourBalls.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

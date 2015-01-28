@@ -30,7 +30,7 @@ namespace IsJustABall
 		CCSprite spikeSprite;
 
 		List<CCSprite> PlayerButtonList;
-		CCSprite PlayerButton;
+
 
 
 		CCLabelTtf scoreLabel;
@@ -38,48 +38,13 @@ namespace IsJustABall
 		double Multiplier =1.05f;
 		float minRotationRadius;
 		int scrollerSpeed= 25;
-		/*
-		float ballXVelocity =0 ;
-		float ballYVelocity = 300;
-		// How much to modify the ball's y velocity per second:
-		;
-		//hookTouchBool=!hookTouchBool// to toggle on Touch
-		bool hookTouchBool = true;
-		//Speed for scroller level
-
-		//Declare variables for HookedParticle Method
-		double dRadius_X;
-		double dRadius_Y;
-		double Radius;
-		double temp;
-		double ballSpeed;
-		double SinThetaZero;
-		double CosThetaZero;
-		double CosAlpha;
-		double SinAlpha;
-		double theta=0;
-		double ThetaZero=0;
-
-		double wZero;
-		double ballSpeedFinal;
-		bool ClockwiseRotation = true;
-
-
-
-		/// //////////////////
-		//needed for multiple Pivots
-		float hookedPivotPosX,hookedPivotPosY;
-		int indexHookPivot;
-		/// 
-		int score = 0;
-*/
-		//Movementson Pivots
-
-
 		CCEventListenerTouchAllAtOnce touchListener;
 
 		public MultiPlayerScrollerScene(CCWindow mainWindow) : base(mainWindow)
-		{
+		{  CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
+			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+
+
 			mainWindowAux = mainWindow;
 			mainLayer = new CCLayer ();
 			AddChild (mainLayer);
@@ -97,17 +62,17 @@ namespace IsJustABall
 
 			//addPivot(mainWindow);
 			// add ALL pivots of the level
-			EmptyClass delete = new EmptyClass ();
+			addFourBalls addBallsClass = new addFourBalls ();
 			addLevelPivots (mainWindow);
 			addLevelJewels (mainWindow);
 			addLevelSpikes (mainWindow);
-			delete.addGameBall(4, mainWindowAux, ballPhysicsList );////TESTING here
+			addBallsClass.addGameBall(4, mainWindowAux, ballPhysicsList );////TESTING here
 			foreach (var ballPhysicsSingle in ballPhysicsList) {
 				mainLayer.AddChild (ballPhysicsSingle.ballSprite);
 			
 			}
 			addBackground1 (mainWindow);addBackground2 (mainWindow);
-			addPlayerButton ();
+			addPlayerButton (4);
 
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
@@ -131,7 +96,7 @@ namespace IsJustABall
 			AddEventListener (touchListener, this);
 
 		}
-
+		#region RUNGAMELOGIC
 		void RunGameLogic(float frameTimeInSeconds)
 		{ foreach(var ballPhysicsSingle in ballPhysicsList){  
 
@@ -179,8 +144,8 @@ namespace IsJustABall
 
 		}
 		}
-
-
+		#endregion
+		#region HANDLE TOUCHSCREEN
 		void HandleTouchesBegan (System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
 		{
 			var bounds = mainWindowAux.WindowSizeInPixels;
@@ -225,8 +190,8 @@ namespace IsJustABall
 		}
 	
 
-
-
+		#endregion
+		#region Free and Hooked Particle States
 		void freeParticle(float frameTimeInSeconds){
 			gravity = 0;
 			foreach (var ballPhysicsSingle in ballPhysicsList){
@@ -310,10 +275,10 @@ namespace IsJustABall
 		}//end foreach
 
 		}
-
+		#endregion
 
 		/// OBJECTS AND SPRITES
-
+			#region OBJECTS AND SPRITES
 		CCSprite addBall(CCWindow mainWindow, int ballColor){
 			var bounds = mainWindow.WindowSizeInPixels;
 			switch (ballColor) {
@@ -351,43 +316,53 @@ namespace IsJustABall
 			return ballSprite;
 		}
 
-
+		//Corner buttons for each Player
 		void addPlayerButton(int playerCount){
 			var bounds = mainWindowAux.WindowSizeInPixels;
-
-			for(){
-			switch (i) {
-			case 1:
-				ballSprite = new CCSprite ("blueball");
-				ballSprite.PositionX = 0.2f*bounds.Width;
-				ballSprite.PositionY = -0.1f*bounds.Height;
-				break;
-			case 2:
-				ballSprite = new CCSprite ("redball");
-				ballSprite.PositionX = 0.4f*bounds.Width;
-				ballSprite.PositionY = -0.1f*bounds.Height;
-				break;
-			case 3:
-				ballSprite = new CCSprite ("greenball");
-				ballSprite.PositionX = 0.6f*bounds.Width;
-				ballSprite.PositionY = -0.1f*bounds.Height;
-				break;
-			case 4:
-				ballSprite = new CCSprite ("yellowball");
-				ballSprite.PositionX = 0.8f*bounds.Width;
-				ballSprite.PositionY = -0.1f*bounds.Height;
-				break;
-			default:
-				ballSprite = new CCSprite ("blueball");
-				ballSprite.PositionX = 0.2f*bounds.Width;
-				ballSprite.PositionY = -0.1f*bounds.Height;
-				break;
-			}
-		ballSprite.Scale = 0.0005f*bounds.Width;
-		mainLayer.AddChild (ballSprite);
-			
+			float scale = 0.002f * bounds.Width;
+			for (int i = 1; i <= playerCount; i++) {
+				switch (i) {
+				case 1:
+					ballSprite = new CCSprite ("blueballButton");
+					ballSprite.PositionX = 0.0f * bounds.Width;
+					ballSprite.PositionY = 0.0f * bounds.Height;
+					ballSprite.Scale = scale;
+					mainLayer.AddChild (ballSprite);
+					break;
+				case 2:
+					ballSprite = new CCSprite ("redballButton");
+					ballSprite.PositionX = 1.0f * bounds.Width;
+					ballSprite.PositionY = 0.0f * bounds.Height;
+					ballSprite.Scale = scale;
+					mainLayer.AddChild (ballSprite);
+					break;
+				case 3:
+					ballSprite = new CCSprite ("greenballButton");
+					ballSprite.PositionX = 0.0f * bounds.Width;
+					ballSprite.PositionY = 1.0f * bounds.Height;
+					ballSprite.Scale = scale;
+					mainLayer.AddChild (ballSprite);
+					break;
+				case 4:
+					ballSprite = new CCSprite ("yellowballButton");
+					ballSprite.PositionX = 1.0f * bounds.Width;
+					ballSprite.PositionY = 1.0f * bounds.Height;
+					ballSprite.Scale = scale;
+					mainLayer.AddChild (ballSprite);
+					break;
+				default:
+					ballSprite = new CCSprite ("blueballButton");
+					ballSprite.PositionX = 0.0f * bounds.Width;
+					ballSprite.PositionY = 0.0f * bounds.Height;
+					ballSprite.Scale = scale;
+					mainLayer.AddChild (ballSprite);
+					break;
 				}
+
+			
+			}
 		}
+
 
 
 		CCSprite addDiamond(CCWindow mainWindow, float diamondPosX,float diamondPosY,float scale){
@@ -448,46 +423,10 @@ namespace IsJustABall
 
 		}
 
-		CCSprite addPlayerButton(CCWindow mainWindow, int ballColor){
-			var bounds = mainWindow.WindowSizeInPixels;
-			switch (ballColor) {
-			case 1:
-				ballSprite = new CCSprite ("blueballButton");
-				ballSprite.PositionX = 0.0f*bounds.Width;
-				ballSprite.PositionY = 0.0f*bounds.Height;
-				break;
-			case 2:
-				ballSprite = new CCSprite ("redballButton");
-				ballSprite.PositionX = bounds.Width;
-				ballSprite.PositionY = -0.0f*bounds.Height;
-				break;
-			case 3:
-				ballSprite = new CCSprite ("greenballButton");
-				ballSprite.PositionX = 0.0f*bounds.Width;
-				ballSprite.PositionY = bounds.Height;
-				break;
-			case 4:
-				ballSprite = new CCSprite ("yellowballButton");
-				ballSprite.PositionX = bounds.Width;
-				ballSprite.PositionY = bounds.Height;
-				break;
-			default:
-				ballSprite = new CCSprite ("blueballButton");
-				ballSprite.PositionX = 0.2f * bounds.Width;
-				ballSprite.PositionY = -0.1f * bounds.Height;
-
-				break;
-			}
-			ballSprite.Scale = 0.0005f*bounds.Width;
+	
 
 
-			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
-			mainLayer.AddChild (ballSprite);
-			return ballSprite;
-		}
-
-
-
+		#region PIVOTS
 
 		CCSprite AddSTATIC_Pivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
 		{   
@@ -650,7 +589,7 @@ namespace IsJustABall
 			}
 
 		}
-
+		#endregion
 		//JEWELS
 
 		void addLevelJewels (CCWindow mainWindow){
@@ -681,28 +620,9 @@ namespace IsJustABall
 		}
 
 
-		//Remove jewel and and Score Counter
-		void checkJewel(){
-			foreach (var ruby in visibleJewels) {
-				foreach (var ballPhysicsSingle in ballPhysicsList) {
-					bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect (ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent);
-					if (hit) {
-						hitJewels.Add (ruby);
-						//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-						//Explode(banana.Position);
-						ruby.RemoveFromParent (true);
-						visibleJewels.Remove (ruby);
-						ballPhysicsSingle.score += 10;
-						DisplayScore (ballPhysicsSingle.score);
-						break;
-
-					}
-				}
-			}
-
 	
-
-		}
+	
+		#region SPIKES
 		//SPIKE
 
 		CCSprite AddSTATIC_Spike (CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
@@ -800,8 +720,9 @@ namespace IsJustABall
 			}
 
 		}
-
-
+		#endregion
+		
+	#endregion
 
 		public void CalculateHookPhysics(int index){
 			foreach(var ballPhysicsSingle in ballPhysicsList){
@@ -906,14 +827,30 @@ namespace IsJustABall
 
 
 
-		void Explode (CCPoint pt)
-		{
-			var explosion = new CCParticleExplosion (pt); //TODO: manage "better" for performance when "many" particles
-			explosion.TotalParticles = 18;
-			explosion.AutoRemoveOnFinish = true;
-			mainLayer.AddChild (explosion);
+	
+
+	#region CHECK COLLISION
+	//Remove jewel and and Score Counter
+		void checkJewel(){
+		foreach (var ruby in visibleJewels) {
+			foreach (var ballPhysicsSingle in ballPhysicsList) {
+				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect (ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent);
+				if (hit) {
+					hitJewels.Add (ruby);
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//Explode(banana.Position);
+					ruby.RemoveFromParent (true);
+					visibleJewels.Remove (ruby);
+					ballPhysicsSingle.score += 10;
+					DisplayScore (ballPhysicsSingle.score);
+					break;
+
+				}
+			}
 		}
 
+		}
+	
 		void checkTrap(){
 			foreach (var spikeSprite in visibleTraps) {
 				foreach (var ballPhysicsSingle in ballPhysicsList) {
@@ -943,7 +880,17 @@ namespace IsJustABall
 			}
 
 		}
+		#endregion
+	#region PARTICLE EFFECTS
+		void Explode (CCPoint pt)
+		{
+			var explosion = new CCParticleExplosion (pt); //TODO: manage "better" for performance when "many" particles
+			explosion.TotalParticles = 18;
+			explosion.AutoRemoveOnFinish = true;
+			mainLayer.AddChild (explosion);
+		}
 
+		#endregion
 		//ENDGAME
 		void ShouldEndGame (){
 			//if (score <= -100) {
