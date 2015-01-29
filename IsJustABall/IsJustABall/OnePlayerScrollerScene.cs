@@ -7,6 +7,7 @@ namespace IsJustABall
 {
 	public class OnePlayerScrollerScene : CCScene
 	{
+		#region VARIABLES INIT
 		CCWindow mainWindowAux;
 		CCLayer mainLayer;
 		ballPhysics ballPhysicsSingle = new ballPhysics ();
@@ -24,18 +25,14 @@ namespace IsJustABall
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
 
-
 		List<CCSprite> visibleTraps;
 		CCSprite spikeSprite;
 
 		CCLabelTtf scoreLabel;
 
-
-
 		// How much to modify the ball's y velocity per second:
 		float gravity = 0;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
-
 		//Speed for scroller level
 		int scrollerSpeed= 150;
 		//Declare variables for HookedParticle Method
@@ -48,15 +45,15 @@ namespace IsJustABall
 
 		//Movementson Pivots
 
-	
+
 
 		CCEventListenerTouchAllAtOnce touchListener;
-
+		#endregion
 		public OnePlayerScrollerScene(CCWindow mainWindow) : base(mainWindow)
-		{
+		{   var bounds = mainWindow.WindowSizeInPixels;
+			minRotationRadius = 0.15f*bounds.Height;
 			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
 			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
-
 
 			mainWindowAux = mainWindow;
 			mainLayer = new CCLayer ();
@@ -68,13 +65,7 @@ namespace IsJustABall
 			DeleteElement = new List<CCSprite> ();
 			ballPhysicsList = new List<ballPhysics> ();
 
-			var bounds = mainWindow.WindowSizeInPixels;
-			minRotationRadius = 0.15f*bounds.Height;
 
-
-
-			//addPivot(mainWindow);
-			// add ALL pivots of the level
 
 			addLevelPivots (mainWindow);
 			addLevelJewels (mainWindow);
@@ -84,32 +75,24 @@ namespace IsJustABall
 			addPauseButton ();
 			addMenuOptions ();
 
-
-
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
 			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/2 ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperRight;
 
-
 			mainLayer.AddChild (scoreLabel);
 			mainLayer.ReorderChild (scoreLabel, 101);
 
-
 			Schedule (RunGameLogic);
-
-
-
-			// New code:
+			// TouchListeners:
 			touchListener = new CCEventListenerTouchAllAtOnce ();
-
-
 			touchListener.OnTouchesBegan = HandleTouchesBegan; 
 			touchListener.OnTouchesEnded = HandleTouchesEnded;
 			AddEventListener (touchListener, this);
 
 		}
 
+		#region RUN GAME LOGIC
 		void RunGameLogic(float frameTimeInSeconds)
 		{  
 			if (PauseGame) {
@@ -156,8 +139,8 @@ namespace IsJustABall
 				mainLayer.ReorderChild (scoreLabel, 101);
 			}
 		}
-
-
+		#endregion
+		#region HANDLE TOUCHSCREEN
 		//handle TouchScreen
 		void HandleTouchesEnded(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
 			var bounds = mainWindowAux.WindowSizeInPixels;
@@ -274,11 +257,6 @@ namespace IsJustABall
 			}
 
 
-
-
-
-
-
 			if (ballPhysicsSingle.hookTouchBool == false) {
 				//Set values for spped and radius or rotation raound Pivot
 
@@ -306,8 +284,9 @@ namespace IsJustABall
 
 				ballPhysicsSingle.wZero = ballPhysicsSingle.ballSpeed / ballPhysicsSingle.Radius;
 				//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
-				ballPhysicsSingle.ballSpeedFinal = ballPhysicsSingle.Radius * Multiplier * ballPhysicsSingle.wZero;
-
+				#region ballSpeedFinal 
+				ballPhysicsSingle.ballSpeedFinal = ballPhysicsSingle.Radius * Multiplier * ballPhysicsSingle.wZero;///*************************
+				#endregion
 				ballPhysicsSingle.ThetaZero = Math.Acos (ballPhysicsSingle.CosThetaZero);
 
 				//Second Quadrant
@@ -341,14 +320,14 @@ namespace IsJustABall
 
 		}
 
-
-
+		#endregion
+		#region FREE & HOOKED PARTICLE
 		void freeParticle(float frameTimeInSeconds){
 			gravity = 0;
 			// This is a linear approximation, so not 100% accurate
 			if (ballPhysicsSingle.hookTouchBool == true) {
 				// This is a linear approximation, so not 100% accurate
-				ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * gravity;
+				//ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * gravity;
 				ballSprite.PositionX += ballPhysicsSingle.ballXVelocity * frameTimeInSeconds;
 				ballSprite.PositionY += ballPhysicsSingle.ballYVelocity * frameTimeInSeconds;
 				// New code:
@@ -401,7 +380,7 @@ namespace IsJustABall
 					ballPhysicsSingle.ballYVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
 				} else {
 					//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-					ballPhysicsSingle.theta -= (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
+					ballPhysicsSingle.theta -= (double)(Multiplier * ballPhysicsSingle.wZero*  frameTimeInSeconds);
 
 					ballPhysicsSingle.ballXVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
 					ballPhysicsSingle.ballYVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
@@ -427,9 +406,9 @@ namespace IsJustABall
 		}
 		//////
 		/// 
-	
+		#endregion
 
-		/// OBJECTS AND SPRITES
+		#region OBJECTS AND SPRITES
 
 		void addBlueBall(CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
@@ -803,18 +782,10 @@ namespace IsJustABall
 			}
 
 		}
+		#endregion
 
 		#region PARTICLE EFFECTS
-		void ExplodeTEst (CCPoint pt)
-		{
-
-			var particles = new[] { "fire.plist" };
-			foreach (string p in particles) {
-				var ps = new CCParticleSystem (p);
-				ps.Position = pt;
-				AddChild (ps);
-			}
-		}
+	
 
 		void Explode (CCPoint pt)
 		{
@@ -835,7 +806,7 @@ namespace IsJustABall
 				if (hit)
 				{
 					hitJewels.Add(ruby);
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2");
 					//Explode(banana.Position);
 					ruby.RemoveFromParent(true);
 					visibleJewels.Remove (ruby);
@@ -851,7 +822,7 @@ namespace IsJustABall
 				if (hit)
 				{
 					hitJewels.Add(diamond);
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
 					//Explode(banana.Position);
 					diamond.RemoveFromParent();
 
@@ -873,7 +844,7 @@ namespace IsJustABall
 				{
 
 
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
 					Explode(spikeSprite.Position);
 					spikeSprite.RemoveFromParent(true);
 					visibleTraps.Remove (spikeSprite);
@@ -894,7 +865,8 @@ namespace IsJustABall
 
 		}
 		#endregion
-		//ENDGAME
+
+		#region LEVEL  HANDLERS
 		void ShouldEndGame (){
 			if (score <= -100) {
 				EndGame ();
@@ -950,7 +922,7 @@ namespace IsJustABall
 
 		
 		}
-
+		#endregion
 
 	}
 

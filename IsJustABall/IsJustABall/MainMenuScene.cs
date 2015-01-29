@@ -82,7 +82,7 @@ namespace IsJustABall
 			if (hit)
 			{
 				ballSprite.ScaleTo (new CCSize (ballSprite.ScaledContentSize.Width/1.1f,ballSprite.ScaledContentSize.Height/1.1f));
-				OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux);
+				LevelPickerScene gameScene = new LevelPickerScene (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene);
 
 			}
@@ -90,7 +90,7 @@ namespace IsJustABall
 			hit =  location.IsNear(MultiOption.Position, 100.0f) ;
 			if (hit) {
 				MultiOption.ScaleTo (new CCSize (MultiOption.ScaledContentSize.Width/1.1f,MultiOption.ScaledContentSize.Height/1.1f));
-				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux);
+				PlayerCountPickerScene gameScene = new PlayerCountPickerScene (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene);
 			}
 

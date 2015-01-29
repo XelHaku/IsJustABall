@@ -108,7 +108,7 @@ namespace IsJustABall
 		public  List<Jewel> JewelMaker()
 		{
 			List<Jewel> JewelList = new List<Jewel>();
-			JewelList.Add (new Jewel { PosX = 0.3f, PosY = 0.3f, JewelType = "RUBY" });
+			//JewelList.Add (new Jewel { PosX = 0.3f, PosY = 0.3f, JewelType = "RUBY" });
 			/*JewelList.Add (new Jewel { PosX = 0.7f, PosY = 0.3f, JewelType = "RUBY" });
 			JewelList.Add (new Jewel { PosX = 0.1f, PosY = 0.8f, JewelType = "RUBY" });
 			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 0.8f, JewelType = "RUBY" });

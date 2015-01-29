@@ -41,6 +41,8 @@
     <Compile Include="LayerExample.cs" />
     <Compile Include="Levels\Multi4Level1.cs" />
     <Compile Include="FunctionsClasses\addFourBalls.cs" />
+    <Compile Include="LevelPickerScene.cs" />
+    <Compile Include="PlayerCountPickerScene.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

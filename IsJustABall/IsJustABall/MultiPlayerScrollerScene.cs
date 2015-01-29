@@ -6,7 +6,8 @@ using System.Linq;
 namespace IsJustABall
 {
 	public class MultiPlayerScrollerScene : CCScene
-	{
+	{  
+		#region VARIABLES INIT
 		CCWindow mainWindowAux;
 		CCLayer mainLayer;
 
@@ -39,8 +40,9 @@ namespace IsJustABall
 		float minRotationRadius;
 		int scrollerSpeed= 25;
 		CCEventListenerTouchAllAtOnce touchListener;
+		#endregion
 
-		public MultiPlayerScrollerScene(CCWindow mainWindow) : base(mainWindow)
+		public MultiPlayerScrollerScene(CCWindow mainWindow,int playerCount) : base(mainWindow)
 		{  CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
 			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
 
@@ -66,13 +68,13 @@ namespace IsJustABall
 			addLevelPivots (mainWindow);
 			addLevelJewels (mainWindow);
 			addLevelSpikes (mainWindow);
-			addBallsClass.addGameBall(4, mainWindowAux, ballPhysicsList );////TESTING here
+			addBallsClass.addGameBall(playerCount, mainWindowAux, ballPhysicsList );////TESTING here
 			foreach (var ballPhysicsSingle in ballPhysicsList) {
 				mainLayer.AddChild (ballPhysicsSingle.ballSprite);
 			
 			}
 			addBackground1 (mainWindow);addBackground2 (mainWindow);
-			addPlayerButton (4);
+			addPlayerButton (playerCount);
 
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
@@ -154,7 +156,7 @@ namespace IsJustABall
 
 			CCPoint touchPoint = new CCPoint (0.0f*bounds.Width, 0.0f*bounds.Height);
 			// 1 FIRST PLAYER
-			bool hit =  location.IsNear(touchPoint, 200.0f) ;
+			bool hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
 			if (hit)
 			{
 				CalculateHookPhysics (1);
@@ -162,7 +164,7 @@ namespace IsJustABall
 			}
 			// 2 SECOND PLAYER
 			touchPoint.X = bounds.Width;
-			hit =  location.IsNear(touchPoint, 200.0f) ;
+			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
 			if (hit)
 			{
 				CalculateHookPhysics (2);
@@ -170,7 +172,7 @@ namespace IsJustABall
 			}
 			// 3 THIRD PLAYER
 			touchPoint.X = 0.0f;touchPoint.Y = bounds.Height;
-			hit =  location.IsNear(touchPoint, 200.0f) ;
+			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
 			if (hit)
 			{
 				CalculateHookPhysics (3);
@@ -178,7 +180,7 @@ namespace IsJustABall
 			}
 			// 4 FOURTH PLAYER
 			touchPoint.X =bounds.Width;touchPoint.Y = bounds.Height;
-			hit =  location.IsNear(touchPoint, 200.0f) ;
+			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
 			if (hit)
 			{
 				CalculateHookPhysics (4);
@@ -289,7 +291,7 @@ namespace IsJustABall
 				break;
 			case 2:
 				ballSprite = new CCSprite ("redball");
-				ballSprite.PositionX = 0.4f*bounds.Width;
+				ballSprite.PositionX = 0.8f*bounds.Width;
 				ballSprite.PositionY = -0.1f*bounds.Height;
 				break;
 			case 3:
@@ -299,7 +301,7 @@ namespace IsJustABall
 				break;
 			case 4:
 				ballSprite = new CCSprite ("yellowball");
-				ballSprite.PositionX = 0.8f*bounds.Width;
+				ballSprite.PositionX = 0.2f*bounds.Width;
 				ballSprite.PositionY = -0.1f*bounds.Height;
 				break;
 			default:
@@ -826,9 +828,6 @@ namespace IsJustABall
 
 
 
-
-	
-
 	#region CHECK COLLISION
 	//Remove jewel and and Score Counter
 		void checkJewel(){
@@ -892,6 +891,7 @@ namespace IsJustABall
 
 		#endregion
 		//ENDGAME
+		#region LEVEL HANDLERS
 		void ShouldEndGame (){
 			//if (score <= -100) {
 				//EndGame ();
@@ -900,7 +900,7 @@ namespace IsJustABall
 
 		}
 		void EndGame(){
-			MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux);
+			MainMenuScene gameScene = new MainMenuScene (mainWindowAux);
 			mainWindowAux.RunWithScene (gameScene);
 
 		}
@@ -910,6 +910,7 @@ namespace IsJustABall
 			scoreLabel.Text = "Score: " + score;
 			//
 		}
+		#endregion
 	}
 
 }
