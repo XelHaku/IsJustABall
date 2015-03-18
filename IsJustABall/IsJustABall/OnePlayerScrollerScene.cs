@@ -21,7 +21,8 @@ namespace IsJustABall
 		CCSprite background1;
 		CCSprite background2;
 		CCSprite PauseButton;
-		CCSprite ResumeGame,Restart,MainMenu;
+		CCSprite ResumeGame,Restart,MainMenu,menuframe;
+		CCSprite levelcleared;
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
 
@@ -154,7 +155,8 @@ namespace IsJustABall
 
 				PauseGame = true;
 				ResumeGame.ScaleTo (new CCSize (ResumeGame.ScaledContentSize.Width/1.1f,ResumeGame.ScaledContentSize.Height/1.1f));
-				CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+				//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+				CCSimpleAudioEngine.SharedEngine.ResumeBackgroundMusic ();
 				CCMoveBy SlideOut = new CCMoveBy (0.5f,new CCPoint(0.0f,- 0.3f*bounds.Height));
 				ResumeGame.RunAction(SlideOut);
 				Restart.RunAction(SlideOut);
@@ -214,13 +216,24 @@ namespace IsJustABall
 			hit = location.IsNear (PauseButton.Position, 50.0f) ;
 
 			if (hit) {
-				CCMoveBy SlideIn = new CCMoveBy (0.5f,new CCPoint(0.0f,0.3f*bounds.Height));
-				ResumeGame.RunAction(SlideIn);
-				Restart.RunAction(SlideIn);
-				MainMenu.RunAction(SlideIn);
-				PauseGame = false;
-				CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic();
-
+				if (PauseGame == true) {
+					CCMoveBy SlideIn = new CCMoveBy (0.5f, new CCPoint (0.0f, 0.3f * bounds.Height));
+					ResumeGame.RunAction (SlideIn);
+					Restart.RunAction (SlideIn);
+					MainMenu.RunAction (SlideIn);
+					menuframe.RunAction (SlideIn);
+					PauseGame = false;
+					CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
+				} else {
+					CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.3f * bounds.Height));
+					ResumeGame.RunAction (SlideOut);
+					Restart.RunAction (SlideOut);
+					MainMenu.RunAction (SlideOut);
+					menuframe.RunAction (SlideOut);
+					PauseGame = true;
+					CCSimpleAudioEngine.SharedEngine.ResumeBackgroundMusic ();
+					//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+				}
 				//MainMenu.Scale *= 1.2f * MainMenu.Scale;
 			}
 
@@ -912,14 +925,24 @@ namespace IsJustABall
 			Restart.Scale = scale; 
 			Restart.PositionX = 0.75f*bounds.Width;
 			Restart.PositionY = -0.2f*bounds.Height;
-			AddChild (Restart);
+			mainLayer.AddChild (Restart);
 
 			MainMenu = new CCSprite ("MainMenuButton");
 			MainMenu.Scale = scale; 
 			MainMenu.PositionX = 0.25f*bounds.Width;
 			MainMenu.PositionY = -0.2f*bounds.Height;
-			AddChild (MainMenu);
+			mainLayer.AddChild (MainMenu);
 
+			menuframe = new CCSprite ("layerbackground");
+			menuframe.Scale = scale; 
+			menuframe.PositionX = 0.5f*bounds.Width;
+			menuframe.PositionY = -0.4f*bounds.Height;
+			mainLayer.AddChild (menuframe);
+
+			mainLayer.ReorderChild (ResumeGame, 101);
+			mainLayer.ReorderChild (Restart, 100);
+			mainLayer.ReorderChild (MainMenu, 100);
+			mainLayer.ReorderChild (menuframe, 98);
 		
 		}
 		#endregion
