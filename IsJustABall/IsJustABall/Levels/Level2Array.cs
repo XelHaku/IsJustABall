@@ -10,7 +10,8 @@ namespace IsJustABall
 
 
 	public class Level2Array{
-		//PIVOTS
+		//PIVOTS 
+		#region PIVOT MAKER
 			public class Pivot
 		{
 			public float PosX { get; set; }
@@ -95,8 +96,9 @@ namespace IsJustABall
 			new Pivot { PosX = 0.85f, PosY = 2.75f, MoveType = "RIGHT" }
 */			return PivotList;
 						}
-
+		#endregion PIVOT MAKER
 		//JEWELS
+		#region JEWEL MAKER
 		public class Jewel
 		{
 			public float PosX { get; set; }
@@ -225,13 +227,15 @@ namespace IsJustABall
 			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 9.8f, JewelType = "RUBY" });
 
 
+			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 10.3f, JewelType = "DIAMOND" });
+
 
 
 			return JewelList;
 		}
-
+		#endregion JEWEL MAKER
 		//SPIKES
-
+		#region SPIKES MAKER
 		public class Spike
 		{
 			public float PosX { get; set; }
@@ -277,6 +281,33 @@ namespace IsJustABall
 			SpikeList.Add ( new Spike { PosX = 0.8f, PosY = 9.2f, MoveType = "STATIC" });
 			return SpikeList;
 		}
+
+		#endregion
+		/*
+		#region Diamond
+		public class Emerald
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string JewelType { get; set; }
+
+		}
+
+		public  Emerald EmeraldMaker()
+		{
+			//List<Emerald> EmeraldList = new List<Emerald>();
+			//EmeraldList.Add (new Jewel { PosX = 0.5f, PosY = 1.2f, JewelType = "DIAMOND" });
+
+			Emerald EmeraldPoint = new Emerald();
+			EmeraldPoint.PosX = 0.5f;
+			EmeraldPoint.PosY = 1.5f;
+			EmeraldPoint.JewelType = "DIAMOND" ;
+
+			return EmeraldPoint;
+		}
+
+		#endregion
+*/
 	}
 }
 

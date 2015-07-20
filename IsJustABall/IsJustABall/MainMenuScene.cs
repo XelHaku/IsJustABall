@@ -79,10 +79,11 @@ namespace IsJustABall
 		
 
 			bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
+
 			if (hit)
 			{
 				ballSprite.ScaleTo (new CCSize (ballSprite.ScaledContentSize.Width/1.1f,ballSprite.ScaledContentSize.Height/1.1f));
-				LevelPickerScene gameScene = new LevelPickerScene (mainWindowAux);
+				LevelPickerSceneSinglePlayer gameScene = new LevelPickerSceneSinglePlayer (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene);
 
 			}

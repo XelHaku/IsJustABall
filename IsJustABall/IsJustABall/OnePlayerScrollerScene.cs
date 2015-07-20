@@ -9,30 +9,35 @@ namespace IsJustABall
 	{
 		#region VARIABLES INIT
 		CCWindow mainWindowAux;
+		String ThisLevelName;
 		CCLayer mainLayer;
 		ballPhysics ballPhysicsSingle = new ballPhysics ();
 		CCSprite ballSprite;
 		List<ballPhysics> ballPhysicsList;
 		List<CCSprite> visibleJewels;
+		List<CCSprite> visibleEmerald;
 		List<CCSprite> hitJewels;
-		List<CCSprite> DeleteElement;
+		List<CCSprite> StarList;
 		CCSprite ruby;
 		CCSprite diamond;
 		CCSprite background1;
 		CCSprite background2;
 		CCSprite PauseButton;
-		CCSprite ResumeGame,Restart,MainMenu,menuframe;
-		CCSprite levelcleared;
+		CCSprite ResumeGame,Restart,MainMenu,menuframe,Star;
+	//	CCSprite levelcleared;
 		List<CCSprite> visiblePivots;
 		CCSprite pivotSprite;
 
 		List<CCSprite> visibleTraps;
 		CCSprite spikeSprite;
+		List<CCSprite> visibleWalls;
+		CCSprite WallSprite;
+
 
 		CCLabelTtf scoreLabel;
 
 		// How much to modify the ball's y velocity per second:
-		float gravity = 0;
+		//float gravity = 0;
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		//Speed for scroller level
 		int scrollerSpeed= 150;
@@ -50,20 +55,24 @@ namespace IsJustABall
 
 		CCEventListenerTouchAllAtOnce touchListener;
 		#endregion
-		public OnePlayerScrollerScene(CCWindow mainWindow) : base(mainWindow)
+		public OnePlayerScrollerScene(CCWindow mainWindow,string LevelName) : base(mainWindow)
 		{   var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.15f*bounds.Height;
 			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
 			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
 
 			mainWindowAux = mainWindow;
+			ThisLevelName = LevelName;
 			mainLayer = new CCLayer ();
 			AddChild (mainLayer);
 			visiblePivots = new List<CCSprite> ();
 			visibleJewels = new List<CCSprite> ();
+			visibleEmerald = new List<CCSprite> ();
+			visibleWalls = new List<CCSprite> ();
+
 			hitJewels = new List<CCSprite> ();
 			visibleTraps = new List<CCSprite>();
-			DeleteElement = new List<CCSprite> ();
+			StarList = new List<CCSprite> ();
 			ballPhysicsList = new List<ballPhysics> ();
 
 
@@ -72,11 +81,15 @@ namespace IsJustABall
 			addLevelJewels (mainWindow);
 			addLevelSpikes (mainWindow);
 			addBlueBall(mainWindow);
+			addLevelWalls (mainWindow);
+
 			addBackground1 (mainWindow);addBackground2 (mainWindow);
 			addPauseButton ();
 			addMenuOptions ();
+			//addLevelStars ();//maybe?
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
+
 			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/2 ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperRight;
@@ -116,13 +129,27 @@ namespace IsJustABall
 					//element.Rotation (1.0f);
 				}
 
+				foreach (var diamond in visibleEmerald) {
+
+					diamond.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					//element.Rotation (1.0f);
+				}
+
 				foreach (var spikeSprite in visibleTraps) {
 
 					spikeSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
 					//element.Rotation (1.0f);
 				}
+
+				foreach (var WallSprite in visibleWalls) {
+
+					WallSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					//element.Rotation (1.0f);
+				}
+
 				checkJewel ();
-				checkTrap ();
+				checkSpike ();
+				checkWall ();
 
 				//backgroundScoller
 				background1.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
@@ -168,7 +195,7 @@ namespace IsJustABall
 			hit =  location.IsNear(Restart.Position, 50.0f) ;
 			if (hit) {
 				Restart.ScaleTo (new CCSize (Restart.ScaledContentSize.Width/1.1f,Restart.ScaledContentSize.Height/1.1f));
-				OnePlayerScrollerScene gameScene1 = new OnePlayerScrollerScene (mainWindowAux);
+				OnePlayerScrollerScene gameScene1 = new OnePlayerScrollerScene (mainWindowAux,ThisLevelName);
 				mainWindowAux.RunWithScene (gameScene1);
 			}
 
@@ -198,7 +225,8 @@ namespace IsJustABall
 			if (hit)
 			{
 				ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
-
+				CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.3f * bounds.Height));
+				menuframe.RunAction (SlideOut);////
 			}
 
 			hit =  location.IsNear(Restart.Position, 50.0f) ;
@@ -336,7 +364,7 @@ namespace IsJustABall
 		#endregion
 		#region FREE & HOOKED PARTICLE
 		void freeParticle(float frameTimeInSeconds){
-			gravity = 0;
+		//	gravity = 0;
 			// This is a linear approximation, so not 100% accurate
 			if (ballPhysicsSingle.hookTouchBool == true) {
 				// This is a linear approximation, so not 100% accurate
@@ -379,7 +407,7 @@ namespace IsJustABall
 		}
 
 		void hookedParticle(float frameTimeInSeconds){
-			gravity = 0;
+		//	gravity = 0;
 
 			if (ballPhysicsSingle.hookTouchBool == false) {
 				//multiplier on close radius\
@@ -427,7 +455,7 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			ballSprite = new CCSprite ("blueball");
-			ballSprite.Scale = 0.0005f*bounds.Width;
+			ballSprite.Scale = 0.00047f*bounds.Width;
 			ballSprite.PositionX = 0.6f*bounds.Width;
 			ballSprite.PositionY = -0.1f*bounds.Height;
 
@@ -476,6 +504,33 @@ namespace IsJustABall
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ruby);
 			return ruby;
+		}
+
+		CCSprite addStar(CCWindow mainWindow,float rubyPosX,float rubyPosY,float scale,string starType){
+			var bounds = mainWindow.WindowSizeInPixels;
+			switch (starType) {
+			case "onestar":
+				Star = new CCSprite ("onestar");
+				break;
+			case "twostar":
+				Star = new CCSprite ("twostar");
+				break;
+			case "thirdstar":
+				Star = new CCSprite ("thirdstar");
+				break;
+			}
+
+			Star.Scale = scale;
+			Star.PositionX = rubyPosX;
+			Star.PositionY = rubyPosY;
+			//CCRotateBy rotate = new CCRotateBy (0.0f, 90);
+			//ruby.RunAction (rotate);
+
+			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
+
+			mainLayer.AddChild (Star);
+			mainLayer.ReorderChild (Star, 102);
+			return Star;
 		}
 
 		void addBackground1(CCWindow mainWindow){
@@ -634,38 +689,107 @@ namespace IsJustABall
 		void addLevelPivots (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0002f*bounds.Width;
-			Level2Array LevelClass = new Level2Array ();
-			List<Level2Array.Pivot> ClassList = new List<Level2Array.Pivot> ();
 
-			ClassList = LevelClass.PivotMaker ();
+			switch(ThisLevelName){
+			case "tutorial":
+				LevelTutorial LevelClass1 = new LevelTutorial ();
+				List<LevelTutorial.Pivot> ClassListTutorial = new List<LevelTutorial.Pivot> ();
+				ClassListTutorial = LevelClass1.PivotMaker ();
+				foreach(var Pivot in ClassListTutorial){
+					Pivot.PosX = Pivot.PosX*bounds.Width;
+					Pivot.PosY = Pivot.PosY*bounds.Height;
 
-			foreach(var Pivot in ClassList){
-				Pivot.PosX =Pivot.PosX*bounds.Width;
-				Pivot.PosY = Pivot.PosY*bounds.Height;
+					switch(Pivot.MoveType){
+					case "STATIC":
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "UP":
+						visiblePivots.Add (AddUP_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "DOWN":
+						visiblePivots.Add (AddDOWN_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						visiblePivots.Add (AddRIGHT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visiblePivots.Add (AddLEFT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					default:
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
 
-				switch(Pivot.MoveType){
-				case "STATIC":
-					visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
-					break;
-				case "UP":
-					visiblePivots.Add (AddUP_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
-					break;
-				case "DOWN":
-					visiblePivots.Add (AddDOWN_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
-					break;
-				case "RIGHT":
-					visiblePivots.Add (AddRIGHT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
-					break;
-				case "LEFT":
-					visiblePivots.Add (AddLEFT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
-					break;
-				default:
-					visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
-
-					break;
-
+						break;
+					}
 				}
-				 
+				break;
+			case "railgun":
+				LevelRailGun LevelClass2 = new LevelRailGun ();
+				List<LevelRailGun.Pivot> ClassListRailGun = new List<LevelRailGun.Pivot> ();
+				ClassListRailGun = LevelClass2.PivotMaker ();
+				foreach(var Pivot in ClassListRailGun){
+					Pivot.PosX = Pivot.PosX*bounds.Width;
+					Pivot.PosY = Pivot.PosY*bounds.Height;
+
+					switch(Pivot.MoveType){
+					case "STATIC":
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "UP":
+						visiblePivots.Add (AddUP_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "DOWN":
+						visiblePivots.Add (AddDOWN_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						visiblePivots.Add (AddRIGHT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visiblePivots.Add (AddLEFT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					default:
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+
+						break;
+
+					}
+				}
+				break;
+			case "minefield":
+				LevelMineField LevelClass3 = new LevelMineField ();
+				List<LevelMineField.Pivot> ClassListMineField = new List<LevelMineField.Pivot> ();
+				ClassListMineField = LevelClass3.PivotMaker ();
+				foreach(var Pivot in ClassListMineField){
+					Pivot.PosX = Pivot.PosX*bounds.Width;
+					Pivot.PosY = Pivot.PosY*bounds.Height;
+
+					switch(Pivot.MoveType){
+					case "STATIC":
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "UP":
+						visiblePivots.Add (AddUP_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "DOWN":
+						visiblePivots.Add (AddDOWN_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						visiblePivots.Add (AddRIGHT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visiblePivots.Add (AddLEFT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					default:
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+
+						break;
+
+					}
+				}
+				break;
+
+			default:
+				break;
+
 			}
 
 		}
@@ -676,27 +800,78 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 			float jewelScale=0.0004f*bounds.Width;
 
-			Level2Array LevelClass = new Level2Array ();
-			List<Level2Array.Jewel> ClassList = new List<Level2Array.Jewel> ();
+			switch(ThisLevelName){
+			case "tutorial":
+				LevelTutorial LevelClass1 = new LevelTutorial ();
+				List<LevelTutorial.Jewel> ClassListTutorial = new List<LevelTutorial.Jewel> ();
+				ClassListTutorial = LevelClass1.JewelMaker ();
+				foreach(var Jewel in ClassListTutorial){
+					Jewel.PosX = Jewel.PosX*bounds.Width;
+					Jewel.PosY = Jewel.PosY*bounds.Height;
 
-			ClassList = LevelClass.JewelMaker ();
-
-			foreach(var Jewel in ClassList){
-				Jewel.PosX = Jewel.PosX*bounds.Width;
-				Jewel.PosY = Jewel.PosY*bounds.Height;
-
-				switch(Jewel.JewelType){
-				case "RUBY":
-					visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
-					break;
-				case "DIAMOND":
-					visibleJewels.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
-					break;
-				default:
-					visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
-					break;
+					switch(Jewel.JewelType){
+					case "RUBY":
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					case "DIAMOND":
+						visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					default:
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
+						break;
+					}
 				}
+				break;
+			case "railgun":
+				LevelRailGun LevelClass2 = new LevelRailGun ();
+				List<LevelRailGun.Jewel> ClassListRailGun = new List<LevelRailGun.Jewel> ();
+				ClassListRailGun = LevelClass2.JewelMaker ();
+				foreach(var Jewel in ClassListRailGun){
+					Jewel.PosX = Jewel.PosX*bounds.Width;
+					Jewel.PosY = Jewel.PosY*bounds.Height;
+
+					switch(Jewel.JewelType){
+					case "RUBY":
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					case "DIAMOND":
+						visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					default:
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
+						break;
+					}
+				}
+				break;
+			case "minefield":
+				LevelMineField LevelClass = new LevelMineField ();
+				List<LevelMineField.Jewel> ClassListMineField = new List<LevelMineField.Jewel> ();
+				ClassListMineField = LevelClass.JewelMaker ();
+				foreach(var Jewel in ClassListMineField){
+					Jewel.PosX = Jewel.PosX*bounds.Width;
+					Jewel.PosY = Jewel.PosY*bounds.Height;
+
+					switch(Jewel.JewelType){
+					case "RUBY":
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					case "DIAMOND":
+						visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					default:
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
+						break;
+					}
+				}
+				break;
+			
+			default:
+				break;
+
 			}
+	
+
+		
 		}
 
 
@@ -764,37 +939,218 @@ namespace IsJustABall
 		void addLevelSpikes (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0004f*bounds.Width;
-			Level2Array LevelClass = new Level2Array ();
-			List<Level2Array.Spike> ClassList = new List<Level2Array.Spike> ();
+			switch(ThisLevelName){
+			case "tutorial":
+				LevelTutorial LevelClass1 = new LevelTutorial ();
+				List<LevelTutorial.Spike> ClassListTutorial = new List<LevelTutorial.Spike> ();
+				ClassListTutorial = LevelClass1.SpikeMaker ();
+				//foreach
+				foreach(var Spike in ClassListTutorial){
+					Spike.PosX =Spike.PosX*bounds.Width;
+					Spike.PosY = Spike.PosY*bounds.Height;
 
-			ClassList = LevelClass.SpikeMaker ();
+					switch(Spike.MoveType){
+					case "STATIC":
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+					case "UP":
+						visibleTraps.Add (AddUP_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
 
-			foreach(var Spike in ClassList){
-				Spike.PosX =Spike.PosX*bounds.Width;
-				Spike.PosY = Spike.PosY*bounds.Height;
+					case "RIGHT":
+						visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
 
-				switch(Spike.MoveType){
-				case "STATIC":
-					visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
-					break;
-				case "UP":
-					visibleTraps.Add (AddUP_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
-					break;
-				
-				case "RIGHT":
-					visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
-					break;
-				
-				default:
-					visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+					default:
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
 
-					break;
+						break;
+
+					}
 
 				}
+				break;
+			case "railgun":
+				LevelRailGun LevelClass2 = new LevelRailGun ();
+				List<LevelRailGun.Spike> ClassListRailGun = new List<LevelRailGun.Spike> ();
+				ClassListRailGun = LevelClass2.SpikeMaker ();
+				//foreach
+				foreach(var Spike in ClassListRailGun){
+					Spike.PosX =Spike.PosX*bounds.Width;
+					Spike.PosY = Spike.PosY*bounds.Height;
+
+					switch(Spike.MoveType){
+					case "STATIC":
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+					case "UP":
+						visibleTraps.Add (AddUP_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					case "RIGHT":
+						visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+			case "minefield":
+				LevelMineField LevelClass3 = new LevelMineField ();
+				List<LevelMineField.Spike> ClassListMineField = new List<LevelMineField.Spike> ();
+				ClassListMineField = LevelClass3.SpikeMaker ();
+				//foreach
+				foreach(var Spike in ClassListMineField){
+					Spike.PosX =Spike.PosX*bounds.Width;
+					Spike.PosY = Spike.PosY*bounds.Height;
+
+					switch(Spike.MoveType){
+					case "STATIC":
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+					case "UP":
+						visibleTraps.Add (AddUP_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					case "RIGHT":
+						visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+
+			default:
+				break;
 
 			}
 
+
+
+			}
+
+		CCSprite AddSTATIC_Wall (CCWindow mainWindow,float wallPosX,float wallPosY,float scale)
+		{   
+			var bounds = mainWindow.WindowSizeInPixels;
+			WallSprite = new CCSprite ("wallbrick");
+			//WallSprite.Scale = scale;
+			CCSize wallSize = new CCSize();
+			wallSize.Height = bounds.Height/10;
+			wallSize.Width = bounds.Width/10;
+			WallSprite.ScaleTo (wallSize);
+			WallSprite.PositionX = wallPosX;
+			WallSprite.PositionY = wallPosY;
+
+
+			mainLayer.AddChild(WallSprite);
+
+
+			return WallSprite;
 		}
+		void addLevelWalls (CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+			float pivotScale=0.0004f*bounds.Width;
+			switch(ThisLevelName){
+			case "tutorial":
+				LevelTutorial LevelClass1 = new LevelTutorial ();
+				List<LevelTutorial.Wall> ClassListTutorial = new List<LevelTutorial.Wall> ();
+				ClassListTutorial = LevelClass1.WallMaker ();
+				//foreach
+				foreach(var Wall in ClassListTutorial){
+					Wall.PosX =Wall.PosX*bounds.Width;
+					Wall.PosY = Wall.PosY*bounds.Height;
+
+					switch(Wall.MoveType){
+					case "STATIC":
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "RIGHT":
+					//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+					//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+			case "railgun":
+				LevelRailGun LevelClass2 = new LevelRailGun ();
+				List<LevelRailGun.Wall> ClassListRailGun = new List<LevelRailGun.Wall> ();
+				ClassListRailGun = LevelClass2.WallMaker ();
+				//foreach
+				foreach(var Wall in ClassListRailGun){
+					Wall.PosX =Wall.PosX*bounds.Width;
+					Wall.PosY = Wall.PosY*bounds.Height;
+
+					switch(Wall.MoveType){
+					case "STATIC":
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+			case "minefield":
+				LevelMineField LevelClass3 = new LevelMineField ();
+				List<LevelMineField.Wall> ClassListMineField = new List<LevelMineField.Wall> ();
+				ClassListMineField = LevelClass3.WallMaker ();
+				//foreach
+				foreach(var Wall in ClassListMineField){
+					Wall.PosX =Wall.PosX*bounds.Width;
+					Wall.PosY = Wall.PosY*bounds.Height;
+
+					switch(Wall.MoveType){
+					case "STATIC":
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+
+			default:
+				break;
+
+			}
+
+
+
+		}
+
+
 		#endregion
 
 		#region PARTICLE EFFECTS
@@ -808,6 +1164,18 @@ namespace IsJustABall
 			mainLayer.AddChild (explosion);
 		}
 
+		void Explode2 (CCPoint pt)
+		{
+			var explosion = new CCParticleGalaxy (pt); //TODO: manage "better" for performance when "many" particles
+			explosion.TotalParticles = 50;
+			explosion.AutoRemoveOnFinish = true;
+			mainLayer.AddChild (explosion);
+			mainLayer.ReorderChild (explosion, 101);
+		}
+
+
+
+
 
 		#endregion
 
@@ -816,6 +1184,7 @@ namespace IsJustABall
 		void checkJewel(){
 			foreach (var ruby in visibleJewels) {
 				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
+
 				if (hit)
 				{
 					hitJewels.Add(ruby);
@@ -830,14 +1199,17 @@ namespace IsJustABall
 				}
 			}
 
-			foreach (var diamond in visibleJewels) {
+			foreach (var diamond in visibleEmerald) {
 				bool hit = diamond.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
 				if (hit)
 				{
 					hitJewels.Add(diamond);
-					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
-					//Explode(banana.Position);
-					diamond.RemoveFromParent();
+					LevelClearGame (mainWindowAux);
+
+
+
+				    diamond.RemoveFromParent();
+					ballSprite.RemoveFromParent ();
 
 
 
@@ -849,8 +1221,7 @@ namespace IsJustABall
 
 		}
 		//SPIKE
-
-		void checkTrap(){
+		void checkSpike(){
 			foreach (var spikeSprite in visibleTraps) {
 				bool hit = spikeSprite.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
 				if (hit)
@@ -877,18 +1248,105 @@ namespace IsJustABall
 
 
 		}
+		//WALL
+		void checkWall(){
+			foreach (var WallSprite in visibleWalls) {
+				bool hit = WallSprite.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
+				if (hit)
+				{
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
+					//Explode(WallSprite.Position);
+					//WallSprite.RemoveFromParent(true);
+					//visibleWalls.Remove (spikeSprite);
+					//ANALYSE THE DIRECTION OF IMPACT
+
+					float wX = ballSprite.BoundingBoxTransformedToParent.Center.X-WallSprite.BoundingBoxTransformedToParent.Center.X;
+					float wY = ballSprite.BoundingBoxTransformedToParent.Center.Y-WallSprite.BoundingBoxTransformedToParent.Center.Y;				
+					double Radial = Math.Pow ((double)wX, 2) + Math.Pow ((double)wY, 2);
+					Radial = Math.Pow (Radial, 0.5);
+					double SineAngle = wY / Radial;
+
+					if (Math.Abs (SineAngle) <= 0.707106) {
+						ballPhysicsSingle.ballXVelocity = -1.0001f*ballPhysicsSingle.ballXVelocity;
+					} else if (Math.Abs (SineAngle) > 0.707106) {
+						ballPhysicsSingle.ballYVelocity = -1.0001f*ballPhysicsSingle.ballYVelocity;
+					}
+
+
+
+
+					//ShouldEndGame ();
+				break;
+				}
+			}
+
+
+		}
 		#endregion
 
 		#region LEVEL  HANDLERS
 		void ShouldEndGame (){
 			if (score <= -100) {
-				EndGame ();
+				//EndGame ();
+			}
+		}
+
+
+			// End game when reaching Diamond Goal and display Stars and final Score
+		void LevelClearGame (CCWindow mainWindow){
+			CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
+			Explode2(diamond.Position);
+			Explode (ballSprite.Position);
+
+
+			score += 100;
+			DisplayScore (score);
+			addLevelStars (mainWindowAux,score);
+
+			// add Resume, Restart and MainMenu button. A frame, (1 2 3)Stars display Score 
+			PauseGame = false;
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			CCMoveBy SlideIn = new CCMoveBy (0f, new CCPoint (0.0f, 0.5f * bounds.Height));
+
+			//ResumeGame.RunAction (SlideIn);
+			Restart.RunAction (SlideIn);
+			MainMenu.RunAction (SlideIn);
+			menuframe.RunAction (SlideIn);
+
+			CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
+				
+
+		}
+
+		void addLevelStars(CCWindow mainWindow,int score){
+
+				var bounds = mainWindow.WindowSizeInPixels;
+				float jewelScale=0.0003f*bounds.Width;
+							
+			//1 STAR
+			if (score >= 20) {
+				StarList.Add (addStar (mainWindow, 0.3f * bounds.Width, 0.4f * bounds.Height, jewelScale,"onestar"));
+				Explode2 (new CCPoint(0.3f * bounds.Width, 0.4f * bounds.Height));
+			}
+			//2 STAR
+			if (score >= 90) {
+				StarList.Add (addStar (mainWindow, 0.5f * bounds.Width, 0.42f * bounds.Height, jewelScale, "twostar"));
+				Explode2 (new CCPoint(0.5f * bounds.Width, 0.42f * bounds.Height));
+			}
+			//3 STAR
+			if (score >= 130) {
+				StarList.Add (addStar (mainWindow, 0.7f * bounds.Width, 0.4f * bounds.Height, jewelScale, "thirdstar"));
+				Explode2 (new CCPoint(0.7f * bounds.Width, 0.4f * bounds.Height));
 			}
 
 
+
 		}
+			
+		
+
 		void EndGame(){
-			OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux);
+			OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux,ThisLevelName);
 			mainWindowAux.RunWithScene (gameScene);
 
 		}
