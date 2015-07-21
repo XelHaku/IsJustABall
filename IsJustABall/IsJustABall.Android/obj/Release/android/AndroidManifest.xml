@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="IsJustABall.Android">
-  <uses-sdk android:minSdkVersion="19" />
+  <uses-sdk android:minSdkVersion="11" />
   <application android:label="IsJustABall.Android" android:name="mono.android.app.Application">
-    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="IsJustABall" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="isjustaball.MainActivity">
+    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="IsJustABall" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

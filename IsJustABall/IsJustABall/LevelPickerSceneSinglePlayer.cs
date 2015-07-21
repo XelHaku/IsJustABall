@@ -11,14 +11,15 @@ namespace IsJustABall
 				{// Declare VAriables
 		            List<CCSprite> ItemsList;
 					CCSprite LevelItem;
-					CCSprite Star;
-		            CCLabelTtf scoreLabel;
+					//CCSprite Star;
+		           // CCLabelTtf scoreLabel;
 					CCSprite background;
 
 
 					CCLayer mainLayer;
 					CCWindow mainWindowAux;
 					CCEventListenerTouchAllAtOnce touchListener;
+		            CCPoint templocation;
 
 
 			public LevelPickerSceneSinglePlayer(CCWindow mainWindow) : base(mainWindow)
@@ -59,6 +60,7 @@ namespace IsJustABall
 					{
 						var bounds = mainWindowAux.WindowSizeInPixels;
 						var locationInverted = touches [0].LocationOnScreen;
+			            templocation = touches [0].LocationOnScreen;
 						CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
 			foreach (var LevelItem in ItemsList) {	
@@ -74,28 +76,50 @@ namespace IsJustABall
 
 
 			void HandleTouchesEnded(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
-						var bounds = mainWindowAux.WindowSizeInPixels;
-						var locationInverted = touches [0].LocationOnScreen;
-						CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
+			var bounds = mainWindowAux.WindowSizeInPixels;
+			var locationInverted = touches [0].LocationOnScreen;
+			CCPoint location = new CCPoint (locationInverted.X, bounds.Height - locationInverted.Y);
+
+
 
 			foreach (var LevelItem in ItemsList) {					
 				bool hit = LevelItem.BoundingBoxTransformedToParent.ContainsPoint (location);
 				if (hit) {
-					switch(LevelItem.Name){
+					switch (LevelItem.Name) {
 					case "tutorial":
-					LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
-						OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux,LevelItem.Name);
-					mainWindowAux.RunWithScene (gameScene);
+						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
+							OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
+							mainWindowAux.RunWithScene (gameScene);
+						}
 						break;
 					case "railgun":
 						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
-						OnePlayerScrollerScene gameScene2 = new OnePlayerScrollerScene (mainWindowAux,LevelItem.Name);
-						mainWindowAux.RunWithScene (gameScene2);
+						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
+							OnePlayerScrollerScene gameScene2 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
+							mainWindowAux.RunWithScene (gameScene2);
+						}
 						break;
 					case "minefield":
 						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
-						OnePlayerScrollerScene gameScene3 = new OnePlayerScrollerScene (mainWindowAux,LevelItem.Name);
-						mainWindowAux.RunWithScene (gameScene3);
+						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
+							OnePlayerScrollerScene gameScene3 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
+							mainWindowAux.RunWithScene (gameScene3);
+						}
+						break;
+					case "blackhole":
+						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
+							OnePlayerScrollerScene gameScene4 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
+							mainWindowAux.RunWithScene (gameScene4);
+						}
+						break;
+					case "testgrounds":
+						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						if (Math.Abs (templocation.Y - locationInverted.Y) <= 1) {
+							OnePlayerScrollerScene gameScene5 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
+							mainWindowAux.RunWithScene (gameScene5);
+						}
 						break;
 					default:
 						break;
@@ -104,7 +128,7 @@ namespace IsJustABall
 					}
 				}
 			}
-					
+		
 
 
 						//BUG: calling walkRepeat separately as it doesn't run when called in RunActions or CCSpawn
@@ -131,7 +155,7 @@ namespace IsJustABall
 					/// OBJECTS AND SPRITES
 	                 	void addLevelItem(CCWindow mainWindow){
 						var bounds = mainWindow.WindowSizeInPixels;
-			LevelItem = new CCSprite ("minefield");
+			LevelItem = new CCSprite ("tutorial");
 			LevelItem.Name = "tutorial";
 			LevelItem.Scale = 0.001f*bounds.Width;
 			LevelItem.PositionX = 0.5f*bounds.Width;
@@ -139,7 +163,7 @@ namespace IsJustABall
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
-			LevelItem = new CCSprite ("minefield");
+			LevelItem = new CCSprite ("railgun");
 			LevelItem.Name = "railgun";
 			LevelItem.Scale = 0.001f*bounds.Width;
 			LevelItem.PositionX = 0.5f*bounds.Width;
@@ -152,6 +176,22 @@ namespace IsJustABall
 			LevelItem.Scale = 0.001f*bounds.Width;
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-2*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
+			ItemsList.Add (LevelItem);
+			mainLayer.AddChild (LevelItem);
+
+			LevelItem = new CCSprite ("blackholeLevel");
+			LevelItem.Name = "blackhole";
+			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.PositionX = 0.5f*bounds.Width;
+			LevelItem.PositionY = (0.8f*bounds.Height-3*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
+			ItemsList.Add (LevelItem);
+			mainLayer.AddChild (LevelItem);
+
+			LevelItem = new CCSprite ("testgrounds");
+			LevelItem.Name = "testgrounds";
+			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.PositionX = 0.5f*bounds.Width;
+			LevelItem.PositionY = (0.8f*bounds.Height-4*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 					}

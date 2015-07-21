@@ -35,6 +35,7 @@ namespace IsJustABall
 
 
 		CCLabelTtf scoreLabel;
+		byte R,G,B;
 
 		// How much to modify the ball's y velocity per second:
 		//float gravity = 0;
@@ -175,7 +176,8 @@ namespace IsJustABall
 			var locationInverted = touches [0].LocationOnScreen;
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
-			bool hit =  location.IsNear(ResumeGame.Position, 50.0f) ;
+			bool hit = ResumeGame.BoundingBoxTransformedToParent.ContainsPoint (location);
+
 			if (hit)
 			{
 				//ResumeGame.Scale =  ResumeGame.Scale/1.2f;
@@ -192,14 +194,15 @@ namespace IsJustABall
 
 			}
 
-			hit =  location.IsNear(Restart.Position, 50.0f) ;
+			hit = Restart.BoundingBoxTransformedToParent.ContainsPoint (location);
+
 			if (hit) {
 				Restart.ScaleTo (new CCSize (Restart.ScaledContentSize.Width/1.1f,Restart.ScaledContentSize.Height/1.1f));
 				OnePlayerScrollerScene gameScene1 = new OnePlayerScrollerScene (mainWindowAux,ThisLevelName);
 				mainWindowAux.RunWithScene (gameScene1);
 			}
 
-			hit =  location.IsNear(MainMenu.Position, 50.0f) ;
+			hit = MainMenu.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
 				MainMenu.ScaleTo (new CCSize (MainMenu.ScaledContentSize.Width/1.1f,MainMenu.ScaledContentSize.Height/1.1f));
@@ -216,12 +219,19 @@ namespace IsJustABall
 
 
 		void HandleTouchesBegan(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
+			//random colors
+			var randomColor = new Random();
+			R = Convert.ToByte( randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+
 			//Pause
 			var bounds = mainWindowAux.WindowSizeInPixels;
 			var locationInverted = touches [0].LocationOnScreen;
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
-			bool hit =  location.IsNear(ResumeGame.Position, 50.0f) ;
+
+			bool hit = ResumeGame.BoundingBoxTransformedToParent.ContainsPoint (location);
 			if (hit)
 			{
 				ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
@@ -229,19 +239,20 @@ namespace IsJustABall
 				menuframe.RunAction (SlideOut);////
 			}
 
-			hit =  location.IsNear(Restart.Position, 50.0f) ;
+			hit = Restart.BoundingBoxTransformedToParent.ContainsPoint (location);
+
 			if (hit) {
 				Restart.ScaleTo (new CCSize (1.1f*Restart.ScaledContentSize.Width,1.1f*Restart.ScaledContentSize.Height));
 			}
 
-			hit =  location.IsNear(MainMenu.Position, 50.0f) ;
+			hit = MainMenu.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
 				MainMenu.ScaleTo (new CCSize (1.1f*MainMenu.ScaledContentSize.Width,1.1f*MainMenu.ScaledContentSize.Height));
 			}
 
+			hit = PauseButton.BoundingBoxTransformedToParent.ContainsPoint (location);
 
-			hit = location.IsNear (PauseButton.Position, 50.0f) ;
 
 			if (hit) {
 				if (PauseGame == true) {
@@ -406,6 +417,8 @@ namespace IsJustABall
 
 		}
 
+
+
 		void hookedParticle(float frameTimeInSeconds){
 		//	gravity = 0;
 
@@ -442,7 +455,13 @@ namespace IsJustABall
 
 
 				}
+
+				//////////TESTING SWEPT AREA LINE drawSweptAreaLine ()
+			
+			drawSweptAreaLine (R,G,B);
 			}
+
+
 
 		}
 		//////
@@ -782,17 +801,83 @@ namespace IsJustABall
 						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
 
 						break;
-
+						//blackhole level pivots
+					
 					}
 				}
 				break;
+			case "blackhole":
+				LevelBlackhole LevelClass4 = new LevelBlackhole ();
+				List<LevelBlackhole.Pivot> ClassListBlackhole = new List<LevelBlackhole.Pivot> ();
+				ClassListBlackhole = LevelClass4.PivotMaker ();
+				foreach(var Pivot in ClassListBlackhole){
+					Pivot.PosX = Pivot.PosX*bounds.Width;
+					Pivot.PosY = Pivot.PosY*bounds.Height;
+
+					switch(Pivot.MoveType){
+					case "STATIC":
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "UP":
+						visiblePivots.Add (AddUP_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "DOWN":
+						visiblePivots.Add (AddDOWN_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						visiblePivots.Add (AddRIGHT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visiblePivots.Add (AddLEFT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					default:
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+
+						break;
+						//blackhole level pivots
+
+					}
+				}break;
+				//TestGrounds
+			case "testgrounds":
+				LevelTestGrounds LevelClass5 = new LevelTestGrounds ();
+				List<LevelTestGrounds.Pivot> ClassListTestGrounds = new List<LevelTestGrounds.Pivot> ();
+				ClassListTestGrounds = LevelClass5.PivotMaker ();
+				foreach(var Pivot in ClassListTestGrounds){
+					Pivot.PosX = Pivot.PosX*bounds.Width;
+					Pivot.PosY = Pivot.PosY*bounds.Height;
+
+					switch(Pivot.MoveType){
+					case "STATIC":
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "UP":
+						visiblePivots.Add (AddUP_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "DOWN":
+						visiblePivots.Add (AddDOWN_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						visiblePivots.Add (AddRIGHT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visiblePivots.Add (AddLEFT_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+						break;
+					default:
+						visiblePivots.Add (AddSTATIC_Pivots (mainWindow,Pivot.PosX,Pivot.PosY,pivotScale));
+
+						break;
+
+					}
+				}break;
+
 
 			default:
 				break;
 
-			}
+			}//switch itemlevel end
 
-		}
+		}//addLevelPivots end
 
 		//JEWELS
 
@@ -848,6 +933,50 @@ namespace IsJustABall
 				List<LevelMineField.Jewel> ClassListMineField = new List<LevelMineField.Jewel> ();
 				ClassListMineField = LevelClass.JewelMaker ();
 				foreach(var Jewel in ClassListMineField){
+					Jewel.PosX = Jewel.PosX*bounds.Width;
+					Jewel.PosY = Jewel.PosY*bounds.Height;
+
+					switch(Jewel.JewelType){
+					case "RUBY":
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					case "DIAMOND":
+						visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					default:
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
+						break;
+					}
+				}
+				break;
+
+			case "blackhole":
+				LevelBlackhole LevelClass3 = new LevelBlackhole ();
+				List<LevelBlackhole.Jewel> ClassListBlackhole = new List<LevelBlackhole.Jewel> ();
+				ClassListBlackhole = LevelClass3.JewelMaker ();
+				foreach(var Jewel in ClassListBlackhole){
+					Jewel.PosX = Jewel.PosX*bounds.Width;
+					Jewel.PosY = Jewel.PosY*bounds.Height;
+
+					switch(Jewel.JewelType){
+					case "RUBY":
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					case "DIAMOND":
+						visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+						break;
+					default:
+						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
+						break;
+					}
+				}
+				break;
+
+			case "testgrounds":
+				LevelTestGrounds LevelClass4 = new LevelTestGrounds ();
+				List<LevelTestGrounds.Jewel> ClassListTestGrounds = new List<LevelTestGrounds.Jewel> ();
+				ClassListTestGrounds = LevelClass4.JewelMaker ();
+				foreach(var Jewel in ClassListTestGrounds){
 					Jewel.PosX = Jewel.PosX*bounds.Width;
 					Jewel.PosY = Jewel.PosY*bounds.Height;
 
@@ -1030,7 +1159,67 @@ namespace IsJustABall
 
 				}
 				break;
+			case "blackhole":
+				LevelBlackhole LevelClass4 = new LevelBlackhole ();
+				List<LevelBlackhole.Spike> ClassListBlackhole = new List<LevelBlackhole.Spike> ();
+				ClassListBlackhole = LevelClass4.SpikeMaker ();
+				//foreach
+				foreach(var Spike in ClassListBlackhole){
+					Spike.PosX =Spike.PosX*bounds.Width;
+					Spike.PosY = Spike.PosY*bounds.Height;
 
+					switch(Spike.MoveType){
+					case "STATIC":
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+					case "UP":
+						visibleTraps.Add (AddUP_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					case "RIGHT":
+						visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+
+				case "testgrounds":
+				LevelTestGrounds LevelClass5 = new LevelTestGrounds ();
+				List<LevelTestGrounds.Spike> ClassListTestGrounds = new List<LevelTestGrounds.Spike> ();
+				ClassListTestGrounds = LevelClass5.SpikeMaker ();
+				//foreach
+				foreach(var Spike in ClassListTestGrounds){
+					Spike.PosX =Spike.PosX*bounds.Width;
+					Spike.PosY = Spike.PosY*bounds.Height;
+
+					switch(Spike.MoveType){
+					case "STATIC":
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+					case "UP":
+						visibleTraps.Add (AddUP_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					case "RIGHT":
+						visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
 			default:
 				break;
 
@@ -1058,6 +1247,7 @@ namespace IsJustABall
 
 			return WallSprite;
 		}
+
 		void addLevelWalls (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0004f*bounds.Width;
@@ -1141,12 +1331,127 @@ namespace IsJustABall
 				}
 				break;
 
+
+			case "blackhole":
+				LevelBlackhole LevelClass4 = new LevelBlackhole();
+				List<LevelBlackhole.Wall> ClassListBlackhole= new List<LevelBlackhole.Wall> ();
+				ClassListBlackhole = LevelClass4.WallMaker ();
+				//foreach
+				foreach(var Wall in ClassListBlackhole){
+					Wall.PosX =Wall.PosX*bounds.Width;
+					Wall.PosY = Wall.PosY*bounds.Height;
+
+					switch(Wall.MoveType){
+					case "STATIC":
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+
+
+			case "testgrounds":
+				LevelTestGrounds LevelClass5 = new LevelTestGrounds ();
+				List<LevelTestGrounds.Wall> ClassListTestGrounds = new List<LevelTestGrounds.Wall> ();
+				ClassListTestGrounds = LevelClass5.WallMaker ();
+				//foreach
+				foreach(var Wall in ClassListTestGrounds){
+					Wall.PosX =Wall.PosX*bounds.Width;
+					Wall.PosY = Wall.PosY*bounds.Height;
+
+					switch(Wall.MoveType){
+					case "STATIC":
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
 			default:
 				break;
 
 			}
 
+					
 
+		}
+
+		void drawSweptAreaLine (byte R,byte G,byte B){
+		var sweptAreaLine = new CCDrawNode ();
+
+			float pivotScale=0.0002f*mainWindowAux.WindowSizeInPixels.Width;
+			float ballScale=0.00047f*mainWindowAux.WindowSizeInPixels.Width;
+			//sweptAreaLine.DrawLine (ballSprite.Position, pivotSprite.Position, BlueColor);
+			CCPoint ballTemp = new CCPoint();
+			CCPoint pivotTemp = new CCPoint();
+			ballTemp.X = ballSprite.BoundingBox.Center.X-visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.X+ballSprite.BoundingBox.Size.Width*ballScale/2;
+			ballTemp.Y = ballSprite.BoundingBox.Center.Y - visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.Y + ballSprite.BoundingBox.Size.Height * ballScale / 2;
+			pivotTemp.X = 0+visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Size.Width*pivotScale/2;
+			pivotTemp.Y = 0+visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Size.Height*pivotScale/2
+				;
+			//pivotTemp.X = visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.X;
+			//pivotTemp.Y =visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.Y;
+			/*var randomColor = new Random();
+			byte R = Convert.ToByte( randomColor.Next (50,255));
+			byte G = Convert.ToByte(randomColor.Next (50,255));
+			byte B = Convert.ToByte(randomColor.Next (50,255));*/
+			var tempColor = new CCColor3B (R, G,B);
+			//var tempColor = new CCColor3B (221, 82, 195);
+			var purpleColor = new CCColor4F (tempColor);
+
+			sweptAreaLine.Scale = 1 / pivotScale;
+			sweptAreaLine.DrawSegment(ballTemp, pivotTemp,1.0f, purpleColor);
+			CCRemoveSelf removeLine = new CCRemoveSelf ();
+		//	CCFadeOut fade = new CCFadeOut (1.0f);
+			CCDelayTime waitLine = new CCDelayTime(0.6f);
+			CCMoveBy moveAway = new CCMoveBy (0.4f,new CCPoint (sweptAreaLine.PositionX, -0.0450f * mainWindowAux.WindowSizeInPixels.Height));
+			sweptAreaLine.RunActions (waitLine,removeLine);
+
+			//visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine);
+
+			visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine);
+			mainLayer.ReorderChild (sweptAreaLine, -100);
+			//add lifetime to the line
+
+			/*NOTES
+	pivotSprite = new CCSprite ("pivot3");
+			pivotSprite.Scale = scale;
+			pivotSprite.PositionX = pivotPosX;
+			pivotSprite.PositionY = pivotPosY;
+			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
+			CCPoint tempPos = new CCPoint (h, h);
+			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
+			var CircleDraw = new CCDrawNode ();
+			var BlueColor = new CCColor4B (0, 0, 255, 1);
+			var bounds = mainWindow.WindowSizeInPixels;
+			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
+			//pivotSprite.AddChild (CircleDraw);
+			mainLayer.AddChild (pivotSprite);
+			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
+			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
+			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
+			//pivotSprite.RepeatForever (rotatePivot);
+			return pivotSprite;
+			*/
 
 		}
 
@@ -1188,7 +1493,7 @@ namespace IsJustABall
 				if (hit)
 				{
 					hitJewels.Add(ruby);
-					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("jewel2");
 					//Explode(banana.Position);
 					ruby.RemoveFromParent(true);
 					visibleJewels.Remove (ruby);
@@ -1227,8 +1532,8 @@ namespace IsJustABall
 				if (hit)
 				{
 
-
-					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
+					CCSimpleAudioEngine.SharedEngine.PreloadEffect ("bomb02");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("bomb02");
 					Explode(spikeSprite.Position);
 					spikeSprite.RemoveFromParent(true);
 					visibleTraps.Remove (spikeSprite);
@@ -1256,8 +1561,9 @@ namespace IsJustABall
 				{
 					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
 					//Explode(WallSprite.Position);
-					//WallSprite.RemoveFromParent(true);
-					//visibleWalls.Remove (spikeSprite);
+					WallSprite.RemoveFromParent(true);
+					visibleWalls.Remove (WallSprite);
+
 					//ANALYSE THE DIRECTION OF IMPACT
 
 					float wX = ballSprite.BoundingBoxTransformedToParent.Center.X-WallSprite.BoundingBoxTransformedToParent.Center.X;

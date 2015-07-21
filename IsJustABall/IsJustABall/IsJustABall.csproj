@@ -44,6 +44,8 @@
     <Compile Include="Levels\LevelMineField.cs" />
     <Compile Include="Levels\LevelRailGun.cs" />
     <Compile Include="Levels\LevelTutorial.cs" />
+    <Compile Include="Levels\LevelBlackhole.cs" />
+    <Compile Include="Levels\LevelTestGounds.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

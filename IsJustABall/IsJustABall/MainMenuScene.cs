@@ -53,13 +53,15 @@ namespace IsJustABall
 			var locationInverted = touches [0].LocationOnScreen;
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
-			bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
+		//	bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
+			bool hit = ballSprite.BoundingBoxTransformedToParent.ContainsPoint (location);
 			if (hit)
 			{
 				ballSprite.ScaleTo (new CCSize (1.1f*ballSprite.ScaledContentSize.Width,1.1f*ballSprite.ScaledContentSize.Height));
 			}
 
-			hit =  location.IsNear(MultiOption.Position, 100.0f) ;
+			hit = MultiOption.BoundingBoxTransformedToParent.ContainsPoint (location);
+
 			if (hit) {
 				MultiOption.ScaleTo (new CCSize (1.1f*MultiOption.ScaledContentSize.Width,1.1f*MultiOption.ScaledContentSize.Height));
 			}
@@ -78,7 +80,7 @@ namespace IsJustABall
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 		
 
-			bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
+			bool hit = ballSprite.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit)
 			{
@@ -88,7 +90,7 @@ namespace IsJustABall
 
 			}
 
-			hit =  location.IsNear(MultiOption.Position, 100.0f) ;
+			hit = MultiOption.BoundingBoxTransformedToParent.ContainsPoint (location);
 			if (hit) {
 				MultiOption.ScaleTo (new CCSize (MultiOption.ScaledContentSize.Width/1.1f,MultiOption.ScaledContentSize.Height/1.1f));
 				PlayerCountPickerScene gameScene = new PlayerCountPickerScene (mainWindowAux);
