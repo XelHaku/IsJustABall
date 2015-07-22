@@ -313,7 +313,23 @@ namespace IsJustABall
 		}
 
 		#endregion
+		#region blackhole MAKER
+		public class Blackhole
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string MoveType { get; set; }
 
+		}
+
+		public  List<Blackhole> BlackholeMaker()
+		{
+			List<Blackhole> BlackholeList = new List<Blackhole>();
+			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 0.6f, MoveType = "STATIC" });
+			return BlackholeList;
+		}
+
+		#endregion
 		#region GENERAL MAKER
 		public class GENERAL
 		{

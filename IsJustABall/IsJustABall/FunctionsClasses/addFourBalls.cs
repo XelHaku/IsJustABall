@@ -21,10 +21,9 @@ namespace IsJustABall
 				ballPhysicsSingle.ThetaZero = 0;
 				ballPhysicsSingle.ClockwiseRotation = true;
 				ballPhysicsList.Add (ballPhysicsSingle);
+							}		
 
-
-
-			}		
+		
 		}
 	
 

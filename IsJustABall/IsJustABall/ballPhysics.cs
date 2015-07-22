@@ -5,13 +5,17 @@ namespace IsJustABall
 	public class ballPhysics
 	{		  
 			public int index{ get; set; }
-		public CCSprite ballSprite{ get; set; }
+	     	public CCSprite ballSprite{ get; set; }
 
-		public float PosY { get; set; }
+	     //	public float PosY { get; set; }
 			public string MoveType { get; set; }
 
 			public	float ballXVelocity { get; set; }
 			public	float ballYVelocity { get; set; }
+
+
+		public	double gravityX { get; set; }
+		public	double gravityY { get; set; }
 			//hookTouchBool=!hookTouchBool// to toggle on Touch
 			public	bool hookTouchBool { get; set; }
 			//Speed for scroller level

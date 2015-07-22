@@ -31,9 +31,12 @@ namespace IsJustABall
 		List<CCSprite> visibleTraps;
 		CCSprite spikeSprite;
 		List<CCSprite> visibleWalls;
+		List<CCSprite> visibleBlackholes;
+		List<CCSprite> visibleTutorialSteps;
 		CCSprite WallSprite;
+		CCSprite BlackholeSprite;
 
-
+		 
 		CCLabelTtf scoreLabel;
 		byte R,G,B;
 
@@ -42,6 +45,7 @@ namespace IsJustABall
 		//hookTouchBool=!hookTouchBool// to toggle on Touch
 		//Speed for scroller level
 		int scrollerSpeed= 150;
+		int topSpeed;
 		//Declare variables for HookedParticle Method
 		double Multiplier =1.05f;
 		float minRotationRadius;
@@ -58,7 +62,7 @@ namespace IsJustABall
 		#endregion
 		public OnePlayerScrollerScene(CCWindow mainWindow,string LevelName) : base(mainWindow)
 		{   var bounds = mainWindow.WindowSizeInPixels;
-			minRotationRadius = 0.15f*bounds.Height;
+			minRotationRadius = 0.25f*bounds.Width;
 			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
 			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
 
@@ -70,11 +74,16 @@ namespace IsJustABall
 			visibleJewels = new List<CCSprite> ();
 			visibleEmerald = new List<CCSprite> ();
 			visibleWalls = new List<CCSprite> ();
+			visibleBlackholes = new List<CCSprite> ();
+			visibleTutorialSteps = new List<CCSprite> ();
 
 			hitJewels = new List<CCSprite> ();
 			visibleTraps = new List<CCSprite>();
 			StarList = new List<CCSprite> ();
 			ballPhysicsList = new List<ballPhysics> ();
+
+			scrollerSpeed = (int)(0.1 * bounds.Width);
+			topSpeed = (int)(0.9 * bounds.Width);
 
 
 
@@ -83,11 +92,14 @@ namespace IsJustABall
 			addLevelSpikes (mainWindow);
 			addBlueBall(mainWindow);
 			addLevelWalls (mainWindow);
+			addLevelBlackholes (mainWindow);
+			addLevelTutorialSteps (mainWindow);
 
-			addBackground1 (mainWindow);addBackground2 (mainWindow);
+			addBackground (mainWindow);
 			addPauseButton ();
 			addMenuOptions ();
 			//addLevelStars ();//maybe?
+		
 
 			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
 
@@ -97,6 +109,7 @@ namespace IsJustABall
 
 			mainLayer.AddChild (scoreLabel);
 			mainLayer.ReorderChild (scoreLabel, 101);
+
 
 			Schedule (RunGameLogic);
 			// TouchListeners:
@@ -145,12 +158,30 @@ namespace IsJustABall
 				foreach (var WallSprite in visibleWalls) {
 
 					WallSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					if(WallSprite.PositionY < -0.2f*mainWindowAux.WindowSizeInPixels.Width){
+						WallSprite.RemoveFromParent(true);
+						WallSprite.Cleanup ();
+						WallSprite.Dispose ();
+						//visibleWalls.Remove (WallSprite);
+						//break;				
+					}
+				}
+				foreach (var BlackholeSprite in visibleBlackholes) {
+
+					BlackholeSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
+					//element.Rotation (1.0f);
+				}
+
+				foreach (var BlackholeSprite in visibleTutorialSteps) {
+
+					BlackholeSprite.PositionY += -scrollerSpeed * frameTimeInSeconds;
 					//element.Rotation (1.0f);
 				}
 
 				checkJewel ();
 				checkSpike ();
 				checkWall ();
+				checkBlackhole ();
 
 				//backgroundScoller
 				background1.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
@@ -378,8 +409,12 @@ namespace IsJustABall
 		//	gravity = 0;
 			// This is a linear approximation, so not 100% accurate
 			if (ballPhysicsSingle.hookTouchBool == true) {
+				visiblePivots [ballPhysicsSingle.indexHookPivot].RemoveAllChildren(true);//sweptAreaLine Delete
 				// This is a linear approximation, so not 100% accurate
 				//ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * gravity;
+				ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * (float)ballPhysicsSingle.gravityX;
+				ballPhysicsSingle.ballYVelocity += frameTimeInSeconds * (float)ballPhysicsSingle.gravityY;
+
 				ballSprite.PositionX += ballPhysicsSingle.ballXVelocity * frameTimeInSeconds;
 				ballSprite.PositionY += ballPhysicsSingle.ballYVelocity * frameTimeInSeconds;
 				// New code:
@@ -415,6 +450,12 @@ namespace IsJustABall
 				}
 			}
 
+			if (ballPhysicsSingle.ballYVelocity > topSpeed) {
+				ballPhysicsSingle.ballYVelocity = topSpeed;
+			}
+			if (ballPhysicsSingle.ballXVelocity > topSpeed) {
+				ballPhysicsSingle.ballXVelocity = topSpeed;
+			}
 		}
 
 
@@ -425,20 +466,24 @@ namespace IsJustABall
 			if (ballPhysicsSingle.hookTouchBool == false) {
 				//multiplier on close radius\
 				//double multR = (10 / Radius);
-
-				if (ballPhysicsSingle.ClockwiseRotation == true) {
-					//theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-					ballPhysicsSingle.theta += (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
-
-					ballPhysicsSingle.ballXVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
-					ballPhysicsSingle.ballYVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
-				} else {
-					//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-					ballPhysicsSingle.theta -= (double)(Multiplier * ballPhysicsSingle.wZero*  frameTimeInSeconds);
-
-					ballPhysicsSingle.ballXVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
-					ballPhysicsSingle.ballYVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+				//min SPEED to avoid sink of th ball
+				if (ballPhysicsSingle.ballSpeedFinal < 180) {
+					ballPhysicsSingle.ballSpeedFinal = 180;
 				}
+					if (ballPhysicsSingle.ClockwiseRotation == true) {
+						//theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+						ballPhysicsSingle.theta += (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
+
+						ballPhysicsSingle.ballXVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
+						ballPhysicsSingle.ballYVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+					} else {
+						//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
+						ballPhysicsSingle.theta -= (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
+
+						ballPhysicsSingle.ballXVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
+						ballPhysicsSingle.ballYVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+					}
+				
 				/////////
 				ballSprite.PositionX = (float)(ballPhysicsSingle.Radius * Math.Cos (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX);
 				ballSprite.PositionY = (float)(ballPhysicsSingle.Radius * Math.Sin (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY);
@@ -474,12 +519,13 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			ballSprite = new CCSprite ("blueball");
-			ballSprite.Scale = 0.00047f*bounds.Width;
+			ballSprite.Scale = 0.0003f*bounds.Width;
 			ballSprite.PositionX = 0.6f*bounds.Width;
 			ballSprite.PositionY = -0.1f*bounds.Height;
 
 			//particleEffetOnBall(ballSprite.PositionX,ballSprite.PositionY);
 			mainLayer.AddChild (ballSprite);
+			mainLayer.ReorderChild (ballSprite, 110);
 
 			ballPhysicsSingle.index = 1;
 			ballPhysicsSingle.ballSprite= ballSprite;
@@ -552,33 +598,40 @@ namespace IsJustABall
 			return Star;
 		}
 
-		void addBackground1(CCWindow mainWindow){
-			var bounds = mainWindow.WindowSizeInPixels;
-
+		void addBackground(CCWindow mainWindow){
 			background1 = new CCSprite ("galaxybackground4");
-
-			background1.Scale = 1.8f;
-			background1.PositionX = bounds.Width/2;
-			background1.PositionY = background1.ContentSize.Height;
-
-			mainLayer.AddChild (background1);
-			mainLayer.ReorderChild (background1, -100);
-
-		}
-
-		void addBackground2(CCWindow mainWindow){
-			var bounds = mainWindow.WindowSizeInPixels;
-				
 			background2 = new CCSprite ("galaxybackground4");
-			background2.Scale = 1.8f;
+			var bounds = mainWindow.WindowSizeInPixels;
+			switch(ThisLevelName){
+			case "minefield":
+			case "railgun":
+			case "blackhole":
+
+			CCSize backgroundSize = new CCSize();
+		
+			backgroundSize.Height = bounds.Height;
+			backgroundSize.Width = bounds.Width;
+			background1.ScaleTo(backgroundSize);
+			background1.PositionX = bounds.Width/2;
+			background1.PositionY = background1.ContentSize.Height-500.0f;
+		    mainLayer.AddChild (background1);
+			mainLayer.ReorderChild (background1,- 100);
+			
+			
+			background2.ScaleTo(backgroundSize);
 			background2.PositionX = bounds.Width/2;
 			background2.PositionY = 2*background2.ContentSize.Height;
-
 			mainLayer.AddChild (background2);
-			mainLayer.ReorderChild (background2, -99);
+			mainLayer.ReorderChild (background2,- 99);
+					
+				break;
+			default:
+				break;
 
+			}
+			}
 
-		}
+	
 
 
 
@@ -596,6 +649,7 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			mainLayer.AddChild(pivotSprite);
+			mainLayer.ReorderChild (pivotSprite, 109);
 
 			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 
@@ -621,6 +675,7 @@ namespace IsJustABall
 			//pivotSprite.AddChild (CircleDraw);
 			//pivotSprite.ReorderChild (CircleDraw, 10);
 			mainLayer.AddChild (pivotSprite);
+			mainLayer.ReorderChild (pivotSprite, 109);
 			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(-0.7f*bounds.Width,0.0f));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
@@ -647,6 +702,7 @@ namespace IsJustABall
 			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
 			//pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
+			mainLayer.ReorderChild (pivotSprite, 109);
 			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.7f*bounds.Width,0.0f));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
@@ -670,6 +726,7 @@ namespace IsJustABall
 			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
 			//pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
+			mainLayer.ReorderChild (pivotSprite, 109);
 			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,0.7f*bounds.Width));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
@@ -695,6 +752,7 @@ namespace IsJustABall
 			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
 			//pivotSprite.AddChild (CircleDraw);
 			mainLayer.AddChild (pivotSprite);
+			mainLayer.ReorderChild (pivotSprite, 109);
 			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
 			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
 			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
@@ -1235,7 +1293,7 @@ namespace IsJustABall
 			WallSprite = new CCSprite ("wallbrick");
 			//WallSprite.Scale = scale;
 			CCSize wallSize = new CCSize();
-			wallSize.Height = bounds.Height/10;
+			wallSize.Height = bounds.Height/20;
 			wallSize.Width = bounds.Width/10;
 			WallSprite.ScaleTo (wallSize);
 			WallSprite.PositionX = wallPosX;
@@ -1394,64 +1452,244 @@ namespace IsJustABall
 					
 
 		}
+		//BLACKHOLE SPRITES
+		CCSprite AddSTATIC_Blackhole (CCWindow mainWindow,float blackholePosX,float blackholePosY,float scale)
+		{   
+			var bounds = mainWindow.WindowSizeInPixels;
+			BlackholeSprite = new CCSprite ("blackholeshadow");
+			//WallSprite.Scale = scale;
+			CCSize blackholeSize = new CCSize();
+			blackholeSize.Width = bounds.Width/4;
+			blackholeSize.Height = blackholeSize.Width;
 
+			BlackholeSprite.ScaleTo (blackholeSize);
+			BlackholeSprite.PositionX = blackholePosX;
+			BlackholeSprite.PositionY = blackholePosY;
+
+			CCRotateBy rotateForever = new CCRotateBy (0.25f, 5);
+			mainLayer.AddChild(BlackholeSprite);
+			mainLayer.ReorderChild (BlackholeSprite, -99);
+			BlackholeSprite.RepeatForever (rotateForever);
+
+
+			return BlackholeSprite;
+		}
+
+		void addLevelBlackholes (CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+			float pivotScale=0.0004f*bounds.Width;
+			switch(ThisLevelName){
+			case "tutorial":
+				LevelTutorial LevelClass1 = new LevelTutorial ();
+				List<LevelTutorial.Blackhole> ClassListTutorial = new List<LevelTutorial.Blackhole> ();
+				ClassListTutorial = LevelClass1.BlackholeMaker ();
+				//foreach
+				foreach(var Blackhole in ClassListTutorial){
+					Blackhole.PosX =Blackhole.PosX*bounds.Width;
+					Blackhole.PosY = Blackhole.PosY*bounds.Height;
+
+					switch(Blackhole.MoveType){
+					case "STATIC":
+						visibleBlackholes.Add (AddSTATIC_Blackhole (mainWindow,Blackhole.PosX,Blackhole.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+			case "railgun":
+				LevelRailGun LevelClass2 = new LevelRailGun ();
+				List<LevelRailGun.Blackhole> ClassListRailGun = new List<LevelRailGun.Blackhole> ();
+				ClassListRailGun = LevelClass2.BlackholeMaker ();
+				//foreach
+				foreach(var Blackhole in ClassListRailGun){
+					Blackhole.PosX =Blackhole.PosX*bounds.Width;
+					Blackhole.PosY = Blackhole.PosY*bounds.Height;
+
+					switch(Blackhole.MoveType){
+					case "STATIC":
+						visibleBlackholes.Add (AddSTATIC_Blackhole (mainWindow,Blackhole.PosX,Blackhole.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+			case "minefield":
+				LevelMineField LevelClass3 = new LevelMineField ();
+				List<LevelMineField.Blackhole> ClassListMineField = new List<LevelMineField.Blackhole> ();
+				ClassListMineField = LevelClass3.BlackholeMaker ();
+				//foreach
+				foreach(var Blackhole in ClassListMineField){
+					Blackhole.PosX =Blackhole.PosX*bounds.Width;
+					Blackhole.PosY = Blackhole.PosY*bounds.Height;
+
+					switch(Blackhole.MoveType){
+					case "STATIC":
+						visibleBlackholes.Add (AddSTATIC_Blackhole (mainWindow,Blackhole.PosX,Blackhole.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+
+
+			case "blackhole":
+				LevelBlackhole LevelClass4 = new LevelBlackhole();
+				List<LevelBlackhole.Blackhole> ClassListBlackhole= new List<LevelBlackhole.Blackhole> ();
+				ClassListBlackhole = LevelClass4.BlackholeMaker ();
+				//foreach
+				foreach(var Blackhole in ClassListBlackhole){
+					Blackhole.PosX =Blackhole.PosX*bounds.Width;
+					Blackhole.PosY = Blackhole.PosY*bounds.Height;
+
+					switch(Blackhole.MoveType){
+					case "STATIC":
+						visibleBlackholes.Add (AddSTATIC_Blackhole (mainWindow,Blackhole.PosX,Blackhole.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+
+
+			case "testgrounds":
+				LevelTestGrounds LevelClass5 = new LevelTestGrounds ();
+				List<LevelTestGrounds.Blackhole> ClassListTestGrounds = new List<LevelTestGrounds.Blackhole> ();
+				ClassListTestGrounds = LevelClass5.BlackholeMaker ();
+				//foreach
+				foreach(var Blackhole in ClassListTestGrounds){
+					Blackhole.PosX =Blackhole.PosX*bounds.Width;
+					Blackhole.PosY = Blackhole.PosY*bounds.Height;
+
+					switch(Blackhole.MoveType){
+					case "STATIC":
+						visibleBlackholes.Add (AddSTATIC_Blackhole (mainWindow,Blackhole.PosX,Blackhole.PosY,pivotScale));
+						break;
+					case "RIGHT":
+						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						break;
+
+					default:
+						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+
+						break;
+
+					}
+
+				}
+				break;
+			default:
+				break;
+
+			}
+
+
+
+		}
+
+		CCSprite Add_TutorialSteps (CCWindow mainWindow,float blackholePosX,float blackholePosY,string spriteNameStep)
+		{   
+			var bounds = mainWindow.WindowSizeInPixels;
+			BlackholeSprite = new CCSprite (spriteNameStep);
+			BlackholeSprite.Scale = 0.0006f*bounds.Width;;
+
+			BlackholeSprite.PositionX = blackholePosX;
+			BlackholeSprite.PositionY = blackholePosY;
+
+			mainLayer.AddChild(BlackholeSprite);
+			mainLayer.ReorderChild (BlackholeSprite, -97);
+
+
+
+			return BlackholeSprite;
+		}
+
+		void addLevelTutorialSteps (CCWindow mainWindow){
+			var bounds = mainWindow.WindowSizeInPixels;
+			float pivotScale=0.001f*bounds.Width;
+			switch (ThisLevelName) {
+			case "tutorial":
+				LevelTutorial LevelClass1 = new LevelTutorial ();
+				List<LevelTutorial.TutorialSteps> ClassListTutorial = new List<LevelTutorial.TutorialSteps> ();
+				ClassListTutorial = LevelClass1.TutorialStepsMaker ();
+				//foreach
+				foreach (var TutorialSteps in ClassListTutorial) {
+					TutorialSteps.PosX = TutorialSteps.PosX * bounds.Width;
+					TutorialSteps.PosY = TutorialSteps.PosY * bounds.Height;
+
+				
+					visibleTutorialSteps.Add(Add_TutorialSteps (mainWindow, TutorialSteps.PosX, TutorialSteps.PosY, TutorialSteps.MoveType));
+					
+
+				}
+				break;
+			
+			}
+					}
+
+		
+
+		// 
 		void drawSweptAreaLine (byte R,byte G,byte B){
-		var sweptAreaLine = new CCDrawNode ();
+			var sweptAreaLine = new CCDrawNode ();
 
 			float pivotScale=0.0002f*mainWindowAux.WindowSizeInPixels.Width;
 			float ballScale=0.00047f*mainWindowAux.WindowSizeInPixels.Width;
-			//sweptAreaLine.DrawLine (ballSprite.Position, pivotSprite.Position, BlueColor);
 			CCPoint ballTemp = new CCPoint();
 			CCPoint pivotTemp = new CCPoint();
 			ballTemp.X = ballSprite.BoundingBox.Center.X-visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.X+ballSprite.BoundingBox.Size.Width*ballScale/2;
 			ballTemp.Y = ballSprite.BoundingBox.Center.Y - visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.Y + ballSprite.BoundingBox.Size.Height * ballScale / 2;
 			pivotTemp.X = 0+visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Size.Width*pivotScale/2;
-			pivotTemp.Y = 0+visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Size.Height*pivotScale/2
-				;
-			//pivotTemp.X = visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.X;
-			//pivotTemp.Y =visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Center.Y;
-			/*var randomColor = new Random();
-			byte R = Convert.ToByte( randomColor.Next (50,255));
-			byte G = Convert.ToByte(randomColor.Next (50,255));
-			byte B = Convert.ToByte(randomColor.Next (50,255));*/
+			pivotTemp.Y = 0+visiblePivots [ballPhysicsSingle.indexHookPivot].BoundingBox.Size.Height*pivotScale/2				;
 			var tempColor = new CCColor3B (R, G,B);
-			//var tempColor = new CCColor3B (221, 82, 195);
 			var purpleColor = new CCColor4F (tempColor);
 
 			sweptAreaLine.Scale = 1 / pivotScale;
-			sweptAreaLine.DrawSegment(ballTemp, pivotTemp,1.0f, purpleColor);
+			sweptAreaLine.DrawSegment( pivotTemp,ballTemp,1.0f, purpleColor);
 			CCRemoveSelf removeLine = new CCRemoveSelf ();
-		//	CCFadeOut fade = new CCFadeOut (1.0f);
-			CCDelayTime waitLine = new CCDelayTime(0.6f);
-			CCMoveBy moveAway = new CCMoveBy (0.4f,new CCPoint (sweptAreaLine.PositionX, -0.0450f * mainWindowAux.WindowSizeInPixels.Height));
+			CCDelayTime waitLine = new CCDelayTime(0.80f);
 			sweptAreaLine.RunActions (waitLine,removeLine);
-
-			//visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine);
-
 			visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine);
 			mainLayer.ReorderChild (sweptAreaLine, -100);
-			//add lifetime to the line
 
-			/*NOTES
-	pivotSprite = new CCSprite ("pivot3");
-			pivotSprite.Scale = scale;
-			pivotSprite.PositionX = pivotPosX;
-			pivotSprite.PositionY = pivotPosY;
-			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
-			CCPoint tempPos = new CCPoint (h, h);
-			//var galaxy = new CCParticleGalaxy (tempPos); //TODO: manage "better" for performance when "many" particles
-			var CircleDraw = new CCDrawNode ();
-			var BlueColor = new CCColor4B (0, 0, 255, 1);
-			var bounds = mainWindow.WindowSizeInPixels;
-			CircleDraw.DrawCircle (tempPos, 1.0f * bounds.Width, BlueColor);
-			//pivotSprite.AddChild (CircleDraw);
-			mainLayer.AddChild (pivotSprite);
-			CCRotateBy rotatePivot = new CCRotateBy (4.0f, 360);
-			CCMoveBy moveByPivot_UP = new CCMoveBy (3.0f,new CCPoint(0.0f,-0.7f*bounds.Width));
-			pivotSprite.RepeatForever(moveByPivot_UP,moveByPivot_UP.Reverse());
-			//pivotSprite.RepeatForever (rotatePivot);
-			return pivotSprite;
-			*/
+			if (ballPhysicsSingle.hookTouchBool == true) {
+				//visiblePivots [ballPhysicsSingle.indexHookPivot].RemoveAllChildren(true);//sweptAreaLine
+			}
 
 		}
 
@@ -1487,18 +1725,26 @@ namespace IsJustABall
 		#region CHECK COLLISION
 		//Remove jewel and and Score Counter
 		void checkJewel(){
+
+
 			foreach (var ruby in visibleJewels) {
 				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
 
 				if (hit)
-				{
+				{   BlueBallAnimation ();
+					//animation for jewel
+					CCScaleTo bounceScale = new CCScaleTo (0.2f, 0.0f);
+					CCRemoveSelf removeRuby = new CCRemoveSelf ();
+					ruby.RunActions (bounceScale,removeRuby);
+
 					hitJewels.Add(ruby);
-					CCSimpleAudioEngine.SharedEngine.PlayEffect("jewel2");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
 					//Explode(banana.Position);
-					ruby.RemoveFromParent(true);
+					//ruby.RemoveFromParent(true);
 					visibleJewels.Remove (ruby);
 					score += 10;
 					DisplayScore (score);
+
 					break;
 
 				}
@@ -1509,6 +1755,7 @@ namespace IsJustABall
 				if (hit)
 				{
 					hitJewels.Add(diamond);
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewelsound1.wav");
 					LevelClearGame (mainWindowAux);
 
 
@@ -1532,10 +1779,15 @@ namespace IsJustABall
 				if (hit)
 				{
 
-					CCSimpleAudioEngine.SharedEngine.PreloadEffect ("bomb02");
-					CCSimpleAudioEngine.SharedEngine.PlayEffect("bomb02");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/explosion-02.wav");
 					Explode(spikeSprite.Position);
-					spikeSprite.RemoveFromParent(true);
+					CCScaleTo bounceScale = new CCScaleTo (0.2f, 0.0008f*mainWindowAux.WindowSizeInPixels.Width);
+				
+					CCRemoveSelf removeSpike = new CCRemoveSelf ();
+					spikeSprite.RunActions (bounceScale,removeSpike);
+
+
+					//spikeSprite.RemoveFromParent(true);
 					visibleTraps.Remove (spikeSprite);
 
 
@@ -1559,10 +1811,17 @@ namespace IsJustABall
 				bool hit = WallSprite.BoundingBoxTransformedToParent.IntersectsRect(ballSprite.BoundingBoxTransformedToParent);
 				if (hit)
 				{
-					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/explosion1.wav");
 					//Explode(WallSprite.Position);
-					WallSprite.RemoveFromParent(true);
-					visibleWalls.Remove (WallSprite);
+					//animation for jewel
+					CCScaleTo bounceScale = new CCScaleTo (0.2f, 0.0f);
+					CCRemoveSelf removeWall = new CCRemoveSelf ();
+					WallSprite.RunActions (bounceScale,removeWall);
+
+					//WallSprite.RemoveFromParent(true);
+					//WallSprite.Cleanup ();
+					//WallSprite.Dispose ();
+
 
 					//ANALYSE THE DIRECTION OF IMPACT
 
@@ -1572,14 +1831,17 @@ namespace IsJustABall
 					Radial = Math.Pow (Radial, 0.5);
 					double SineAngle = wY / Radial;
 
+					if(ballPhysicsSingle.hookTouchBool == true){
 					if (Math.Abs (SineAngle) <= 0.707106) {
-						ballPhysicsSingle.ballXVelocity = -1.0001f*ballPhysicsSingle.ballXVelocity;
-					} else if (Math.Abs (SineAngle) > 0.707106) {
-						ballPhysicsSingle.ballYVelocity = -1.0001f*ballPhysicsSingle.ballYVelocity;
+						ballPhysicsSingle.ballXVelocity = -1.01f*ballPhysicsSingle.ballXVelocity;
+						ballPhysicsSingle.ballYVelocity = 1.01f*ballPhysicsSingle.ballYVelocity;
+					} else if (Math.Abs (SineAngle) > 0.706) {
+						ballPhysicsSingle.ballYVelocity = -1.01f*ballPhysicsSingle.ballYVelocity;
+						ballPhysicsSingle.ballXVelocity = 1.01f*ballPhysicsSingle.ballXVelocity;
+					}
 					}
 
-
-
+					visibleWalls.Remove (WallSprite);
 
 					//ShouldEndGame ();
 				break;
@@ -1588,6 +1850,58 @@ namespace IsJustABall
 
 
 		}
+
+		//BLACKHOLE
+		void checkBlackhole(){
+			float RvecX, RvecY;
+			double Radius;
+			float alphaFactor= 20000*mainWindowAux.WindowSizeInPixels.Width;
+
+			foreach (var BlackholeSprite in visibleBlackholes) {
+				//change gravity
+				RvecX = ballSprite.BoundingBoxTransformedToParent.Center.X - BlackholeSprite.BoundingBoxTransformedToParent.Center.X;
+				RvecY = ballSprite.BoundingBoxTransformedToParent.Center.Y- BlackholeSprite.BoundingBoxTransformedToParent.Center.Y;
+				Radius = Math.Pow (RvecX, 2.0f) + Math.Pow (RvecY, 2.0f);
+				Radius = Math.Pow (Radius, 0.5f);
+				Radius = Math.Pow (Radius, 3f);
+
+				ballPhysicsSingle.gravityX =-alphaFactor * RvecX / Radius ;
+				ballPhysicsSingle.gravityY =-alphaFactor * RvecY / Radius ;
+				//
+				bool hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear(ballSprite.BoundingBoxTransformedToParent.Center,20.0f);
+				if (hit)
+				{
+						EndGame();
+					}
+
+				hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear(ballSprite.BoundingBoxTransformedToParent.Center,0.2f*mainWindowAux.WindowSizeInPixels.Width);
+				if (hit)
+				{
+					CCRotateBy rotate = new CCRotateBy (2.0f, -2*360f);
+					BlackholeSprite.RunAction(rotate);
+				}
+
+
+
+				//OUT OF BOUNDS DELETE
+				if (BlackholeSprite.PositionY < -mainWindowAux.WindowSizeInPixels.Height / 4) {
+					BlackholeSprite.RemoveFromParent(true);
+					visibleBlackholes.Remove (BlackholeSprite);
+				
+				}
+
+					//ShouldEndGame ();
+					break;
+				}
+			}
+
+		void BlueBallAnimation (){
+			CCScaleTo bounceScale = new CCScaleTo (0.1f, 0.00045f*mainWindowAux.WindowSizeInPixels.Width);
+			CCDelayTime wait = new CCDelayTime (0.1f);
+			CCScaleTo bounceReduce = new CCScaleTo (0.1f, 0.0003f*mainWindowAux.WindowSizeInPixels.Width);
+			ballSprite.RunActions (bounceScale,wait,bounceReduce);
+					}
+
 		#endregion
 
 		#region LEVEL  HANDLERS

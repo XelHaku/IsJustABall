@@ -12,8 +12,6 @@
 		{// Declare VAriables
 			
 			CCSprite LevelItem;
-			CCSprite Star;
-			CCLabelTtf scoreLabel;
 			CCSprite background;
 
 

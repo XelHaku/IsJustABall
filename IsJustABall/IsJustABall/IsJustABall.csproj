@@ -36,7 +36,6 @@
     <Compile Include="OnePlayerScrollerScene.cs" />
     <Compile Include="MultiPlayerScrollerScene.cs" />
     <Compile Include="ballPhysics.cs" />
-    <Compile Include="LayerExample.cs" />
     <Compile Include="Levels\Multi4Level1.cs" />
     <Compile Include="FunctionsClasses\addFourBalls.cs" />
     <Compile Include="PlayerCountPickerScene.cs" />

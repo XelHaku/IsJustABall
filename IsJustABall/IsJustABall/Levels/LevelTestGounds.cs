@@ -173,7 +173,8 @@ namespace IsJustABall
 		public  List<Blackhole> BlackholeMaker()
 		{
 			List<Blackhole> BlackholeList = new List<Blackhole>();
-			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 0.6f, MoveType = "STATIC" });
+			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 0.5f, MoveType = "STATIC" });
+			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 1.5f, MoveType = "STATIC" });
 			return BlackholeList;
 		}
 

@@ -153,10 +153,53 @@ namespace IsJustABall
 		public  List<Wall> WallMaker()
 		{
 			List<Wall> WallList = new List<Wall>();
-			WallList.Add ( new Wall { PosX = 0.5f, PosY = 0.7f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.5f, PosY = 3.7f, MoveType = "STATIC" });
 			return WallList;
 		}
 
+		#endregion
+
+		#region blackhole MAKER
+		public class Blackhole
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string MoveType { get; set; }
+
+		}
+
+		public  List<Blackhole> BlackholeMaker()
+		{
+			List<Blackhole> BlackholeList = new List<Blackhole>();
+			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 4.6f, MoveType = "STATIC" });
+			return BlackholeList;
+		}
+
+		#endregion
+
+		#region TutorialSteps MAKER
+		public class TutorialSteps
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string MoveType { get; set; }
+
+		}
+
+		public  List<TutorialSteps> TutorialStepsMaker()
+		{
+			List<TutorialSteps> TutorialStepsList = new List<TutorialSteps>();
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.3f, PosY = 0.6f, MoveType = "step01" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.6f, PosY = 1.2f, MoveType = "step02" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.3f, PosY = 1.8f, MoveType = "step03" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.6f, PosY = 2.4f, MoveType = "step04" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.3f, PosY = 2.6f, MoveType = "diagram01" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.3f, PosY = 3.2f, MoveType = "step05" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.6f, PosY = 3.8f, MoveType = "step06" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.3f, PosY = 4.4f, MoveType = "step07" });
+			TutorialStepsList.Add ( new TutorialSteps { PosX = 0.6f, PosY = 5.8f, MoveType = "step08" });
+			return TutorialStepsList;
+		}
 		#endregion
 		/*
 		#region Diamond

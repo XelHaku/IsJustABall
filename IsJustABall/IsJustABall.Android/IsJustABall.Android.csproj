@@ -133,5 +133,20 @@
     <AndroidAsset Include="Assets\Content\railgun.png" />
     <AndroidAsset Include="Assets\Content\testgrounds.png" />
     <AndroidAsset Include="Assets\Content\tutorial.png" />
+    <AndroidAsset Include="Assets\Content\Sounds\electronics011.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\explosion1.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\explosion-02.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\jewel2.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\jewelsound1.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\laser-01.wav" />
+    <AndroidAsset Include="Assets\Content\diagram01.png" />
+    <AndroidAsset Include="Assets\Content\step01.png" />
+    <AndroidAsset Include="Assets\Content\step02.png" />
+    <AndroidAsset Include="Assets\Content\step03.png" />
+    <AndroidAsset Include="Assets\Content\step04.png" />
+    <AndroidAsset Include="Assets\Content\step05.png" />
+    <AndroidAsset Include="Assets\Content\step06.png" />
+    <AndroidAsset Include="Assets\Content\step07.png" />
+    <AndroidAsset Include="Assets\Content\step08.png" />
   </ItemGroup>
 </Project>

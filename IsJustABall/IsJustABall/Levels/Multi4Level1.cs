@@ -4,7 +4,7 @@ using CocosSharp;
 using System.Collections.Generic;
 using CocosDenshion;
 using System.Linq;
-using System;
+
 
 namespace IsJustABall
 {

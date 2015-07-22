@@ -309,11 +309,36 @@ namespace IsJustABall
 			WallList.Add ( new Wall { PosX = 0.9f, PosY = 0.5f, MoveType = "STATIC" });
 			WallList.Add ( new Wall { PosX = 1.0f, PosY = 0.5f, MoveType = "STATIC" });
 		
+			WallList.Add ( new Wall { PosX = 0.0f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.1f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.2f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.3f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.7f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.8f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 0.9f, PosY = 0.55f, MoveType = "STATIC" });
+			WallList.Add ( new Wall { PosX = 1.0f, PosY = 0.55f, MoveType = "STATIC" });
+
 			return WallList;
 		}
 
 		#endregion
+		#region blackhole MAKER
+		public class Blackhole
+		{
+			public float PosX { get; set; }
+			public float PosY { get; set; }
+			public string MoveType { get; set; }
 
+		}
+
+		public  List<Blackhole> BlackholeMaker()
+		{
+			List<Blackhole> BlackholeList = new List<Blackhole>();
+			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 0.6f, MoveType = "STATIC" });
+			return BlackholeList;
+		}
+
+		#endregion
 		#region GENERAL MAKER
 		public class GENERAL
 		{
