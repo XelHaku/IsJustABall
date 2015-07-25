@@ -5,12 +5,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsJustABall.Android", "IsJu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsJustABall", "IsJustABall\IsJustABall.csproj", "{AD014AE2-06AE-46BF-805E-DEEFE3C4CEDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BundleSdkLib", "Bundle2SdkLib\BundleSdkLib.csproj", "{792ED9AE-DC2B-41FA-BA17-5F17F4DE0C45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{792ED9AE-DC2B-41FA-BA17-5F17F4DE0C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{792ED9AE-DC2B-41FA-BA17-5F17F4DE0C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{792ED9AE-DC2B-41FA-BA17-5F17F4DE0C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{792ED9AE-DC2B-41FA-BA17-5F17F4DE0C45}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD014AE2-06AE-46BF-805E-DEEFE3C4CEDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD014AE2-06AE-46BF-805E-DEEFE3C4CEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD014AE2-06AE-46BF-805E-DEEFE3C4CEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU

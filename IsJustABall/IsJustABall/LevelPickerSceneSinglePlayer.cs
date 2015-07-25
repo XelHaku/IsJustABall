@@ -67,7 +67,9 @@ namespace IsJustABall
 				bool hit = LevelItem.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 				if (hit) {
-					LevelItem.ScaleTo (new CCSize (1.1f * LevelItem.ScaledContentSize.Width, 1.1f * LevelItem.ScaledContentSize.Height));
+					//LevelItem.ScaleTo (new CCSize (1.1f * LevelItem.ScaledContentSize.Width, 1.1f * LevelItem.ScaledContentSize.Height));
+					CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.90f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
+					LevelItem.RunAction (ZoomTouch);
 				}
 				//
 						
@@ -83,39 +85,43 @@ namespace IsJustABall
 
 
 			foreach (var LevelItem in ItemsList) {					
+				CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.82f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld .Size.Width);
+				LevelItem.RunAction(ZoomTouch);
 				bool hit = LevelItem.BoundingBoxTransformedToParent.ContainsPoint (location);
 				if (hit) {
+					
 					switch (LevelItem.Name) {
 					case "tutorial":
-						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+					
 						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
 							OnePlayerScrollerScene gameScene = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
 							mainWindowAux.RunWithScene (gameScene);
 						}
 						break;
 					case "railgun":
-						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
 						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
 							OnePlayerScrollerScene gameScene2 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
 							mainWindowAux.RunWithScene (gameScene2);
 						}
 						break;
 					case "minefield":
-						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
 						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
 							OnePlayerScrollerScene gameScene3 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
 							mainWindowAux.RunWithScene (gameScene3);
 						}
 						break;
 					case "blackhole":
-						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
 						if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
 							OnePlayerScrollerScene gameScene4 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
 							mainWindowAux.RunWithScene (gameScene4);
 						}
 						break;
 					case "testgrounds":
-						LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
+						//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width / 1.1f, LevelItem.ScaledContentSize.Height / 1.1f));
 						if (Math.Abs (templocation.Y - locationInverted.Y) <= 1) {
 							OnePlayerScrollerScene gameScene5 = new OnePlayerScrollerScene (mainWindowAux, LevelItem.Name);
 							mainWindowAux.RunWithScene (gameScene5);
@@ -155,9 +161,11 @@ namespace IsJustABall
 					/// OBJECTS AND SPRITES
 	                 	void addLevelItem(CCWindow mainWindow){
 						var bounds = mainWindow.WindowSizeInPixels;
+
 			LevelItem = new CCSprite ("tutorial");
+			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.82f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
 			LevelItem.Name = "tutorial";
-			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = 0.8f*bounds.Height;
 			ItemsList.Add (LevelItem);
@@ -165,7 +173,7 @@ namespace IsJustABall
 
 			LevelItem = new CCSprite ("railgun");
 			LevelItem.Name = "railgun";
-			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-1*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
 			ItemsList.Add (LevelItem);
@@ -173,7 +181,7 @@ namespace IsJustABall
 
 			LevelItem = new CCSprite ("minefield");
 			LevelItem.Name = "minefield";
-			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-2*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
 			ItemsList.Add (LevelItem);
@@ -181,7 +189,7 @@ namespace IsJustABall
 
 			LevelItem = new CCSprite ("blackholeLevel");
 			LevelItem.Name = "blackhole";
-			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-3*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
 			ItemsList.Add (LevelItem);
@@ -189,7 +197,7 @@ namespace IsJustABall
 
 			LevelItem = new CCSprite ("testgrounds");
 			LevelItem.Name = "testgrounds";
-			LevelItem.Scale = 0.001f*bounds.Width;
+			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-4*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
 			ItemsList.Add (LevelItem);

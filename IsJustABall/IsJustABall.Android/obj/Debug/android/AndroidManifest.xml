@@ -1,7 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="IsJustABall.Android">
-  <uses-sdk android:minSdkVersion="11" />
+  <uses-sdk android:minSdkVersion="18" android:targetSdkVersion="22" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+  <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.GET_TASKS" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
   <application android:label="IsJustABall.Android" android:name="mono.android.app.Application" android:debuggable="true">
+    <activity android:exported="false" android:name="com.yrkfgo.assxqx4.AdActivity" android:configChanges="orientation|screenSize" android:theme="@android:style/Theme.Translucent" />
+    <activity android:name="com.yrkfgo.assxqx4.BrowserActivity" android:configChanges="orientation|screenSize" />
+    <meta-data android:name="com.google.android.gms.version" android:value="7571000" />
+    <service android:name="com.yrkfgo.assxqx4.UbService" android:exported="false"></service>
+    <service android:name="com.yrkfgo.assxqx4.AdService" android:exported="false" />
+    <receiver android:name="com.yrkfgo.assxqx4.BootReceiver" android:exported="true">
+      <intent-filter android:priority="-1000">
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <category android:name="android.intent.category.HOME" />
+      </intent-filter>
+    </receiver>
     <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="IsJustABall" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -16,6 +40,5 @@
       </intent-filter>
     </receiver>
   </application>
-  <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

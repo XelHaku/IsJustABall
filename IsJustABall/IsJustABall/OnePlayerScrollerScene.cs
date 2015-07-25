@@ -207,6 +207,17 @@ namespace IsJustABall
 			var locationInverted = touches [0].LocationOnScreen;
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
+
+			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,(0.18f)* mainWindowAux.WindowSizeInPixels.Width/ResumeGame.BoundingBoxTransformedToWorld.Size.Width);
+			ResumeGame.RunAction (ZoomTouch);
+
+			ZoomTouch = new CCScaleBy(0.01f,(0.18f)* mainWindowAux.WindowSizeInPixels.Width/Restart.BoundingBoxTransformedToWorld.Size.Width);
+			Restart.RunAction (ZoomTouch);
+
+			ZoomTouch = new CCScaleBy(0.01f,(0.18f)* mainWindowAux.WindowSizeInPixels.Width/MainMenu.BoundingBoxTransformedToWorld.Size.Width);
+			MainMenu.RunAction (ZoomTouch);
+
+
 			bool hit = ResumeGame.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit)
@@ -214,7 +225,8 @@ namespace IsJustABall
 				//ResumeGame.Scale =  ResumeGame.Scale/1.2f;
 
 				PauseGame = true;
-				ResumeGame.ScaleTo (new CCSize (ResumeGame.ScaledContentSize.Width/1.1f,ResumeGame.ScaledContentSize.Height/1.1f));
+
+				//ResumeGame.ScaleTo (new CCSize (ResumeGame.ScaledContentSize.Width/1.1f,ResumeGame.ScaledContentSize.Height/1.1f));
 				//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
 				CCSimpleAudioEngine.SharedEngine.ResumeBackgroundMusic ();
 				CCMoveBy SlideOut = new CCMoveBy (0.5f,new CCPoint(0.0f,- 0.3f*bounds.Height));
@@ -228,7 +240,7 @@ namespace IsJustABall
 			hit = Restart.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
-				Restart.ScaleTo (new CCSize (Restart.ScaledContentSize.Width/1.1f,Restart.ScaledContentSize.Height/1.1f));
+				//Restart.ScaleTo (new CCSize (Restart.ScaledContentSize.Width/1.1f,Restart.ScaledContentSize.Height/1.1f));
 				OnePlayerScrollerScene gameScene1 = new OnePlayerScrollerScene (mainWindowAux,ThisLevelName);
 				mainWindowAux.RunWithScene (gameScene1);
 			}
@@ -236,7 +248,7 @@ namespace IsJustABall
 			hit = MainMenu.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
-				MainMenu.ScaleTo (new CCSize (MainMenu.ScaledContentSize.Width/1.1f,MainMenu.ScaledContentSize.Height/1.1f));
+				//MainMenu.ScaleTo (new CCSize (MainMenu.ScaledContentSize.Width/1.1f,MainMenu.ScaledContentSize.Height/1.1f));
 				MainMenuScene gameScene2 = new MainMenuScene (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene2);
 
@@ -256,6 +268,7 @@ namespace IsJustABall
 			G = Convert.ToByte(randomColor.Next (50,255));
 			B = Convert.ToByte(randomColor.Next (50,255));
 
+			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.21f* mainWindowAux.WindowSizeInPixels.Width/ResumeGame.BoundingBoxTransformedToWorld.Size.Width);
 			//Pause
 			var bounds = mainWindowAux.WindowSizeInPixels;
 			var locationInverted = touches [0].LocationOnScreen;
@@ -265,7 +278,8 @@ namespace IsJustABall
 			bool hit = ResumeGame.BoundingBoxTransformedToParent.ContainsPoint (location);
 			if (hit)
 			{
-				ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
+				//ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
+				ResumeGame.RunAction(ZoomTouch);
 				CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.3f * bounds.Height));
 				menuframe.RunAction (SlideOut);////
 			}
@@ -273,13 +287,17 @@ namespace IsJustABall
 			hit = Restart.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
-				Restart.ScaleTo (new CCSize (1.1f*Restart.ScaledContentSize.Width,1.1f*Restart.ScaledContentSize.Height));
+				//Restart.ScaleTo (new CCSize (1.1f*Restart.ScaledContentSize.Width,1.1f*Restart.ScaledContentSize.Height));
+				ZoomTouch = new CCScaleBy(0.01f,0.21f* mainWindowAux.WindowSizeInPixels.Width/Restart.BoundingBoxTransformedToWorld.Size.Width);
+				Restart.RunAction(ZoomTouch);
 			}
 
 			hit = MainMenu.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
-				MainMenu.ScaleTo (new CCSize (1.1f*MainMenu.ScaledContentSize.Width,1.1f*MainMenu.ScaledContentSize.Height));
+				//MainMenu.ScaleTo (new CCSize (1.1f*MainMenu.ScaledContentSize.Width,1.1f*MainMenu.ScaledContentSize.Height));
+				ZoomTouch = new CCScaleBy(0.01f,0.21f* mainWindowAux.WindowSizeInPixels.Width/MainMenu.BoundingBoxTransformedToWorld.Size.Width);
+				MainMenu.RunAction(ZoomTouch);
 			}
 
 			hit = PauseButton.BoundingBoxTransformedToParent.ContainsPoint (location);
@@ -606,19 +624,19 @@ namespace IsJustABall
 			case "minefield":
 			case "railgun":
 			case "blackhole":
+			CCScaleBy SpriteSize = new CCScaleBy(0.01f,1.0f*bounds.Width/background1.BoundingBoxTransformedToWorld.Size.Width);
 
-			CCSize backgroundSize = new CCSize();
+			
 		
-			backgroundSize.Height = bounds.Height;
-			backgroundSize.Width = bounds.Width;
-			background1.ScaleTo(backgroundSize);
+			
+			background1.RunAction(SpriteSize);
 			background1.PositionX = bounds.Width/2;
 			background1.PositionY = background1.ContentSize.Height-500.0f;
 		    mainLayer.AddChild (background1);
 			mainLayer.ReorderChild (background1,- 100);
 			
 			
-			background2.ScaleTo(backgroundSize);
+			background2.RunAction(SpriteSize);
 			background2.PositionX = bounds.Width/2;
 			background2.PositionY = 2*background2.ContentSize.Height;
 			mainLayer.AddChild (background2);
@@ -1295,7 +1313,10 @@ namespace IsJustABall
 			CCSize wallSize = new CCSize();
 			wallSize.Height = bounds.Height/20;
 			wallSize.Width = bounds.Width/10;
-			WallSprite.ScaleTo (wallSize);
+			//0.3f*bounds.Width/BlackholeSprite.BoundingBoxTransformedToWorld.Size.Width
+			CCScaleBy SpriteSize = new CCScaleBy(0.0f,0.1f*bounds.Width/WallSprite.BoundingBoxTransformedToWorld.Size.Width);
+			WallSprite.RunAction(SpriteSize);
+			//WallSprite.ScaleTo (wallSize);
 			WallSprite.PositionX = wallPosX;
 			WallSprite.PositionY = wallPosY;
 
@@ -1458,11 +1479,11 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 			BlackholeSprite = new CCSprite ("blackholeshadow");
 			//WallSprite.Scale = scale;
-			CCSize blackholeSize = new CCSize();
-			blackholeSize.Width = bounds.Width/4;
-			blackholeSize.Height = blackholeSize.Width;
-
-			BlackholeSprite.ScaleTo (blackholeSize);
+			//CCSize blackholeSize = new CCSize();
+			//blackholeSize.Width = bounds.Width/4;
+			//blackholeSize.Height = blackholeSize.Width;
+			CCScaleBy SpriteSize = new CCScaleBy(0.0f,0.3f*bounds.Width/BlackholeSprite.BoundingBoxTransformedToWorld.Size.Width);
+			BlackholeSprite.RunAction(SpriteSize);
 			BlackholeSprite.PositionX = blackholePosX;
 			BlackholeSprite.PositionY = blackholePosY;
 
@@ -1994,33 +2015,37 @@ namespace IsJustABall
 			float scale =0.002f*bounds.Width;
 
 			ResumeGame = new CCSprite ("ResumeButton");
-			ResumeGame.Scale = scale; 
+			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.18f* mainWindowAux.WindowSizeInPixels.Width/ResumeGame.BoundingBoxTransformedToWorld.Size.Width);
+
+			ResumeGame.RunAction(ZoomTouch); 
 			ResumeGame.PositionX = 0.5f*bounds.Width;
 			ResumeGame.PositionY = -0.2f*bounds.Height;
 			mainLayer.AddChild (ResumeGame);
 
 			Restart = new CCSprite ("RestartButton");
-			Restart.Scale = scale; 
+			Restart.RunAction(ZoomTouch); 
 			Restart.PositionX = 0.75f*bounds.Width;
 			Restart.PositionY = -0.2f*bounds.Height;
 			mainLayer.AddChild (Restart);
 
 			MainMenu = new CCSprite ("MainMenuButton");
-			MainMenu.Scale = scale; 
+			MainMenu.RunAction(ZoomTouch); 
 			MainMenu.PositionX = 0.25f*bounds.Width;
 			MainMenu.PositionY = -0.2f*bounds.Height;
 			mainLayer.AddChild (MainMenu);
 
+
 			menuframe = new CCSprite ("layerbackground");
-			menuframe.Scale = scale; 
+			ZoomTouch = new CCScaleBy(0.01f,0.95f* mainWindowAux.WindowSizeInPixels.Width/menuframe.BoundingBoxTransformedToWorld.Size.Width);
+			menuframe.RunAction(ZoomTouch);  
 			menuframe.PositionX = 0.5f*bounds.Width;
 			menuframe.PositionY = -0.4f*bounds.Height;
 			mainLayer.AddChild (menuframe);
 
-			mainLayer.ReorderChild (ResumeGame, 101);
-			mainLayer.ReorderChild (Restart, 100);
-			mainLayer.ReorderChild (MainMenu, 100);
-			mainLayer.ReorderChild (menuframe, 98);
+			mainLayer.ReorderChild (ResumeGame, 120);
+			mainLayer.ReorderChild (Restart, 120);
+			mainLayer.ReorderChild (MainMenu, 120);
+			mainLayer.ReorderChild (menuframe, 119);
 		
 		}
 		#endregion

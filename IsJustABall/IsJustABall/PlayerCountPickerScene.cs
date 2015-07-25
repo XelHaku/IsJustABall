@@ -68,7 +68,7 @@
 			bool hit =  location.IsNear(buttonPoint, 200.0f) ;
 				if (hit)
 				{
-					LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
+					//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
 				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,4);
 					mainWindowAux.RunWithScene (gameScene);
 
@@ -78,7 +78,7 @@
 			hit =  location.IsNear(buttonPoint, 200.0f) ;
 			if (hit)
 			{
-				LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
+				//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
 				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,3);
 				mainWindowAux.RunWithScene (gameScene);
 
@@ -88,7 +88,7 @@
 			hit =  location.IsNear(buttonPoint, 200.0f) ;
 			if (hit)
 			{
-				LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
+				//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
 				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,2);
 				mainWindowAux.RunWithScene (gameScene);
 

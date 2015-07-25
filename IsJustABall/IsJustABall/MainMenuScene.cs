@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using CocosSharp;
 namespace IsJustABall
-{
+{	
 	public class MainMenuScene : CCScene 
 	{// Declare VAriables
 		CCSprite ballSprite;
@@ -19,6 +19,8 @@ namespace IsJustABall
 
 		public MainMenuScene(CCWindow mainWindow) : base(mainWindow)
 			{
+
+			 
 			    mainLayer = new CCLayer ();
 			    AddChild (mainLayer);
 			mainWindowAux = mainWindow;
@@ -52,18 +54,23 @@ namespace IsJustABall
 			var bounds = mainWindowAux.WindowSizeInPixels;
 			var locationInverted = touches [0].LocationOnScreen;
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
-
+			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.90f*bounds.Width/ballSprite.BoundingBoxTransformedToWorld.Size.Width);
 		//	bool hit =  location.IsNear(ballSprite.Position, 100.0f) ;
 			bool hit = ballSprite.BoundingBoxTransformedToParent.ContainsPoint (location);
 			if (hit)
 			{
-				ballSprite.ScaleTo (new CCSize (1.1f*ballSprite.ScaledContentSize.Width,1.1f*ballSprite.ScaledContentSize.Height));
+				//ballSprite.ScaleTo (new CCSize (1.1f*ballSprite.ScaledContentSize.Width,1.1f*ballSprite.ScaledContentSize.Height));
+				//CCScaleTo ZoomTouch = new CCScaleTo(0.01f,1.05f);
+
+				ballSprite.RunAction (ZoomTouch);
 			}
 
 			hit = MultiOption.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit) {
-				MultiOption.ScaleTo (new CCSize (1.1f*MultiOption.ScaledContentSize.Width,1.1f*MultiOption.ScaledContentSize.Height));
+				//MultiOption.ScaleTo (new CCSize (1.1f*MultiOption.ScaledContentSize.Width,1.1f*MultiOption.ScaledContentSize.Height));
+
+				MultiOption.RunAction (ZoomTouch);
 			}
 
 
@@ -78,13 +85,18 @@ namespace IsJustABall
 			var bounds = mainWindowAux.WindowSizeInPixels;
 			var locationInverted = touches [0].LocationOnScreen;
 			CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
-		
+
+			CCScaleTo ZoomTouch = new CCScaleTo(0.01f,0.80f*bounds.Width/ballSprite.BoundingBox.Size.Width);
+			ballSprite.RunAction (ZoomTouch);
+			ZoomTouch = new CCScaleTo(0.01f,0.80f*bounds.Width/MultiOption.BoundingBox.Size.Width);
+			MultiOption.RunAction (ZoomTouch);
+
 
 			bool hit = ballSprite.BoundingBoxTransformedToParent.ContainsPoint (location);
 
 			if (hit)
 			{
-				ballSprite.ScaleTo (new CCSize (ballSprite.ScaledContentSize.Width/1.1f,ballSprite.ScaledContentSize.Height/1.1f));
+				//ballSprite.ScaleTo (new CCSize (ballSprite.ScaledContentSize.Width/1.1f,ballSprite.ScaledContentSize.Height/1.1f));
 				LevelPickerSceneSinglePlayer gameScene = new LevelPickerSceneSinglePlayer (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene);
 
@@ -92,7 +104,7 @@ namespace IsJustABall
 
 			hit = MultiOption.BoundingBoxTransformedToParent.ContainsPoint (location);
 			if (hit) {
-				MultiOption.ScaleTo (new CCSize (MultiOption.ScaledContentSize.Width/1.1f,MultiOption.ScaledContentSize.Height/1.1f));
+				//MultiOption.ScaleTo (new CCSize (MultiOption.ScaledContentSize.Width/1.1f,MultiOption.ScaledContentSize.Height/1.1f));
 				PlayerCountPickerScene gameScene = new PlayerCountPickerScene (mainWindowAux);
 				mainWindowAux.RunWithScene (gameScene);
 			}
@@ -119,7 +131,8 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 				ballSprite = new CCSprite ("singleplayermenubutton");
-			ballSprite.Scale = 0.0008f*bounds.Width;
+			CCScaleTo ZoomTouch = new CCScaleTo(0.01f,0.80f*bounds.Width/ballSprite.BoundingBox.Size.Width);
+			ballSprite.RunAction (ZoomTouch);
 				ballSprite.PositionX = 0.5f*bounds.Width;
 				ballSprite.PositionY = 0.5f*bounds.Height;
 
@@ -132,7 +145,9 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			MultiOption = new CCSprite ("fourplayermenubutton");
-			MultiOption.Scale = 0.0008f*bounds.Width;
+			CCScaleTo ZoomTouch = new CCScaleTo(0.01f,0.80f*bounds.Width/MultiOption.BoundingBox.Size.Width);
+			MultiOption.RunAction (ZoomTouch);
+
 			MultiOption.PositionX = 0.5f*bounds.Width;
 			MultiOption.PositionY = 0.3f*bounds.Height;
 

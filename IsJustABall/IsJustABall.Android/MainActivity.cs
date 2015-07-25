@@ -9,6 +9,9 @@ using Android.OS;
 using CocosSharp;
 using Android.Content.PM;
 using Microsoft.Xna.Framework;
+using Com.Airpush.Xamarinlib;
+
+
 
 
 namespace IsJustABall
@@ -36,7 +39,19 @@ namespace IsJustABall
 			// from CCApplicationDelegate
 			application.ApplicationDelegate = new GameAppDelegate();
 			SetContentView(application.AndroidContentView);
+			//AIRPUSH
+			AirpushSdk air = new AirpushSdk (this);
+
+			air.AirConfig (282083, "1437771158230876985", false, true, 0);
+
+
+
+			//
 			application.StartGame();
+			air.AirBannerBottomAd ();
+			air.AirBannerTopAd ();
+			air.AirSmartWallAd ();
+			air.Banner360 ();
 		}
 	}
 }
