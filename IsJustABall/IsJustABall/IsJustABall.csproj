@@ -34,7 +34,6 @@
     <Compile Include="GameAppDelegate.cs" />
     <Compile Include="MainMenuScene.cs" />
     <Compile Include="OnePlayerScrollerScene.cs" />
-    <Compile Include="MultiPlayerScrollerScene.cs" />
     <Compile Include="ballPhysics.cs" />
     <Compile Include="Levels\Multi4Level1.cs" />
     <Compile Include="FunctionsClasses\addFourBalls.cs" />
@@ -45,6 +44,7 @@
     <Compile Include="Levels\LevelTutorial.cs" />
     <Compile Include="Levels\LevelBlackhole.cs" />
     <Compile Include="Levels\LevelTestGounds.cs" />
+    <Compile Include="MultiPlayerScrollerScene3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

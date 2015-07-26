@@ -2,17 +2,18 @@
 using System;
 using System.Collections.Generic;
 using CocosSharp;
+
 namespace IsJustABall
 {
 
 		
 		
 	public class LevelPickerSceneSinglePlayer : CCScene 
-				{// Declare VAriables
+				{	// Declare VAriables
 		            List<CCSprite> ItemsList;
 					CCSprite LevelItem;
 					//CCSprite Star;
-		           // CCLabelTtf scoreLabel;
+		           // CCLabel scoreLabel;
 					CCSprite background;
 
 
@@ -24,6 +25,7 @@ namespace IsJustABall
 
 			public LevelPickerSceneSinglePlayer(CCWindow mainWindow) : base(mainWindow)
 					{
+			
 						mainLayer = new CCLayer ();
 						AddChild (mainLayer);
 						mainWindowAux = mainWindow;

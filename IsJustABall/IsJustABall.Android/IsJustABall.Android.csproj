@@ -150,5 +150,12 @@
     <AndroidAsset Include="Assets\Content\step06.png" />
     <AndroidAsset Include="Assets\Content\step07.png" />
     <AndroidAsset Include="Assets\Content\step08.png" />
+    <AndroidAsset Include="Assets\Content\nasalizationbold.ttf" />
+    <AndroidAsset Include="Assets\Content\freepik03.png" />
+    <AndroidAsset Include="Assets\Content\geometricbackground.png" />
+    <AndroidAsset Include="Assets\Content\trianglesbackground.png" />
+    <AndroidAsset Include="Assets\Content\triangles2background.png" />
+    <AndroidAsset Include="Assets\Content\triangles3background.png" />
+    <AndroidAsset Include="Assets\Content\blackholetransparent.png" />
   </ItemGroup>
 </Project>

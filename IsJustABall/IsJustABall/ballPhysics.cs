@@ -6,7 +6,7 @@ namespace IsJustABall
 	{		  
 			public int index{ get; set; }
 	     	public CCSprite ballSprite{ get; set; }
-
+			public int Score{ get; set; }
 	     //	public float PosY { get; set; }
 			public string MoveType { get; set; }
 
@@ -40,8 +40,8 @@ namespace IsJustABall
 			/// //////////////////
 			//needed for multiple Pivots
 
-			public int indexHookPivot;
-		public int score;
+		public int indexHookPivot{ get; set; }
+	//	public int score;
 		
 	}
 }

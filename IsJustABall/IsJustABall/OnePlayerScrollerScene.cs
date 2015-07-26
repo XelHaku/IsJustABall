@@ -22,6 +22,7 @@ namespace IsJustABall
 		CCSprite diamond;
 		CCSprite background1;
 		CCSprite background2;
+		CCSprite backgroundRotational;
 		CCSprite PauseButton;
 		CCSprite ResumeGame,Restart,MainMenu,menuframe,Star;
 	//	CCSprite levelcleared;
@@ -37,7 +38,8 @@ namespace IsJustABall
 		CCSprite BlackholeSprite;
 
 		 
-		CCLabelTtf scoreLabel;
+		CCLabel scoreLabel;
+		CCLabel pointsLabel;
 		byte R,G,B;
 
 		// How much to modify the ball's y velocity per second:
@@ -101,14 +103,25 @@ namespace IsJustABall
 			//addLevelStars ();//maybe?
 		
 
-			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
-
-			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/2 ;
+			//scoreLabel = new CCLabel ("Score: 0", "arial", 78);
+			scoreLabel = new CCLabel("Score:","nasalizationbold.ttf",78);
+			scoreLabel.PositionX = 0 ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
-			scoreLabel.AnchorPoint = CCPoint.AnchorUpperRight;
+			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
+
+			pointsLabel = new CCLabel("","nasalizationbold.ttf",78);
+			pointsLabel.PositionX = scoreLabel.ContentSize.Width ;
+			pointsLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
+			pointsLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
+			CCColor3B fontColor = new CCColor3B(255	,62	,150) ;
+			pointsLabel.UpdateDisplayedColor (fontColor);
+
+
 
 			mainLayer.AddChild (scoreLabel);
-			mainLayer.ReorderChild (scoreLabel, 101);
+			mainLayer.ReorderChild (scoreLabel, 200);
+			mainLayer.AddChild (pointsLabel);
+			mainLayer.ReorderChild (pointsLabel, 200);
 
 
 			Schedule (RunGameLogic);
@@ -280,7 +293,7 @@ namespace IsJustABall
 			{
 				//ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
 				ResumeGame.RunAction(ZoomTouch);
-				CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.3f * bounds.Height));
+				CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.4f * bounds.Height));
 				menuframe.RunAction (SlideOut);////
 			}
 
@@ -305,7 +318,7 @@ namespace IsJustABall
 
 			if (hit) {
 				if (PauseGame == true) {
-					CCMoveBy SlideIn = new CCMoveBy (0.5f, new CCPoint (0.0f, 0.3f * bounds.Height));
+					CCMoveBy SlideIn = new CCMoveBy (0.5f, new CCPoint (0.0f, 0.4f * bounds.Height));
 					ResumeGame.RunAction (SlideIn);
 					Restart.RunAction (SlideIn);
 					MainMenu.RunAction (SlideIn);
@@ -313,7 +326,7 @@ namespace IsJustABall
 					PauseGame = false;
 					CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
 				} else {
-					CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.3f * bounds.Height));
+					CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.4f * bounds.Height));
 					ResumeGame.RunAction (SlideOut);
 					Restart.RunAction (SlideOut);
 					MainMenu.RunAction (SlideOut);
@@ -619,16 +632,41 @@ namespace IsJustABall
 		void addBackground(CCWindow mainWindow){
 			background1 = new CCSprite ("galaxybackground4");
 			background2 = new CCSprite ("galaxybackground4");
+			backgroundRotational= new CCSprite ("freepik03");
 			var bounds = mainWindow.WindowSizeInPixels;
 			switch(ThisLevelName){
 			case "minefield":
-			case "railgun":
-			case "blackhole":
-			CCScaleBy SpriteSize = new CCScaleBy(0.01f,1.0f*bounds.Width/background1.BoundingBoxTransformedToWorld.Size.Width);
+				CCScaleBy SpriteSize = new CCScaleBy (0.0f, 4.2f * bounds.Width / backgroundRotational.BoundingBoxTransformedToWorld.Size.Height);
 
-			
+				backgroundRotational.RunAction (SpriteSize);
+
+				//backgroundRotational.PositionX = bounds.Width / 2;
+				//backgroundRotational.PositionY = -background1.ContentSize.Height;
+				backgroundRotational.Opacity = 150;
+				backgroundRotational.PositionX = bounds.Width/2;;
+				backgroundRotational.PositionY = 0;
+				backgroundRotational.AnchorPoint = CCPoint.AnchorMiddle;
+				mainLayer.AddChild (backgroundRotational);
+				mainLayer.ReorderChild (backgroundRotational, -100);
+				CCRotateBy rotateBG = new CCRotateBy (200.0f, 360.0f);
+				backgroundRotational.RepeatForever (rotateBG);
+				break;
+			case "railgun":
+				background1 = new CCSprite ("triangles3background");
+				SpriteSize = new CCScaleBy (0.0f, 1.0f * bounds.Width / background1.BoundingBoxTransformedToWorld.Size.Width);
+				background1.RunAction (SpriteSize);
+				background1.Opacity = 200;
+				background1.PositionX = bounds.Width/2;;
+				background1.PositionY = 0;
+				background1.AnchorPoint = CCPoint.AnchorMiddleBottom;
+				mainLayer.AddChild (background1);
+				mainLayer.ReorderChild (background1,- 100);
+				CCMoveBy moveBG = new CCMoveBy (25.0f, new CCPoint (0.0f,background1.BoundingBoxTransformedToWorld.Size.Height));
+				backgroundRotational.RepeatForever (moveBG);
+				break;
+			case "blackhole":
+			 SpriteSize = new CCScaleBy(0.01f,1.0f*bounds.Width/background1.BoundingBoxTransformedToWorld.Size.Width);
 		
-			
 			background1.RunAction(SpriteSize);
 			background1.PositionX = bounds.Width/2;
 			background1.PositionY = background1.ContentSize.Height-500.0f;
@@ -1327,6 +1365,55 @@ namespace IsJustABall
 			return WallSprite;
 		}
 
+		CCSprite AddRIGHT_Wall (CCWindow mainWindow,float wallPosX,float wallPosY,float scale)
+		{   
+			var bounds = mainWindow.WindowSizeInPixels;
+			WallSprite = new CCSprite ("wallbrick");
+			//WallSprite.Scale = scale;
+			CCSize wallSize = new CCSize();
+			wallSize.Height = bounds.Height/20;
+			wallSize.Width = bounds.Width/10;
+			//0.3f*bounds.Width/BlackholeSprite.BoundingBoxTransformedToWorld.Size.Width
+			CCScaleBy SpriteSize = new CCScaleBy(0.0f,0.1f*bounds.Width/WallSprite.BoundingBoxTransformedToWorld.Size.Width);
+			WallSprite.RunAction(SpriteSize);
+			//WallSprite.ScaleTo (wallSize);
+			WallSprite.PositionX = wallPosX;
+			WallSprite.PositionY = wallPosY;
+
+			mainLayer.AddChild(WallSprite);
+
+			CCMoveBy moveByWall_RIGHT = new CCMoveBy (5.0f,new CCPoint(0.7f*bounds.Width,0.0f));
+			WallSprite.RepeatForever(moveByWall_RIGHT,moveByWall_RIGHT.Reverse());
+
+
+			return WallSprite;
+		}
+
+
+		CCSprite AddLEFT_Wall (CCWindow mainWindow,float wallPosX,float wallPosY,float scale)
+		{   
+			var bounds = mainWindow.WindowSizeInPixels;
+			WallSprite = new CCSprite ("wallbrick");
+			//WallSprite.Scale = scale;
+			CCSize wallSize = new CCSize();
+			wallSize.Height = bounds.Height/20;
+			wallSize.Width = bounds.Width/10;
+			//0.3f*bounds.Width/BlackholeSprite.BoundingBoxTransformedToWorld.Size.Width
+			CCScaleBy SpriteSize = new CCScaleBy(0.0f,0.1f*bounds.Width/WallSprite.BoundingBoxTransformedToWorld.Size.Width);
+			WallSprite.RunAction(SpriteSize);
+			//WallSprite.ScaleTo (wallSize);
+			WallSprite.PositionX = wallPosX;
+			WallSprite.PositionY = wallPosY;
+
+
+			mainLayer.AddChild(WallSprite);
+		    CCMoveBy moveByWall_LEFT = new CCMoveBy (5.0f,new CCPoint(-0.7f*bounds.Width,0.0f));
+			WallSprite.RepeatForever(moveByWall_LEFT,moveByWall_LEFT.Reverse());
+
+
+			return WallSprite;
+		}
+
 		void addLevelWalls (CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float pivotScale=0.0004f*bounds.Width;
@@ -1345,12 +1432,15 @@ namespace IsJustABall
 						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 					case "RIGHT":
-					//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						visibleWalls.Add (AddRIGHT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visibleWalls.Add (AddLEFT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
-					default:
-					//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
 
+					default:
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
 					}
@@ -1371,12 +1461,15 @@ namespace IsJustABall
 						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 					case "RIGHT":
-						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						visibleWalls.Add (AddRIGHT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visibleWalls.Add (AddLEFT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
-					default:
-						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
 
+					default:
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
 					}
@@ -1397,12 +1490,15 @@ namespace IsJustABall
 						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 					case "RIGHT":
-						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						visibleWalls.Add (AddRIGHT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visibleWalls.Add (AddLEFT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
-					default:
-						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
 
+					default:
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
 					}
@@ -1425,12 +1521,15 @@ namespace IsJustABall
 						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 					case "RIGHT":
-						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						visibleWalls.Add (AddRIGHT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visibleWalls.Add (AddLEFT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
-					default:
-						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
 
+					default:
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
 					}
@@ -1453,16 +1552,18 @@ namespace IsJustABall
 						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 					case "RIGHT":
-						//	visibleTraps.Add (AddRIGHT_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
+						visibleWalls.Add (AddRIGHT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
+						break;
+					case "LEFT":
+						visibleWalls.Add (AddLEFT_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
-					default:
-						//	visibleTraps.Add (AddSTATIC_Spike (mainWindow,Spike.PosX,Spike.PosY,pivotScale));
 
+					default:
+						visibleWalls.Add (AddSTATIC_Wall (mainWindow,Wall.PosX,Wall.PosY,pivotScale));
 						break;
 
 					}
-
 				}
 				break;
 			default:
@@ -1477,7 +1578,7 @@ namespace IsJustABall
 		CCSprite AddSTATIC_Blackhole (CCWindow mainWindow,float blackholePosX,float blackholePosY,float scale)
 		{   
 			var bounds = mainWindow.WindowSizeInPixels;
-			BlackholeSprite = new CCSprite ("blackholeshadow");
+			BlackholeSprite = new CCSprite ("blackholetransparent");
 			//WallSprite.Scale = scale;
 			//CCSize blackholeSize = new CCSize();
 			//blackholeSize.Width = bounds.Width/4;
@@ -1763,8 +1864,10 @@ namespace IsJustABall
 					//Explode(banana.Position);
 					//ruby.RemoveFromParent(true);
 					visibleJewels.Remove (ruby);
+
 					score += 10;
 					DisplayScore (score);
+
 
 					break;
 
@@ -1876,7 +1979,7 @@ namespace IsJustABall
 		void checkBlackhole(){
 			float RvecX, RvecY;
 			double Radius;
-			float alphaFactor= 20000*mainWindowAux.WindowSizeInPixels.Width;
+			float alphaFactor= 25000*mainWindowAux.WindowSizeInPixels.Width;
 
 			foreach (var BlackholeSprite in visibleBlackholes) {
 				//change gravity
@@ -1917,7 +2020,7 @@ namespace IsJustABall
 			}
 
 		void BlueBallAnimation (){
-			CCScaleTo bounceScale = new CCScaleTo (0.1f, 0.00045f*mainWindowAux.WindowSizeInPixels.Width);
+			CCScaleTo bounceScale = new CCScaleTo (0.1f, 0.0004f*mainWindowAux.WindowSizeInPixels.Width);
 			CCDelayTime wait = new CCDelayTime (0.1f);
 			CCScaleTo bounceReduce = new CCScaleTo (0.1f, 0.0003f*mainWindowAux.WindowSizeInPixels.Width);
 			ballSprite.RunActions (bounceScale,wait,bounceReduce);
@@ -1947,7 +2050,7 @@ namespace IsJustABall
 			// add Resume, Restart and MainMenu button. A frame, (1 2 3)Stars display Score 
 			PauseGame = false;
 			var bounds = mainWindowAux.WindowSizeInPixels;
-			CCMoveBy SlideIn = new CCMoveBy (0f, new CCPoint (0.0f, 0.5f * bounds.Height));
+			CCMoveBy SlideIn = new CCMoveBy (0f, new CCPoint (0.0f, 0.4f * bounds.Height));
 
 			//ResumeGame.RunAction (SlideIn);
 			Restart.RunAction (SlideIn);
@@ -1994,9 +2097,10 @@ namespace IsJustABall
 
 		void DisplayScore(float score ){
 
-			scoreLabel.Text = "Score: " + score;
+			pointsLabel.Text = ""+score;
 			//
 		}
+
 
 		void addPauseButton(){
 			var bounds = mainWindowAux.WindowSizeInPixels;

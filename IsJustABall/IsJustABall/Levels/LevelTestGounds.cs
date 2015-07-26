@@ -155,6 +155,9 @@ namespace IsJustABall
 
 			WallList.Add ( new Wall { PosX = 0.4f, PosY = 0.8f, MoveType = "STATIC" });
 
+			WallList.Add(new Wall{ PosX =0.2f, PosY =0.5f, MoveType = "RIGHT" });
+			WallList.Add(new Wall{ PosX =0.8f, PosY =0.6f, MoveType = "LEFT" });
+
 		
 			return WallList;
 		}
@@ -173,7 +176,9 @@ namespace IsJustABall
 		public  List<Blackhole> BlackholeMaker()
 		{
 			List<Blackhole> BlackholeList = new List<Blackhole>();
-			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 0.5f, MoveType = "STATIC" });
+			BlackholeList.Add ( new Blackhole { PosX = 0.7f, PosY = 0.6f, MoveType = "STATIC" });
+			BlackholeList.Add ( new Blackhole { PosX = 0.3f, PosY = 0.6f, MoveType = "STATIC" });
+
 			BlackholeList.Add ( new Blackhole { PosX = 0.5f, PosY = 1.5f, MoveType = "STATIC" });
 			return BlackholeList;
 		}

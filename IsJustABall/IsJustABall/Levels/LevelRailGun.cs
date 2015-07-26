@@ -204,7 +204,6 @@ namespace IsJustABall
 		public  List<Wall> WallMaker()
 		{
 			List<Wall> WallList = new List<Wall>();
-				
 			WallList.Add(new Wall{ PosX =0f, PosY =0.8f, MoveType = "STATIC" });
 			WallList.Add(new Wall{ PosX =0.1f, PosY =0.8f, MoveType = "STATIC" });
 			WallList.Add(new Wall{ PosX =0.2f, PosY =0.8f, MoveType = "STATIC" });

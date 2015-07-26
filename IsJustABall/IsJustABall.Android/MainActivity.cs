@@ -48,10 +48,12 @@ namespace IsJustABall
 
 			//
 			application.StartGame();
-			air.AirBannerBottomAd ();
-			air.AirBannerTopAd ();
-			air.AirSmartWallAd ();
-			air.Banner360 ();
+			//air.AirBannerBottomAd ();
+			//air.AirBannerTopAd ();
+
+			//air.AirSmartWallAd ();
+			//air.Banner360 ();
+
 		}
 	}
 }

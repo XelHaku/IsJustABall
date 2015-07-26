@@ -34,7 +34,7 @@ namespace IsJustABall
 
 
 
-		CCLabelTtf scoreLabel;
+		CCLabel scoreLabel;
 		float gravity = 0;
 		double Multiplier =1.05f;
 		float minRotationRadius;
@@ -77,7 +77,7 @@ namespace IsJustABall
 			addPlayerButton (playerCount);
 
 
-			scoreLabel = new CCLabelTtf ("Score: 0", "arial", 22);
+			scoreLabel = new CCLabel ("Score: 0", "arial", 22);
 			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/2 ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperRight;
