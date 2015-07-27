@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CocosSharp;
 using System.Collections.Generic;
 using CocosDenshion;
@@ -16,6 +17,7 @@ namespace IsJustABall
 		List<ballPhysics> ballPhysicsList;
 		List<CCSprite> visibleJewels;
 		List<CCSprite> visibleEmerald;
+		List<Multi4Level1.Jewel> usedJewels;
 		List<CCSprite> hitJewels;
 		List<CCSprite> StarList;
 		CCSprite ruby;
@@ -60,10 +62,15 @@ namespace IsJustABall
 		int score = 0;
 		bool PauseGame=true;
 		float GameTime =0;
+		bool StartBuzzingPoints = false;
 		//Movementson Pivots
 		int playerCount;
 
+		//LOAD JEWEL FILE
+		Multi4Level1 LevelClass1 = new Multi4Level1 ();
+		List<Multi4Level1.Jewel> ClassListMulti4Level1 = new List<Multi4Level1.Jewel> ();
 
+		/////
 		CCEventListenerTouchAllAtOnce touchListener;
 		#endregion
 		public MultiPlayerScrollerScene(CCWindow mainWindow,string LevelName,int playerCounter) : base(mainWindow)
@@ -79,6 +86,7 @@ namespace IsJustABall
 			visiblePivots = new List<CCSprite> ();
 			visibleJewels = new List<CCSprite> ();
 			visibleEmerald = new List<CCSprite> ();
+			usedJewels = new List<Multi4Level1.Jewel> ();
 			visibleWalls = new List<CCSprite> ();
 			visibleBlackholes = new List<CCSprite> ();
 			visibleTutorialSteps = new List<CCSprite> ();
@@ -89,14 +97,14 @@ namespace IsJustABall
 			StarList = new List<CCSprite> ();
 			ballPhysicsList = new List<ballPhysics> ();
 
-
+			ClassListMulti4Level1 = LevelClass1.JewelMaker ();
 			scrollerSpeed = (int)(0.1 * bounds.Width);
 			topSpeed = (int)(0.9 * bounds.Width);
 
 
 
 			addLevelPivots (mainWindow);
-			addLevelJewels (mainWindow);
+			//addLevelJewels (mainWindow); moved to RunGameLogic
 			addLevelSpikes (mainWindow);
 
 			addLevelWalls (mainWindow);
@@ -116,16 +124,18 @@ namespace IsJustABall
 			addPauseButton ();
 			addMenuOptions ();
 					//scoreLabel = new CCLabel ("Score: 0", "arial", 78);
-			scoreLabel = new CCLabel("Score:","nasalizationbold.ttf",78);
-			scoreLabel.PositionX = 0 ;
+			scoreLabel = new CCLabel("0s","nasalizationbold.ttf",90);
+			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/3 ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
+			CCColor3B fontColor = new CCColor3B(255,0,255) ;
+			scoreLabel.UpdateDisplayedColor (fontColor);
 
-			Bluepoints = new CCLabel("0000","nasalizationbold.ttf",78);
+			Bluepoints = new CCLabel("","nasalizationbold.ttf",78);
 			Bluepoints.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/3 ;
 			Bluepoints.PositionY = 0;
 			Bluepoints.AnchorPoint = CCPoint.AnchorMiddleBottom;
-			CCColor3B fontColor = new CCColor3B(72,118,255) ;
+			fontColor = new CCColor3B(72,118,255) ;
 			Bluepoints.UpdateDisplayedColor (fontColor);
 
 			Redpoints = new CCLabel("","nasalizationbold.ttf",78);
@@ -154,8 +164,8 @@ namespace IsJustABall
 
 		
 
-		//	mainLayer.AddChild (scoreLabel);
-		//	mainLayer.ReorderChild (scoreLabel, 200);
+			mainLayer.AddChild (scoreLabel);
+			mainLayer.ReorderChild (scoreLabel, 200);
 			mainLayer.AddChild (Bluepoints);
 			mainLayer.AddChild(Redpoints);
 			mainLayer.AddChild(Greenpoints);
@@ -165,7 +175,7 @@ namespace IsJustABall
 			mainLayer.ReorderChild(Greenpoints,200);
 			mainLayer.ReorderChild(Yellowpoints,200);
 
-
+		
 			Schedule (RunGameLogic);
 			// TouchListeners:
 			touchListener = new CCEventListenerTouchAllAtOnce ();
@@ -173,12 +183,19 @@ namespace IsJustABall
 			touchListener.OnTouchesEnded = HandleTouchesEnded;
 			AddEventListener (touchListener, this);
 
+
 		}
 
 		#region RUN GAME LOGIC
 		void RunGameLogic(float frameTimeInSeconds)
 		{
 			GameTime += frameTimeInSeconds;
+			scoreLabel.Text = ""+(int)GameTime+" sec";
+			if(StartBuzzingPoints == true){
+				LevelClearGamePointBuzzer (mainWindowAux);
+			}
+
+			addLevelJewels (mainWindowAux,GameTime,ClassListMulti4Level1);
 			//pointsLabel.Text = "" + (int)GameTime;
 			foreach (var ballSinglePhysics in ballPhysicsList) {  
 				if (PauseGame) {
@@ -600,10 +617,12 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			diamond = new CCSprite ("diamond");
-			diamond.Scale = scale;
+			//diamond.Scale = scale;
 			diamond.PositionX = diamondPosX;
 			diamond.PositionY = diamondPosY;
 			mainLayer.AddChild (diamond);
+			CCScaleBy scaleAction = new CCScaleBy(0.5f,0.2f* mainWindowAux.WindowSizeInPixels.Width/diamond.BoundingBoxTransformedToWorld.Size.Width);
+			diamond.RunAction (scaleAction);
 			return diamond;
 		}
 
@@ -611,10 +630,12 @@ namespace IsJustABall
 			var bounds = mainWindow.WindowSizeInPixels;
 
 			ruby = new CCSprite ("ruby");
-			ruby.Scale = scale;
+			//ruby.Scale = scale;
 			ruby.PositionX = rubyPosX;
 			ruby.PositionY = rubyPosY;
 			mainLayer.AddChild (ruby);
+			CCScaleBy scaleAction = new CCScaleBy(0.5f,scale);
+			ruby.RunAction (scaleAction);
 			return ruby;
 		}
 
@@ -843,31 +864,42 @@ namespace IsJustABall
 
 		//JEWELS
 
-		void addLevelJewels (CCWindow mainWindow){
+		void addLevelJewels (CCWindow mainWindow,float gametime,List<Multi4Level1.Jewel> ClassListMulti4Level1 ){
 			var bounds = mainWindow.WindowSizeInPixels;
 			float jewelScale=0.0004f*bounds.Width;
 
 			switch(ThisLevelName){
 			case "multi4level1":
-				Multi4Level1 LevelClass1 = new Multi4Level1 ();
-				List<Multi4Level1.Jewel> ClassListMulti4Level1 = new List<Multi4Level1.Jewel> ();
-				ClassListMulti4Level1 = LevelClass1.JewelMaker ();
-				foreach(var Jewel in ClassListMulti4Level1){
-					Jewel.PosX = Jewel.PosX*bounds.Width;
-					Jewel.PosY = Jewel.PosY*bounds.Height;
+				
+				foreach (var Jewel in ClassListMulti4Level1) {
+					
+					if ((int)Jewel.Time == (int)gametime & Jewel.Displayed == false) {
+						Jewel.PosX = Jewel.PosX * bounds.Width;
+						Jewel.PosY = Jewel.PosY * bounds.Height;
+						Jewel.Displayed = true;
 
-					switch(Jewel.JewelType){
-					case "RUBY":
-						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
-						break;
-					case "DIAMOND":
-						visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
-						break;
-					default:
-						visibleJewels.Add (addRuby (mainWindow, Jewel.PosX,Jewel.PosY, jewelScale));
-						break;
+						switch (Jewel.JewelType) {
+						case "RUBY":
+							visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+							break;
+						case "DIAMOND":
+							visibleEmerald.Add (addDiamond (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+							break;
+						default:
+							visibleJewels.Add (addRuby (mainWindow, Jewel.PosX, Jewel.PosY, jewelScale));
+							break;
+						}
+					//	ClassListMulti4Level1.Remove (Jewel);
+					//	break;
+						//usedJewels.Add (Jewel);
+
 					}
 				}
+
+			//	foreach (var Jewel in usedJewels) {
+				//	ClassListMulti4Level1.Remove (Jewel);
+			//	}
+
 				break;
 			
 			default:
@@ -1236,6 +1268,7 @@ namespace IsJustABall
 		//Remove jewel and and Score Counter
 		void checkJewel(ballPhysics ballSinglePhysics){
 			foreach (var ruby in visibleJewels) {
+				
 				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent);
 					if (hit) {
 						hitJewels.Add (ruby);
@@ -1248,8 +1281,42 @@ namespace IsJustABall
 						break;
 
 				
+			
 				}
+			
+			
 			}
+
+			foreach (var diamond in visibleEmerald) {
+
+				bool hit = diamond.BoundingBoxTransformedToParent.IntersectsRect (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent);
+				if (hit) {
+					hitJewels.Add (diamond);
+					//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+					//Explode(banana.Position);
+					diamond.RemoveFromParent (true);
+					visibleEmerald.Remove (diamond);
+					ballSinglePhysics.Score += 50;
+					DisplayScore (ballSinglePhysics.index,ballSinglePhysics.Score);
+					GameTime = 0;
+					LevelClearGame (mainWindowAux);
+
+				
+
+
+
+					
+
+
+					break;
+
+
+
+				}
+
+
+			}
+
 
 		}
 		//SPIKE
@@ -1394,15 +1461,14 @@ namespace IsJustABall
 
 
 			// End game when reaching Diamond Goal and display Stars and final Score
-		void LevelClearGame (CCWindow mainWindow){
+		 void LevelClearGame (CCWindow mainWindow){
+			mainLayer.RemoveChild (PauseButton);
+			mainLayer.RemoveChild (scoreLabel);
 			CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
 			Explode2(diamond.Position);
-			Explode (ballSprite.Position);
 
-
-			score += 100;
 			//DisplayScore (score);
-			addLevelStars (mainWindowAux,score);
+			//addLevelStars (mainWindowAux,score);
 
 			// add Resume, Restart and MainMenu button. A frame, (1 2 3)Stars display Score 
 			PauseGame = false;
@@ -1412,11 +1478,78 @@ namespace IsJustABall
 			//ResumeGame.RunAction (SlideIn);
 			Restart.RunAction (SlideIn);
 			MainMenu.RunAction (SlideIn);
+			SlideIn = new CCMoveBy (0f, new CCPoint (0.0f, 0.9f * bounds.Height));
 			menuframe.RunAction (SlideIn);
 
+			Bluepoints.Scale = 2.5f;
+			Bluepoints.Text = "0";
 			CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
-				
+			CCMoveTo Textalingment = new CCMoveTo (1.0f, new CCPoint (bounds.Width / 2, 0.75f * bounds.Height)); 
+			Bluepoints.AnchorPoint =CCPoint.AnchorMiddleBottom;
+			Bluepoints.RunAction(Textalingment);
 
+
+			Redpoints.Scale = 2.5f;
+			Redpoints.Text = "0";
+			Textalingment = new CCMoveTo (1.0f, new CCPoint (bounds.Width / 2, 0.65f * bounds.Height)); 
+			Redpoints.RunAction ( new CCRotateBy (0.5f, 180.0f));
+			Redpoints.AnchorPoint =CCPoint.AnchorMiddleBottom;
+			Redpoints.RunAction(Textalingment);
+
+			Greenpoints.Scale = 2.5f;
+			Greenpoints.Text = "0";
+			Textalingment = new CCMoveTo (1.0f, new CCPoint (bounds.Width / 2, 0.55f * bounds.Height)); 
+			Greenpoints.RunAction ( new CCRotateBy (0.5f, 90.0f));
+			Greenpoints.AnchorPoint =CCPoint.AnchorMiddleBottom;
+			Greenpoints.RunAction(Textalingment);
+
+			Yellowpoints.Scale = 2.5f;
+			Yellowpoints.Text = "0";
+			Textalingment = new CCMoveTo (1.0f, new CCPoint (bounds.Width / 2, 0.45f * bounds.Height)); 
+			Yellowpoints.RunAction ( new CCRotateBy (0.5f, -90.0f));
+			Yellowpoints.AnchorPoint =CCPoint.AnchorMiddleBottom;
+			Yellowpoints.RunAction(Textalingment);
+
+			//for(int i = 0;i<=50+10.0f*visibleJewels.Count;i++){
+
+				
+			StartBuzzingPoints = true;
+		}
+
+		void LevelClearGamePointBuzzer(CCWindow mainWindow){
+			foreach (var ballPhysicsSingle in ballPhysicsList) {
+
+				switch (ballPhysicsSingle.index) {
+				case 1:
+					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+						Bluepoints.Text = "" + (int)(80.0f*GameTime);
+						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					}
+					break;
+				case 2:
+					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+						Redpoints.Text = "" + (int)(80.0f*GameTime);
+						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					}
+					break;
+				case 3:
+					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+						Greenpoints.Text = "" + (int)(80.0f*GameTime);
+						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					}
+					break;
+				case 4:
+					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+						Yellowpoints.Text = "" + (int)(80.0f*GameTime);
+						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					}
+					break;
+
+				default:
+					break;
+				}
+
+			}
 		}
 
 		void addLevelStars(CCWindow mainWindow,int score){

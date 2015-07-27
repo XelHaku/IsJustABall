@@ -53,28 +53,28 @@ namespace IsJustABall
 			switch (ballColor) {
 			case 1:
 				ballSprite = new CCSprite ("blueball");
-				ballSprite.PositionX = 0.1f*bounds.Width;
-				ballSprite.PositionY = 0.1f*bounds.Height;
+				ballSprite.PositionX =- 0.2f*bounds.Width;
+				ballSprite.PositionY = -0.2f*bounds.Height;
 				break;
 			case 2:
 				ballSprite = new CCSprite ("redball");
-				ballSprite.PositionX = 0.9f*bounds.Width;
-				ballSprite.PositionY = 0.9f*bounds.Height;
+				ballSprite.PositionX = 1.2f*bounds.Width;
+				ballSprite.PositionY = 1.2f*bounds.Height;
 				break;
 			case 3:
 				ballSprite = new CCSprite ("greenball");
-				ballSprite.PositionX = 0.9f*bounds.Width;
-				ballSprite.PositionY = 0.1f*bounds.Height;
+				ballSprite.PositionX = 1.2f*bounds.Width;
+				ballSprite.PositionY = -0.2f*bounds.Height;
 				break;
 			case 4:
 				ballSprite = new CCSprite ("yellowball");
-				ballSprite.PositionX = 0.1f*bounds.Width;
-				ballSprite.PositionY = 0.9f*bounds.Height;
+				ballSprite.PositionX = -0.2f*bounds.Width;
+				ballSprite.PositionY = 1.2f*bounds.Height;
 				break;
 			default:
 				ballSprite = new CCSprite ("blueball");
-				ballSprite.PositionX = 0.1f*bounds.Width;
-				ballSprite.PositionY = 0.1f*bounds.Height;
+				ballSprite.PositionX = -0.2f*bounds.Width;
+				ballSprite.PositionY = -0.2f*bounds.Height;
 				break;
 
 			}

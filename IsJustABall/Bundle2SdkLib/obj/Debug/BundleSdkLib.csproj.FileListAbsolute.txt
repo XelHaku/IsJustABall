@@ -18,3 +18,7 @@ C:\Users\admin\Documents\Projects\IsJustABall\Bundle2SdkLib\bin\Debug\BundleSdkL
 C:\Users\admin\Documents\Projects\IsJustABall\Bundle2SdkLib\bin\Debug\BundleSdkLib.pdb
 C:\Users\admin\Documents\Projects\IsJustABall\Bundle2SdkLib\obj\Debug\BundleSdkLib.dll
 C:\Users\admin\Documents\Projects\IsJustABall\Bundle2SdkLib\obj\Debug\BundleSdkLib.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\bin\Debug\BundleSdkLib.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\bin\Debug\BundleSdkLib.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\obj\Debug\BundleSdkLib.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\obj\Debug\BundleSdkLib.pdb
