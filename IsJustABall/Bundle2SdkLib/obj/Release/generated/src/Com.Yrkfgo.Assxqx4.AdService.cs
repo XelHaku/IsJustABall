@@ -28,25 +28,29 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_ctor;
 		// Metadata.xml XPath constructor reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='AdService']/constructor[@name='AdService' and count(parameter)=0]"
 		[Register (".ctor", "()V", "")]
-		public AdService () : base (IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
+		public unsafe AdService ()
+			: base (IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
 		{
 			if (Handle != IntPtr.Zero)
 				return;
 
-			if (GetType () != typeof (AdService)) {
-				SetHandle (
-						global::Android.Runtime.JNIEnv.StartCreateInstance (GetType (), "()V"),
-						JniHandleOwnership.TransferLocalRef);
-				global::Android.Runtime.JNIEnv.FinishCreateInstance (Handle, "()V");
-				return;
-			}
+			try {
+				if (GetType () != typeof (AdService)) {
+					SetHandle (
+							global::Android.Runtime.JNIEnv.StartCreateInstance (GetType (), "()V"),
+							JniHandleOwnership.TransferLocalRef);
+					global::Android.Runtime.JNIEnv.FinishCreateInstance (Handle, "()V");
+					return;
+				}
 
-			if (id_ctor == IntPtr.Zero)
-				id_ctor = JNIEnv.GetMethodID (class_ref, "<init>", "()V");
-			SetHandle (
-					global::Android.Runtime.JNIEnv.StartCreateInstance (class_ref, id_ctor),
-					JniHandleOwnership.TransferLocalRef);
-			JNIEnv.FinishCreateInstance (Handle, class_ref, id_ctor);
+				if (id_ctor == IntPtr.Zero)
+					id_ctor = JNIEnv.GetMethodID (class_ref, "<init>", "()V");
+				SetHandle (
+						global::Android.Runtime.JNIEnv.StartCreateInstance (class_ref, id_ctor),
+						JniHandleOwnership.TransferLocalRef);
+				JNIEnv.FinishCreateInstance (Handle, class_ref, id_ctor);
+			} finally {
+			}
 		}
 
 		static Delegate cb_onBind_Landroid_content_Intent_;
@@ -70,17 +74,22 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onBind_Landroid_content_Intent_;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='AdService']/method[@name='onBind' and count(parameter)=1 and parameter[1][@type='android.content.Intent']]"
 		[Register ("onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;", "GetOnBind_Landroid_content_Intent_Handler")]
-		public override global::Android.OS.IBinder OnBind (global::Android.Content.Intent p0)
+		public override unsafe global::Android.OS.IBinder OnBind (global::Android.Content.Intent p0)
 		{
 			if (id_onBind_Landroid_content_Intent_ == IntPtr.Zero)
 				id_onBind_Landroid_content_Intent_ = JNIEnv.GetMethodID (class_ref, "onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;");
+			try {
+				JValue* __args = stackalloc JValue [1];
+				__args [0] = new JValue (p0);
 
-			global::Android.OS.IBinder __ret;
-			if (GetType () == ThresholdType)
-				__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallObjectMethod  (Handle, id_onBind_Landroid_content_Intent_, new JValue (p0)), JniHandleOwnership.TransferLocalRef);
-			else
-				__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallNonvirtualObjectMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;"), new JValue (p0)), JniHandleOwnership.TransferLocalRef);
-			return __ret;
+				global::Android.OS.IBinder __ret;
+				if (GetType () == ThresholdType)
+					__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallObjectMethod  (Handle, id_onBind_Landroid_content_Intent_, __args), JniHandleOwnership.TransferLocalRef);
+				else
+					__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallNonvirtualObjectMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;"), __args), JniHandleOwnership.TransferLocalRef);
+				return __ret;
+			} finally {
+			}
 		}
 
 	}

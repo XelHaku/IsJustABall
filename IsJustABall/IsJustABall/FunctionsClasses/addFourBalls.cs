@@ -9,27 +9,29 @@ namespace IsJustABall
 	public class addFourBalls
 	{
 		public void addGameBall(int playersCount,CCWindow mainWindow, List<ballPhysics> ballPhysicsList ){
+			int speed = 90;
 			for (int i = 1; i <= playersCount; i++) {
 
 				ballPhysics ballPhysicsSingle = new ballPhysics ();
 				ballPhysicsSingle.index = i;
 				ballPhysicsSingle.ballSprite= addBall (mainWindow, i);
+				ballPhysicsSingle.playerSpriteButton= addPlayerButton (mainWindow, i);
 				switch (i) {
 				case 1:
-					ballPhysicsSingle.ballXVelocity = 150;
-					ballPhysicsSingle.ballYVelocity = 150;
+					ballPhysicsSingle.ballXVelocity = speed;
+					ballPhysicsSingle.ballYVelocity = speed;
 					break;
 				case 2:
-					ballPhysicsSingle.ballXVelocity = -150;
-					ballPhysicsSingle.ballYVelocity = -150;
+					ballPhysicsSingle.ballXVelocity = -speed;
+					ballPhysicsSingle.ballYVelocity = -speed;
 					break;
 				case 3:
-					ballPhysicsSingle.ballXVelocity = -150;
-					ballPhysicsSingle.ballYVelocity = 150;
+					ballPhysicsSingle.ballXVelocity = -speed;
+					ballPhysicsSingle.ballYVelocity = speed;
 					break;
 				case 4:
-					ballPhysicsSingle.ballXVelocity = 150;
-					ballPhysicsSingle.ballYVelocity = -150;
+					ballPhysicsSingle.ballXVelocity = speed;
+					ballPhysicsSingle.ballYVelocity = -speed;
 					break;
 				default:
 					break;
@@ -82,6 +84,57 @@ namespace IsJustABall
 			return ballSprite;
 		}
 	
+		CCSprite addPlayerButton(CCWindow mainwindow, int playerCount){
+			var bounds = mainwindow.WindowSizeInPixels;
+			float scale = 0.002f * bounds.Width;
+			CCSprite buttonSprite = new CCSprite ();
+			for (int i = 1; i <= playerCount; i++) {
+				switch (i) {
+				case 1:
+					buttonSprite = new CCSprite ("blueball");
+					buttonSprite.PositionX = 0.0f * bounds.Width;
+					buttonSprite.PositionY = 0.0f * bounds.Height;
+					CCScaleTo scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
+					buttonSprite.RunAction (scaleAction);
+					buttonSprite.Opacity = 150;
+
+					break;
+				case 2:
+					buttonSprite = new CCSprite ("redball");
+					buttonSprite.PositionX = 1.0f * bounds.Width;
+					buttonSprite.PositionY = 1.0f * bounds.Height;
+					scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
+					buttonSprite.RunAction (scaleAction);
+					buttonSprite.Opacity = 150;
+
+					break;
+				case 3:
+					buttonSprite = new CCSprite ("greenball");
+					buttonSprite.PositionX = 1.0f * bounds.Width;
+					buttonSprite.PositionY = 0.0f * bounds.Height;
+					 scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
+					buttonSprite.RunAction (scaleAction);
+					buttonSprite.Opacity = 150;
+
+					break;
+				case 4:
+					buttonSprite = new CCSprite ("yellowball");
+					buttonSprite.PositionX = 0.0f * bounds.Width;
+					buttonSprite.PositionY = 1.0f * bounds.Height;
+					 scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
+					buttonSprite.RunAction (scaleAction);
+					buttonSprite.Opacity =150;
+
+					break;
+				default:
+					break;
+				}
+
+
+			}
+
+			return buttonSprite;
+		}
 	
 	}
 }

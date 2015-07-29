@@ -28,25 +28,29 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_ctor;
 		// Metadata.xml XPath constructor reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='BootReceiver']/constructor[@name='BootReceiver' and count(parameter)=0]"
 		[Register (".ctor", "()V", "")]
-		public BootReceiver () : base (IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
+		public unsafe BootReceiver ()
+			: base (IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
 		{
 			if (Handle != IntPtr.Zero)
 				return;
 
-			if (GetType () != typeof (BootReceiver)) {
-				SetHandle (
-						global::Android.Runtime.JNIEnv.StartCreateInstance (GetType (), "()V"),
-						JniHandleOwnership.TransferLocalRef);
-				global::Android.Runtime.JNIEnv.FinishCreateInstance (Handle, "()V");
-				return;
-			}
+			try {
+				if (GetType () != typeof (BootReceiver)) {
+					SetHandle (
+							global::Android.Runtime.JNIEnv.StartCreateInstance (GetType (), "()V"),
+							JniHandleOwnership.TransferLocalRef);
+					global::Android.Runtime.JNIEnv.FinishCreateInstance (Handle, "()V");
+					return;
+				}
 
-			if (id_ctor == IntPtr.Zero)
-				id_ctor = JNIEnv.GetMethodID (class_ref, "<init>", "()V");
-			SetHandle (
-					global::Android.Runtime.JNIEnv.StartCreateInstance (class_ref, id_ctor),
-					JniHandleOwnership.TransferLocalRef);
-			JNIEnv.FinishCreateInstance (Handle, class_ref, id_ctor);
+				if (id_ctor == IntPtr.Zero)
+					id_ctor = JNIEnv.GetMethodID (class_ref, "<init>", "()V");
+				SetHandle (
+						global::Android.Runtime.JNIEnv.StartCreateInstance (class_ref, id_ctor),
+						JniHandleOwnership.TransferLocalRef);
+				JNIEnv.FinishCreateInstance (Handle, class_ref, id_ctor);
+			} finally {
+			}
 		}
 
 		static Delegate cb_onReceive_Landroid_content_Context_Landroid_content_Intent_;
@@ -70,15 +74,21 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onReceive_Landroid_content_Context_Landroid_content_Intent_;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='BootReceiver']/method[@name='onReceive' and count(parameter)=2 and parameter[1][@type='android.content.Context'] and parameter[2][@type='android.content.Intent']]"
 		[Register ("onReceive", "(Landroid/content/Context;Landroid/content/Intent;)V", "GetOnReceive_Landroid_content_Context_Landroid_content_Intent_Handler")]
-		public override void OnReceive (global::Android.Content.Context p0, global::Android.Content.Intent p1)
+		public override unsafe void OnReceive (global::Android.Content.Context p0, global::Android.Content.Intent p1)
 		{
 			if (id_onReceive_Landroid_content_Context_Landroid_content_Intent_ == IntPtr.Zero)
 				id_onReceive_Landroid_content_Context_Landroid_content_Intent_ = JNIEnv.GetMethodID (class_ref, "onReceive", "(Landroid/content/Context;Landroid/content/Intent;)V");
+			try {
+				JValue* __args = stackalloc JValue [2];
+				__args [0] = new JValue (p0);
+				__args [1] = new JValue (p1);
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onReceive_Landroid_content_Context_Landroid_content_Intent_, new JValue (p0), new JValue (p1));
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onReceive", "(Landroid/content/Context;Landroid/content/Intent;)V"), new JValue (p0), new JValue (p1));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onReceive_Landroid_content_Context_Landroid_content_Intent_, __args);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onReceive", "(Landroid/content/Context;Landroid/content/Intent;)V"), __args);
+			} finally {
+			}
 		}
 
 	}

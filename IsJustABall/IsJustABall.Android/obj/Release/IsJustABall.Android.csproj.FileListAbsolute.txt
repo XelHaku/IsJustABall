@@ -29,7 +29,6 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\IsJustABall.Android-Signed.apk
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\box2d.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\CocosSharp.dll
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\ICSharpCode.SharpZipLib.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\IsJustABall.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\Lidgren.Network.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\MonoGame.Framework.dll
@@ -123,3 +122,9 @@ S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall.Android\obj\
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall.Android\obj\Release\res\drawable-xxxhdpi\icon.png
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall.Android\obj\Release\R.cs.flag
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall.Android\obj\Release\uploadflags.txt
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\BundleSdkLib.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\BundleSdkLib.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\BundleSdkLib.dll.mdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\CocosSharp.xml
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\Lidgren.Network.xml
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Release\MonoGame.Framework.xml

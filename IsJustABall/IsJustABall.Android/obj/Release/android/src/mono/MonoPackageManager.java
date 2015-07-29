@@ -81,8 +81,8 @@ class MonoPackageManager_Resources {
 	public static final String[] Assemblies = new String[]{
 		"IsJustABall.Android.dll",
 		"box2d.dll",
+		"BundleSdkLib.dll",
 		"CocosSharp.dll",
-		"ICSharpCode.SharpZipLib.dll",
 		"IsJustABall.dll",
 		"Lidgren.Network.dll",
 		"MonoGame.Framework.dll",

@@ -56,7 +56,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 			get { return class_ref; }
 		}
 
-		protected override System.Type ThresholdType {
+		protected override global::System.Type ThresholdType {
 			get { return typeof (IEulaListenerInvoker); }
 		}
 
@@ -77,11 +77,13 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_optinResult_Z;
-		public void OptinResult (bool p0)
+		public unsafe void OptinResult (bool p0)
 		{
 			if (id_optinResult_Z == IntPtr.Zero)
 				id_optinResult_Z = JNIEnv.GetMethodID (class_ref, "optinResult", "(Z)V");
-			JNIEnv.CallVoidMethod (Handle, id_optinResult_Z, new JValue (p0));
+			JValue* __args = stackalloc JValue [1];
+			__args [0] = new JValue (p0);
+			JNIEnv.CallVoidMethod (Handle, id_optinResult_Z, __args);
 		}
 
 		static Delegate cb_showingEula;
@@ -101,7 +103,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_showingEula;
-		public void ShowingEula ()
+		public unsafe void ShowingEula ()
 		{
 			if (id_showingEula == IntPtr.Zero)
 				id_showingEula = JNIEnv.GetMethodID (class_ref, "showingEula", "()V");
@@ -124,7 +126,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 	}
 
 	[global::Android.Runtime.Register ("mono/com/yrkfgo/assxqx4/EulaListenerImplementor")]
-	internal sealed class IEulaListenerImplementor : global::Java.Lang.Object, IEulaListener {
+	internal sealed partial class IEulaListenerImplementor : global::Java.Lang.Object, IEulaListener {
 
 		object sender;
 

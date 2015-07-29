@@ -6,6 +6,7 @@ namespace IsJustABall
 	{		  
 			public int index{ get; set; }
 	     	public CCSprite ballSprite{ get; set; }
+		    public CCSprite playerSpriteButton{ get; set; }
 			public int Score{ get; set; }
 	     //	public float PosY { get; set; }
 			public string MoveType { get; set; }

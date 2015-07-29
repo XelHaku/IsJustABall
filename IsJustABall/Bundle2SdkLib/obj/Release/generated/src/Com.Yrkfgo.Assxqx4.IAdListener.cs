@@ -92,7 +92,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 			get { return class_ref; }
 		}
 
-		protected override System.Type ThresholdType {
+		protected override global::System.Type ThresholdType {
 			get { return typeof (IAdListenerInvoker); }
 		}
 
@@ -113,7 +113,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_noAdListener;
-		public void NoAdListener ()
+		public unsafe void NoAdListener ()
 		{
 			if (id_noAdListener == IntPtr.Zero)
 				id_noAdListener = JNIEnv.GetMethodID (class_ref, "noAdListener", "()V");
@@ -138,11 +138,13 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_;
-		public void OnAdCached (global::Com.Yrkfgo.Assxqx4.AdConfig.AdType p0)
+		public unsafe void OnAdCached (global::Com.Yrkfgo.Assxqx4.AdConfig.AdType p0)
 		{
 			if (id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_ == IntPtr.Zero)
 				id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_ = JNIEnv.GetMethodID (class_ref, "onAdCached", "(Lcom/yrkfgo/assxqx4/AdConfig$AdType;)V");
-			JNIEnv.CallVoidMethod (Handle, id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_, new JValue (p0));
+			JValue* __args = stackalloc JValue [1];
+			__args [0] = new JValue (p0);
+			JNIEnv.CallVoidMethod (Handle, id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_, __args);
 		}
 
 		static Delegate cb_onAdClickedListener;
@@ -162,7 +164,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdClickedListener;
-		public void OnAdClickedListener ()
+		public unsafe void OnAdClickedListener ()
 		{
 			if (id_onAdClickedListener == IntPtr.Zero)
 				id_onAdClickedListener = JNIEnv.GetMethodID (class_ref, "onAdClickedListener", "()V");
@@ -186,7 +188,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdClosed;
-		public void OnAdClosed ()
+		public unsafe void OnAdClosed ()
 		{
 			if (id_onAdClosed == IntPtr.Zero)
 				id_onAdClosed = JNIEnv.GetMethodID (class_ref, "onAdClosed", "()V");
@@ -211,12 +213,14 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdError_Ljava_lang_String_;
-		public void OnAdError (string p0)
+		public unsafe void OnAdError (string p0)
 		{
 			if (id_onAdError_Ljava_lang_String_ == IntPtr.Zero)
 				id_onAdError_Ljava_lang_String_ = JNIEnv.GetMethodID (class_ref, "onAdError", "(Ljava/lang/String;)V");
 			IntPtr native_p0 = JNIEnv.NewString (p0);
-			JNIEnv.CallVoidMethod (Handle, id_onAdError_Ljava_lang_String_, new JValue (native_p0));
+			JValue* __args = stackalloc JValue [1];
+			__args [0] = new JValue (native_p0);
+			JNIEnv.CallVoidMethod (Handle, id_onAdError_Ljava_lang_String_, __args);
 			JNIEnv.DeleteLocalRef (native_p0);
 		}
 
@@ -237,7 +241,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdExpandedListner;
-		public void OnAdExpandedListner ()
+		public unsafe void OnAdExpandedListner ()
 		{
 			if (id_onAdExpandedListner == IntPtr.Zero)
 				id_onAdExpandedListner = JNIEnv.GetMethodID (class_ref, "onAdExpandedListner", "()V");
@@ -261,7 +265,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdLoadedListener;
-		public void OnAdLoadedListener ()
+		public unsafe void OnAdLoadedListener ()
 		{
 			if (id_onAdLoadedListener == IntPtr.Zero)
 				id_onAdLoadedListener = JNIEnv.GetMethodID (class_ref, "onAdLoadedListener", "()V");
@@ -285,7 +289,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdLoadingListener;
-		public void OnAdLoadingListener ()
+		public unsafe void OnAdLoadingListener ()
 		{
 			if (id_onAdLoadingListener == IntPtr.Zero)
 				id_onAdLoadingListener = JNIEnv.GetMethodID (class_ref, "onAdLoadingListener", "()V");
@@ -309,7 +313,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onAdShowing;
-		public void OnAdShowing ()
+		public unsafe void OnAdShowing ()
 		{
 			if (id_onAdShowing == IntPtr.Zero)
 				id_onAdShowing = JNIEnv.GetMethodID (class_ref, "onAdShowing", "()V");
@@ -333,7 +337,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onCloseListener;
-		public void OnCloseListener ()
+		public unsafe void OnCloseListener ()
 		{
 			if (id_onCloseListener == IntPtr.Zero)
 				id_onCloseListener = JNIEnv.GetMethodID (class_ref, "onCloseListener", "()V");
@@ -358,12 +362,14 @@ namespace Com.Yrkfgo.Assxqx4 {
 #pragma warning restore 0169
 
 		IntPtr id_onIntegrationError_Ljava_lang_String_;
-		public void OnIntegrationError (string p0)
+		public unsafe void OnIntegrationError (string p0)
 		{
 			if (id_onIntegrationError_Ljava_lang_String_ == IntPtr.Zero)
 				id_onIntegrationError_Ljava_lang_String_ = JNIEnv.GetMethodID (class_ref, "onIntegrationError", "(Ljava/lang/String;)V");
 			IntPtr native_p0 = JNIEnv.NewString (p0);
-			JNIEnv.CallVoidMethod (Handle, id_onIntegrationError_Ljava_lang_String_, new JValue (native_p0));
+			JValue* __args = stackalloc JValue [1];
+			__args [0] = new JValue (native_p0);
+			JNIEnv.CallVoidMethod (Handle, id_onIntegrationError_Ljava_lang_String_, __args);
 			JNIEnv.DeleteLocalRef (native_p0);
 		}
 
@@ -409,7 +415,7 @@ namespace Com.Yrkfgo.Assxqx4 {
 	}
 
 	[global::Android.Runtime.Register ("mono/com/yrkfgo/assxqx4/AdListenerImplementor")]
-	internal sealed class IAdListenerImplementor : global::Java.Lang.Object, IAdListener {
+	internal sealed partial class IAdListenerImplementor : global::Java.Lang.Object, IAdListener {
 
 		object sender;
 

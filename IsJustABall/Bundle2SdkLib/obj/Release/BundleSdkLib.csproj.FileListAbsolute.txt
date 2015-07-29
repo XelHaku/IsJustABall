@@ -10,3 +10,7 @@ C:\Users\Haranath\Desktop\X\B1\BundleSdkLib\bin\Release\BundleSdkLib.dll
 C:\Users\Haranath\Desktop\X\B1\BundleSdkLib\bin\Release\BundleSdkLib.pdb
 C:\Users\Haranath\Desktop\X\B1\BundleSdkLib\obj\Release\BundleSdkLib.dll
 C:\Users\Haranath\Desktop\X\B1\BundleSdkLib\obj\Release\BundleSdkLib.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\bin\Release\BundleSdkLib.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\bin\Release\BundleSdkLib.pdb
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\obj\Release\BundleSdkLib.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\Bundle2SdkLib\obj\Release\BundleSdkLib.pdb

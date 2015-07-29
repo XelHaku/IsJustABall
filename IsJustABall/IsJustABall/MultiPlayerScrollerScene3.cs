@@ -12,7 +12,7 @@ namespace IsJustABall
 		CCWindow mainWindowAux;
 		String ThisLevelName;
 		CCLayer mainLayer;
-		ballPhysics ballPhysicsSingle = new ballPhysics ();
+		//ballPhysics ballSinglePhysics = new ballPhysics ();
 		CCSprite ballSprite;
 		List<ballPhysics> ballPhysicsList;
 		List<CCSprite> visibleJewels;
@@ -55,7 +55,7 @@ namespace IsJustABall
 		int scrollerSpeed= 150;
 		int topSpeed;
 		//Declare variables for HookedParticle Method
-		double Multiplier =1.05f;
+		double Multiplier =1.1f;
 		float minRotationRadius;
 		//needed for multiple Pivots
 		/// 
@@ -99,7 +99,7 @@ namespace IsJustABall
 
 			ClassListMulti4Level1 = LevelClass1.JewelMaker ();
 			scrollerSpeed = (int)(0.1 * bounds.Width);
-			topSpeed = (int)(0.9 * bounds.Width);
+			topSpeed = (int)(0.4 * bounds.Width);
 
 
 
@@ -113,19 +113,22 @@ namespace IsJustABall
 
 			addFourBalls addBallsClass = new addFourBalls ();
 			addBallsClass.addGameBall(playerCount, mainWindowAux, ballPhysicsList );
-			foreach (var ballPhysicsSingle in ballPhysicsList) {
-				mainLayer.AddChild (ballPhysicsSingle.ballSprite);
+			foreach (var ballSinglePhysics in ballPhysicsList) {
+				mainLayer.AddChild (ballSinglePhysics.ballSprite);
+				mainLayer.ReorderChild (ballSinglePhysics.ballSprite,100);
 
+				mainLayer.AddChild (ballSinglePhysics.playerSpriteButton);
+				mainLayer.ReorderChild (ballSinglePhysics.playerSpriteButton,99);
 			}
 
-			addPlayerButton (playerCount);
+
 
 			addBackground (mainWindow);
 			addPauseButton ();
 			addMenuOptions ();
 					//scoreLabel = new CCLabel ("Score: 0", "arial", 78);
 			scoreLabel = new CCLabel("0s","nasalizationbold.ttf",90);
-			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/3 ;
+			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/(4) ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
 			CCColor3B fontColor = new CCColor3B(255,0,255) ;
@@ -189,9 +192,11 @@ namespace IsJustABall
 		#region RUN GAME LOGIC
 		void RunGameLogic(float frameTimeInSeconds)
 		{
-			GameTime += frameTimeInSeconds;
-			scoreLabel.Text = ""+(int)GameTime+" sec";
-			if(StartBuzzingPoints == true){
+			if (PauseGame == true) {
+				GameTime += frameTimeInSeconds;
+				scoreLabel.Text = "" + (int)GameTime + " sec";
+			}
+				if(StartBuzzingPoints == true){
 				LevelClearGamePointBuzzer (mainWindowAux);
 			}
 
@@ -294,8 +299,15 @@ namespace IsJustABall
 			{
 				//ResumeGame.ScaleTo (new CCSize (1.1f*ResumeGame.ScaledContentSize.Width,1.1f*ResumeGame.ScaledContentSize.Height));
 				ResumeGame.RunAction(ZoomTouch);
-				CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.4f * bounds.Height));
-				menuframe.RunAction (SlideOut);////
+				CCMoveTo SlideBack = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width,- 0.4f * bounds.Height));
+				menuframe.RunAction (SlideBack);
+				SlideBack = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width,- 0.2f * bounds.Height));
+				ResumeGame.RunAction (SlideBack);
+				SlideBack = new CCMoveTo (0.5f, new CCPoint (0.75f*bounds.Width,- 0.2f * bounds.Height));
+				Restart.RunAction (SlideBack);
+				SlideBack = new CCMoveTo (0.5f, new CCPoint (0.25f*bounds.Width,- 0.2f * bounds.Height));
+				MainMenu .RunAction (SlideBack);
+				PauseGame = true;
 			}
 
 			hit = Restart.BoundingBoxTransformedToParent.ContainsPoint (location);
@@ -319,19 +331,26 @@ namespace IsJustABall
 
 			if (hit) {
 				if (PauseGame == true) {
-					CCMoveBy SlideIn = new CCMoveBy (0.5f, new CCPoint (0.0f, 0.4f * bounds.Height));
-					ResumeGame.RunAction (SlideIn);
-					Restart.RunAction (SlideIn);
-					MainMenu.RunAction (SlideIn);
+					
+					CCMoveTo SlideIn = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width,0.0f * bounds.Height));
 					menuframe.RunAction (SlideIn);
+					SlideIn = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width, 0.2f * bounds.Height));
+					ResumeGame.RunAction (SlideIn);
+					SlideIn = new CCMoveTo (0.5f, new CCPoint (0.75f*bounds.Width, 0.2f * bounds.Height));
+					Restart.RunAction (SlideIn);
+					SlideIn = new CCMoveTo (0.5f, new CCPoint (0.25f*bounds.Width, 0.2f * bounds.Height));
+					MainMenu .RunAction (SlideIn);
 					PauseGame = false;
 					CCSimpleAudioEngine.SharedEngine.PauseBackgroundMusic ();
 				} else {
-					CCMoveBy SlideOut = new CCMoveBy (0.5f, new CCPoint (0.0f,- 0.4f * bounds.Height));
-					ResumeGame.RunAction (SlideOut);
-					Restart.RunAction (SlideOut);
-					MainMenu.RunAction (SlideOut);
+					CCMoveTo SlideOut = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width,-0.4f * bounds.Height));
 					menuframe.RunAction (SlideOut);
+					SlideOut = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width, -0.4f * bounds.Height));
+					ResumeGame.RunAction (SlideOut);
+					SlideOut = new CCMoveTo (0.5f, new CCPoint (0.75f*bounds.Width, -0.4f * bounds.Height));
+					Restart.RunAction (SlideOut);
+					SlideOut = new CCMoveTo (0.5f, new CCPoint (0.25f*bounds.Width, -0.4f * bounds.Height));
+					MainMenu .RunAction (SlideOut);
 					PauseGame = true;
 					CCSimpleAudioEngine.SharedEngine.ResumeBackgroundMusic ();
 					//CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
@@ -342,7 +361,20 @@ namespace IsJustABall
 
 			location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
-			CCPoint touchPoint = new CCPoint (0.0f*bounds.Width, 0.0f*bounds.Height);
+
+			foreach (var ballSinglePhysics in ballPhysicsList) {
+				hit = ballSinglePhysics.playerSpriteButton.BoundingBoxTransformedToParent.ContainsPoint (location);
+					if(hit){
+						CalculateHookPhysics (ballSinglePhysics.index);
+					CCScaleBy ZoomToucha = new CCScaleBy(0.1f,0.50f* mainWindowAux.WindowSizeInPixels.Width/ballSinglePhysics.playerSpriteButton.BoundingBoxTransformedToWorld.Size.Width);
+					CCScaleBy ZoomTouchb = new CCScaleBy(0.1f,0.45f* mainWindowAux.WindowSizeInPixels.Width/ballSinglePhysics.playerSpriteButton.BoundingBoxTransformedToWorld.Size.Width);
+
+					ballSinglePhysics.playerSpriteButton.RunActions(ZoomToucha,ZoomTouchb);
+
+					}
+			}
+
+			/*CCPoint touchPoint = new CCPoint (0.0f*bounds.Width, 0.0f*bounds.Height);
 			// 1 FIRST PLAYER
 			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
 			if (hit)
@@ -373,7 +405,7 @@ namespace IsJustABall
 			{
 				CalculateHookPhysics (2);
 
-			}
+			}*/
 
 		}
 
@@ -381,71 +413,78 @@ namespace IsJustABall
 		#region FREE & HOOKED PARTICLE
 		void freeParticle(float frameTimeInSeconds){
 			
-			foreach (var ballPhysicsSingle in ballPhysicsList){
-				if (ballPhysicsSingle.hookTouchBool == true) {
+			foreach (var ballSinglePhysics in ballPhysicsList){
+				if (ballSinglePhysics.hookTouchBool == true) {
 					// This is a linear approximation, so not 100% accurate
-					//ballPhysicsSingle.ballXVelocity += frameTimeInSeconds * gravity;
-					ballPhysicsSingle.ballSprite.PositionX += ballPhysicsSingle.ballXVelocity * frameTimeInSeconds;
-					ballPhysicsSingle.ballSprite.PositionY += ballPhysicsSingle.ballYVelocity * frameTimeInSeconds;
+					//ballSinglePhysics.ballXVelocity += frameTimeInSeconds * gravity;
+					ballSinglePhysics.ballSprite.PositionX += ballSinglePhysics.ballXVelocity * frameTimeInSeconds;
+					ballSinglePhysics.ballSprite.PositionY += ballSinglePhysics.ballYVelocity * frameTimeInSeconds;
 					// New code:
 					//score++;
 					//scoreLabel.Text = "Score: " + score;
 					// Check if the ball is either too far to the right or left:
-					float ballRight = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MaxX;
-					float ballLeft = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MinX;
+					float ballRight = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.MaxX;
+					float ballLeft = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.MinX;
 
 					float screenRight = mainLayer.VisibleBoundsWorldspace.MaxX;
 					float screenLeft = mainLayer.VisibleBoundsWorldspace.MinX;
 
-					bool shouldReflectXVelocity = (ballRight > screenRight && ballPhysicsSingle.ballXVelocity > 0) ||	(ballLeft < screenLeft && ballPhysicsSingle.ballXVelocity < 0);
+					bool shouldReflectXVelocity = (ballRight > screenRight && ballSinglePhysics.ballXVelocity > 0) ||	(ballLeft < screenLeft && ballSinglePhysics.ballXVelocity < 0);
 
 
 					if (shouldReflectXVelocity) {
-						ballPhysicsSingle.ballXVelocity *= -1;
+						ballSinglePhysics.ballXVelocity *= -1;
 
 					}
 
 					// Check if the ball is either too far to the right or left:
 
-					float ballTop = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MaxY;
-					float ballBottom = ballPhysicsSingle.ballSprite.BoundingBoxTransformedToParent.MinY;
+					float ballTop = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.MaxY;
+					float ballBottom = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.MinY;
 
 					float screenTop = mainLayer.VisibleBoundsWorldspace.MaxY;
 					float screenBottom = mainLayer.VisibleBoundsWorldspace.MinY;
 
-					bool shouldReflectYVelocity = (ballTop > screenTop && ballPhysicsSingle.ballYVelocity > 0) ||	(ballBottom < screenBottom && ballPhysicsSingle.ballYVelocity < 0);
+					bool shouldReflectYVelocity = (ballTop > screenTop && ballSinglePhysics.ballYVelocity > 0) ||	(ballBottom < screenBottom && ballSinglePhysics.ballYVelocity < 0);
 
 					if (shouldReflectYVelocity) {
-						ballPhysicsSingle.ballYVelocity *= -1;
+						ballSinglePhysics.ballYVelocity *= -1;
 					}
 				}
+				if (ballSinglePhysics.ballYVelocity > topSpeed) {
+					ballSinglePhysics.ballYVelocity = topSpeed;
+				}
+				if (ballSinglePhysics.ballXVelocity > topSpeed) {
+					ballSinglePhysics.ballXVelocity = topSpeed;
+				}
+
 			}
 		}
 
 
 		void hookedParticle(float frameTimeInSeconds){
 			//gravity = 0;
-			foreach (var ballPhysicsSingle in ballPhysicsList){
-				if (ballPhysicsSingle.hookTouchBool == false) {
+			foreach (var ballSinglePhysics in ballPhysicsList){
+				if (ballSinglePhysics.hookTouchBool == false) {
 					//multiplier on close radius\
 					//double multR = (10 / Radius);
 
-					if (ballPhysicsSingle.ClockwiseRotation == true) {
+					if (ballSinglePhysics.ClockwiseRotation == true) {
 						//theta+= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-						ballPhysicsSingle.theta += (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
+						ballSinglePhysics.theta += (double)(Multiplier * ballSinglePhysics.wZero * frameTimeInSeconds);
 
-						ballPhysicsSingle.ballXVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
-						ballPhysicsSingle.ballYVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+						ballSinglePhysics.ballXVelocity = (float)(-ballSinglePhysics.ballSpeedFinal * Math.Sin (ballSinglePhysics.theta));
+						ballSinglePhysics.ballYVelocity = (float)(ballSinglePhysics.ballSpeedFinal * Math.Cos (ballSinglePhysics.theta));
 					} else {
 						//theta-= (double)(Multiplier*wZero*SinAlpha*frameTimeInSeconds);
-						ballPhysicsSingle.theta -= (double)(Multiplier * ballPhysicsSingle.wZero * frameTimeInSeconds);
+						ballSinglePhysics.theta -= (double)(Multiplier * ballSinglePhysics.wZero * frameTimeInSeconds);
 
-						ballPhysicsSingle.ballXVelocity = (float)(ballPhysicsSingle.ballSpeedFinal * Math.Sin (ballPhysicsSingle.theta));
-						ballPhysicsSingle.ballYVelocity = (float)(-ballPhysicsSingle.ballSpeedFinal * Math.Cos (ballPhysicsSingle.theta));
+						ballSinglePhysics.ballXVelocity = (float)(ballSinglePhysics.ballSpeedFinal * Math.Sin (ballSinglePhysics.theta));
+						ballSinglePhysics.ballYVelocity = (float)(-ballSinglePhysics.ballSpeedFinal * Math.Cos (ballSinglePhysics.theta));
 					}
 					/////////
-					ballPhysicsSingle.ballSprite.PositionX = (float)(ballPhysicsSingle.Radius * Math.Cos (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX);
-					ballPhysicsSingle.ballSprite.PositionY = (float)(ballPhysicsSingle.Radius * Math.Sin (ballPhysicsSingle.theta) + visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY);
+					ballSinglePhysics.ballSprite.PositionX = (float)(ballSinglePhysics.Radius * Math.Cos (ballSinglePhysics.theta) + visiblePivots [ballSinglePhysics.indexHookPivot].PositionX);
+					ballSinglePhysics.ballSprite.PositionY = (float)(ballSinglePhysics.Radius * Math.Sin (ballSinglePhysics.theta) + visiblePivots [ballSinglePhysics.indexHookPivot].PositionY);
 
 
 					///Remove gone far Pivots
@@ -459,41 +498,43 @@ namespace IsJustABall
 
 
 					}
+					drawSweptAreaLine(ballSinglePhysics);
 				}
+
 			}//end foreach
-			//drawSweptAreaLine(ballPhysicsSingle);
+
 		}
 		//////
 		/// 
 		#endregion
 
 		public void CalculateHookPhysics(int index){
-			foreach(var ballPhysicsSingle in ballPhysicsList){
-				if(ballPhysicsSingle.index==index){
+			foreach(var ballSinglePhysics in ballPhysicsList){
+				if(ballSinglePhysics.index==index){
 					double closestPivot = 10000;
 					for (int i = 0; i < visiblePivots.Count; i++) {
-						ballPhysicsSingle.dRadius_X = ballPhysicsSingle.ballSprite.PositionX - visiblePivots [i].PositionX;
-						ballPhysicsSingle.dRadius_Y = ballPhysicsSingle.ballSprite.PositionY - visiblePivots [i].PositionY;
+						ballSinglePhysics.dRadius_X = ballSinglePhysics.ballSprite.PositionX - visiblePivots [i].PositionX;
+						ballSinglePhysics.dRadius_Y = ballSinglePhysics.ballSprite.PositionY - visiblePivots [i].PositionY;
 
 
-						ballPhysicsSingle.temp = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
-						ballPhysicsSingle.temp = Math.Pow (ballPhysicsSingle.temp, 0.5);
+						ballSinglePhysics.temp = Math.Pow ((double)ballSinglePhysics.dRadius_X, 2) + Math.Pow ((double)ballSinglePhysics.dRadius_Y, 2);
+						ballSinglePhysics.temp = Math.Pow (ballSinglePhysics.temp, 0.5);
 
-						if (ballPhysicsSingle.temp < closestPivot) {
-							closestPivot = ballPhysicsSingle.temp;
-							ballPhysicsSingle.indexHookPivot = i;
+						if (ballSinglePhysics.temp < closestPivot) {
+							closestPivot = ballSinglePhysics.temp;
+							ballSinglePhysics.indexHookPivot = i;
 
 						}
 
 
 					}
 
-					if (closestPivot < minRotationRadius && ballPhysicsSingle.hookTouchBool == true) {
-						ballPhysicsSingle.hookTouchBool = false;//Toggle hook
+					if (closestPivot < minRotationRadius && ballSinglePhysics.hookTouchBool == true) {
+						ballSinglePhysics.hookTouchBool = false;//Toggle hook
 						//scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
 
-					} else if (ballPhysicsSingle.hookTouchBool == false) {
-						ballPhysicsSingle.hookTouchBool = true;
+					} else if (ballSinglePhysics.hookTouchBool == false) {
+						ballSinglePhysics.hookTouchBool = true;
 						//scoreLabel.Text = "Free";
 					}
 
@@ -503,60 +544,60 @@ namespace IsJustABall
 
 
 
-					if (ballPhysicsSingle.hookTouchBool == false) {
+					if (ballSinglePhysics.hookTouchBool == false) {
 						//Set values for spped and radius or rotation raound Pivot
 
-						ballPhysicsSingle.dRadius_X = ballPhysicsSingle.ballSprite.PositionX - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionX;
-						ballPhysicsSingle.dRadius_Y = ballPhysicsSingle.ballSprite.PositionY - visiblePivots [ballPhysicsSingle.indexHookPivot].PositionY;
+						ballSinglePhysics.dRadius_X = ballSinglePhysics.ballSprite.PositionX - visiblePivots [ballSinglePhysics.indexHookPivot].PositionX;
+						ballSinglePhysics.dRadius_Y = ballSinglePhysics.ballSprite.PositionY - visiblePivots [ballSinglePhysics.indexHookPivot].PositionY;
 
-						ballPhysicsSingle.Radius = Math.Pow ((double)ballPhysicsSingle.dRadius_X, 2) + Math.Pow ((double)ballPhysicsSingle.dRadius_Y, 2);
-						ballPhysicsSingle.Radius = Math.Pow (ballPhysicsSingle.Radius, 0.5);
+						ballSinglePhysics.Radius = Math.Pow ((double)ballSinglePhysics.dRadius_X, 2) + Math.Pow ((double)ballSinglePhysics.dRadius_Y, 2);
+						ballSinglePhysics.Radius = Math.Pow (ballSinglePhysics.Radius, 0.5);
 
 
-						ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballXVelocity, 2) + Math.Pow (ballPhysicsSingle.ballYVelocity, 2);
-						ballPhysicsSingle.ballSpeed = Math.Pow (ballPhysicsSingle.ballSpeed, 0.5d);
+						ballSinglePhysics.ballSpeed = Math.Pow (ballSinglePhysics.ballXVelocity, 2) + Math.Pow (ballSinglePhysics.ballYVelocity, 2);
+						ballSinglePhysics.ballSpeed = Math.Pow (ballSinglePhysics.ballSpeed, 0.5d);
 
-						ballPhysicsSingle.CosThetaZero = ballPhysicsSingle.dRadius_X / ballPhysicsSingle.Radius;
-						ballPhysicsSingle.SinThetaZero = ballPhysicsSingle.dRadius_Y / ballPhysicsSingle.Radius;
+						ballSinglePhysics.CosThetaZero = ballSinglePhysics.dRadius_X / ballSinglePhysics.Radius;
+						ballSinglePhysics.SinThetaZero = ballSinglePhysics.dRadius_Y / ballSinglePhysics.Radius;
 
-						ballPhysicsSingle.CosAlpha = (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballXVelocity + ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballYVelocity) / (ballPhysicsSingle.Radius * ballPhysicsSingle.ballSpeed);
+						ballSinglePhysics.CosAlpha = (ballSinglePhysics.dRadius_X * ballSinglePhysics.ballXVelocity + ballSinglePhysics.dRadius_Y * ballSinglePhysics.ballYVelocity) / (ballSinglePhysics.Radius * ballSinglePhysics.ballSpeed);
 
-						if (Math.Pow (ballPhysicsSingle.CosAlpha, 2) < 0.5) {
-							ballPhysicsSingle.CosAlpha = Math.Pow (0.5, 0.5);
+						if (Math.Pow (ballSinglePhysics.CosAlpha, 2) < 0.5) {
+							ballSinglePhysics.CosAlpha = Math.Pow (0.5, 0.5);
 						}
-						ballPhysicsSingle.SinAlpha = (1 - Math.Pow (ballPhysicsSingle.CosAlpha, 2));
-						ballPhysicsSingle.SinAlpha = Math.Pow (ballPhysicsSingle.SinAlpha, 0.5f);
+						ballSinglePhysics.SinAlpha = (1 - Math.Pow (ballSinglePhysics.CosAlpha, 2));
+						ballSinglePhysics.SinAlpha = Math.Pow (ballSinglePhysics.SinAlpha, 0.5f);
 
 
-						ballPhysicsSingle.wZero = ballPhysicsSingle.ballSpeed / ballPhysicsSingle.Radius;
+						ballSinglePhysics.wZero = ballSinglePhysics.ballSpeed / ballSinglePhysics.Radius;
 						//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
-						ballPhysicsSingle.ballSpeedFinal = ballPhysicsSingle.Radius * Multiplier * ballPhysicsSingle.wZero;
+						ballSinglePhysics.ballSpeedFinal = ballSinglePhysics.Radius * Multiplier * ballSinglePhysics.wZero;
 
-						ballPhysicsSingle.ThetaZero = Math.Acos (ballPhysicsSingle.CosThetaZero);
+						ballSinglePhysics.ThetaZero = Math.Acos (ballSinglePhysics.CosThetaZero);
 
 						//Second Quadrant
-						if (ballPhysicsSingle.SinThetaZero > 0 && ballPhysicsSingle.CosThetaZero < 0) {
-							ballPhysicsSingle.ThetaZero = (1 / 2) * Math.PI + ballPhysicsSingle.ThetaZero;
+						if (ballSinglePhysics.SinThetaZero > 0 && ballSinglePhysics.CosThetaZero < 0) {
+							ballSinglePhysics.ThetaZero = (1 / 2) * Math.PI + ballSinglePhysics.ThetaZero;
 						}
 						//Third Quadrant
-						if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero < 0) {
-							ballPhysicsSingle.ThetaZero = (2) * Math.PI - ballPhysicsSingle.ThetaZero;
+						if (ballSinglePhysics.SinThetaZero < 0 && ballSinglePhysics.CosThetaZero < 0) {
+							ballSinglePhysics.ThetaZero = (2) * Math.PI - ballSinglePhysics.ThetaZero;
 						}
 
 
 
 						//Fourth Quadrant
-						if (ballPhysicsSingle.SinThetaZero < 0 && ballPhysicsSingle.CosThetaZero > 0) {
-							ballPhysicsSingle.ThetaZero = -ballPhysicsSingle.ThetaZero;
+						if (ballSinglePhysics.SinThetaZero < 0 && ballSinglePhysics.CosThetaZero > 0) {
+							ballSinglePhysics.ThetaZero = -ballSinglePhysics.ThetaZero;
 						}
-						ballPhysicsSingle.theta = ballPhysicsSingle.ThetaZero;
+						ballSinglePhysics.theta = ballSinglePhysics.ThetaZero;
 						//Define if it is clockwise or anticlockwise rotation
 
-						if (ballPhysicsSingle.dRadius_X * ballPhysicsSingle.ballYVelocity - ballPhysicsSingle.dRadius_Y * ballPhysicsSingle.ballXVelocity <= 0) {
-							ballPhysicsSingle.ClockwiseRotation = false;
+						if (ballSinglePhysics.dRadius_X * ballSinglePhysics.ballYVelocity - ballSinglePhysics.dRadius_Y * ballSinglePhysics.ballXVelocity <= 0) {
+							ballSinglePhysics.ClockwiseRotation = false;
 							//scoreLabel.Text += "ClockwiseRotation: false";
 						} else {
-							ballPhysicsSingle.ClockwiseRotation = true;
+							ballSinglePhysics.ClockwiseRotation = true;
 							//scoreLabel.Text += "ClockwiseRotation: true";
 
 						}
@@ -570,47 +611,7 @@ namespace IsJustABall
 
 		#region OBJECTS AND SPRITES
 
-		void addPlayerButton(int playerCount){
-			var bounds = mainWindowAux.WindowSizeInPixels;
-			float scale = 0.002f * bounds.Width;
-			CCSprite buttonSprite = new CCSprite ();
-			for (int i = 1; i <= playerCount; i++) {
-				switch (i) {
-				case 1:
-					buttonSprite = new CCSprite ("blueballButton");
-					buttonSprite.PositionX = 0.0f * bounds.Width;
-					buttonSprite.PositionY = 0.0f * bounds.Height;
-					buttonSprite.Scale = scale;
-					mainLayer.AddChild (buttonSprite);
-					break;
-				case 2:
-					buttonSprite = new CCSprite ("redballButton");
-					buttonSprite.PositionX = 1.0f * bounds.Width;
-					buttonSprite.PositionY = 1.0f * bounds.Height;
-					buttonSprite.Scale = scale;
-					mainLayer.AddChild (buttonSprite);
-					break;
-				case 3:
-					buttonSprite = new CCSprite ("greenballButton");
-					buttonSprite.PositionX = 1.0f * bounds.Width;
-					buttonSprite.PositionY = 0.0f * bounds.Height;
-					buttonSprite.Scale = scale;
-					mainLayer.AddChild (buttonSprite);
-					break;
-				case 4:
-					buttonSprite = new CCSprite ("yellowballButton");
-					buttonSprite.PositionX = 0.0f * bounds.Width;
-					buttonSprite.PositionY = 1.0f * bounds.Height;
-					buttonSprite.Scale = scale;
-					mainLayer.AddChild (buttonSprite);
-					break;
-				default:
-					break;
-				}
-
-
-			}
-		}
+	
 	
 
 		CCSprite addDiamond(CCWindow mainWindow, float diamondPosX,float diamondPosY,float scale){
@@ -1192,46 +1193,47 @@ namespace IsJustABall
 
 		// 
 		void drawSweptAreaLine (ballPhysics ballSinglePhysics){
+
 			var sweptAreaLine = new CCDrawNode ();
 
-			float pivotScale=0.0002f*mainWindowAux.WindowSizeInPixels.Width;
-			float ballScale=0.00047f*mainWindowAux.WindowSizeInPixels.Width;
-			CCPoint ballTemp = new CCPoint();
-			CCPoint pivotTemp = new CCPoint();
-			ballTemp.X = ballSinglePhysics.ballSprite.BoundingBox.Center.X-visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Center.X+ballSinglePhysics.ballSprite.BoundingBox.Size.Width*ballScale/2;
+			float pivotScale = 0.0002f * mainWindowAux.WindowSizeInPixels.Width;
+			float ballScale = 0.00047f * mainWindowAux.WindowSizeInPixels.Width;
+			CCPoint ballTemp = new CCPoint ();
+			CCPoint pivotTemp = new CCPoint ();
+			ballTemp.X = ballSinglePhysics.ballSprite.BoundingBox.Center.X - visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Center.X + ballSinglePhysics.ballSprite.BoundingBox.Size.Width * ballScale / 2;
 			ballTemp.Y = ballSinglePhysics.ballSprite.BoundingBox.Center.Y - visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Center.Y + ballSinglePhysics.ballSprite.BoundingBox.Size.Height * ballScale / 2;
-			pivotTemp.X = 0+visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Size.Width*pivotScale/2;
-			pivotTemp.Y = 0+visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Size.Height*pivotScale/2				;
-			var tempColor = new CCColor3B (0,0,0);
+			pivotTemp.X = 0 + visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Size.Width * pivotScale / 2;
+			pivotTemp.Y = 0 + visiblePivots [ballSinglePhysics.indexHookPivot].BoundingBox.Size.Height * pivotScale / 2;
+			var tempColor = new CCColor3B (0, 0, 0);
 
-			switch(ballSinglePhysics.index){
-			case 1:
-				tempColor = new CCColor3B (72,118,255);
-				break;
-			case 2:
-				tempColor = new CCColor3B (255,48,48);
-				break;
-			case 3:
-				tempColor = new CCColor3B (0,238,118	);
-				break;
-			case 4:
-				tempColor = new CCColor3B (255,215,0);
-				break;
-			}
 
-			var purpleColor = new CCColor4F (tempColor);
+				switch (ballSinglePhysics.index) {
+				case 1:
+					tempColor = new CCColor3B (72, 118, 255);
+					break;
+				case 2:
+					tempColor = new CCColor3B (255, 48, 48);
+					break;
+				case 3:
+					tempColor = new CCColor3B (0, 238, 118);
+					break;
+				case 4:
+					tempColor = new CCColor3B (255, 215, 0);
+					break;
+			
+				}
 
-			sweptAreaLine.Scale = 1 / pivotScale;
-			sweptAreaLine.DrawSegment( pivotTemp,ballTemp,1.0f, purpleColor);
-			CCRemoveSelf removeLine = new CCRemoveSelf ();
-			CCDelayTime waitLine = new CCDelayTime(0.80f);
-			sweptAreaLine.RunActions (waitLine,removeLine);
-			visiblePivots [ballSinglePhysics.indexHookPivot].AddChild (sweptAreaLine);
-			mainLayer.ReorderChild (sweptAreaLine, -100);
+				var purpleColor = new CCColor4F (tempColor);
 
-			if (ballSinglePhysics.hookTouchBool == true) {
-				//visiblePivots [ballPhysicsSingle.indexHookPivot].RemoveAllChildren(true);//sweptAreaLine
-			}
+				sweptAreaLine.Scale = 1 / pivotScale;
+				sweptAreaLine.DrawSegment (pivotTemp, ballTemp, 1.0f, purpleColor);
+				CCRemoveSelf removeLine = new CCRemoveSelf ();
+				CCDelayTime waitLine = new CCDelayTime (0.005f);
+				sweptAreaLine.RunActions (waitLine, removeLine);
+				visiblePivots [ballSinglePhysics.indexHookPivot].AddChild (sweptAreaLine);
+				mainLayer.ReorderChild (sweptAreaLine, -100);
+
+
 
 		}
 
@@ -1271,10 +1273,18 @@ namespace IsJustABall
 				
 				bool hit = ruby.BoundingBoxTransformedToParent.IntersectsRect (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent);
 					if (hit) {
-						hitJewels.Add (ruby);
-						//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
+						
+						
+					BlueBallAnimation (ballSinglePhysics);
+					//animation for jewel
+						CCScaleTo bounceScale = new CCScaleTo (0.2f, 0.0f);
+						CCRemoveSelf removeRuby = new CCRemoveSelf ();
+						ruby.RunActions (bounceScale,removeRuby);
+
+					hitJewels.Add(ruby);
+					CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
 						//Explode(banana.Position);
-						ruby.RemoveFromParent (true);
+						//ruby.RemoveFromParent (true);
 						visibleJewels.Remove (ruby);
 					ballSinglePhysics.Score += 10;
 					DisplayScore (ballSinglePhysics.index,ballSinglePhysics.Score);
@@ -1322,7 +1332,7 @@ namespace IsJustABall
 		//SPIKE
 		void checkSpike(){
 			foreach (var spikeSprite in visibleTraps) {
-				foreach (var ballPhysicsSingle in ballPhysicsList) {
+				foreach (var ballSinglePhysics in ballPhysicsList) {
 					bool hit = spikeSprite.BoundingBoxTransformedToParent.IntersectsRect (ballSprite.BoundingBoxTransformedToParent);
 					if (hit) {
 
@@ -1356,7 +1366,7 @@ namespace IsJustABall
 		//WALL
 		void checkWall(){
 			foreach (var WallSprite in visibleWalls) {
-				foreach (var ballPhysicsSingle in ballPhysicsList) {
+				foreach (var ballSinglePhysics in ballPhysicsList) {
 					bool hit = WallSprite.BoundingBoxTransformedToParent.IntersectsRect (ballSprite.BoundingBoxTransformedToParent);
 					if (hit) {
 						CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/explosion1.wav");
@@ -1379,13 +1389,13 @@ namespace IsJustABall
 						Radial = Math.Pow (Radial, 0.5);
 						double SineAngle = wY / Radial;
 
-						if (ballPhysicsSingle.hookTouchBool == true) {
+						if (ballSinglePhysics.hookTouchBool == true) {
 							if (Math.Abs (SineAngle) <= 0.707106) {
-								ballPhysicsSingle.ballXVelocity = -1.01f * ballPhysicsSingle.ballXVelocity;
-								ballPhysicsSingle.ballYVelocity = 1.01f * ballPhysicsSingle.ballYVelocity;
+								ballSinglePhysics.ballXVelocity = -1.01f * ballSinglePhysics.ballXVelocity;
+								ballSinglePhysics.ballYVelocity = 1.01f * ballSinglePhysics.ballYVelocity;
 							} else if (Math.Abs (SineAngle) > 0.706) {
-								ballPhysicsSingle.ballYVelocity = -1.01f * ballPhysicsSingle.ballYVelocity;
-								ballPhysicsSingle.ballXVelocity = 1.01f * ballPhysicsSingle.ballXVelocity;
+								ballSinglePhysics.ballYVelocity = -1.01f * ballSinglePhysics.ballYVelocity;
+								ballSinglePhysics.ballXVelocity = 1.01f * ballSinglePhysics.ballXVelocity;
 							}
 						}
 
@@ -1406,7 +1416,7 @@ namespace IsJustABall
 			float alphaFactor = 25000 * mainWindowAux.WindowSizeInPixels.Width;
 
 			foreach (var BlackholeSprite in visibleBlackholes) {
-						foreach (var ballPhysicsSingle in ballPhysicsList) {						
+						foreach (var ballSinglePhysics in ballPhysicsList) {						
 				//change gravity
 				RvecX = ballSprite.BoundingBoxTransformedToParent.Center.X - BlackholeSprite.BoundingBoxTransformedToParent.Center.X;
 				RvecY = ballSprite.BoundingBoxTransformedToParent.Center.Y - BlackholeSprite.BoundingBoxTransformedToParent.Center.Y;
@@ -1414,8 +1424,8 @@ namespace IsJustABall
 				Radius = Math.Pow (Radius, 0.5f);
 				Radius = Math.Pow (Radius, 3f);
 
-				ballPhysicsSingle.gravityX = -alphaFactor * RvecX / Radius;
-				ballPhysicsSingle.gravityY = -alphaFactor * RvecY / Radius;
+				ballSinglePhysics.gravityX = -alphaFactor * RvecX / Radius;
+				ballSinglePhysics.gravityY = -alphaFactor * RvecY / Radius;
 				//
 				bool hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear (ballSprite.BoundingBoxTransformedToParent.Center, 20.0f);
 				if (hit) {
@@ -1443,11 +1453,11 @@ namespace IsJustABall
 		}
 			}
 
-		void BlueBallAnimation (){
+		void BlueBallAnimation (ballPhysics ballSinglePhysics){
 			CCScaleTo bounceScale = new CCScaleTo (0.1f, 0.0004f*mainWindowAux.WindowSizeInPixels.Width);
 			CCDelayTime wait = new CCDelayTime (0.1f);
 			CCScaleTo bounceReduce = new CCScaleTo (0.1f, 0.0003f*mainWindowAux.WindowSizeInPixels.Width);
-			ballPhysicsSingle.ballSprite.RunActions (bounceScale,wait,bounceReduce);
+			ballSinglePhysics.ballSprite.RunActions (bounceScale,wait,bounceReduce);
 					}
 
 		#endregion
@@ -1464,6 +1474,9 @@ namespace IsJustABall
 		 void LevelClearGame (CCWindow mainWindow){
 			mainLayer.RemoveChild (PauseButton);
 			mainLayer.RemoveChild (scoreLabel);
+			foreach (var ballSinglePhysics in ballPhysicsList) {
+				mainLayer.RemoveChild (ballSinglePhysics.ballSprite);
+			}
 			CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
 			Explode2(diamond.Position);
 
@@ -1471,15 +1484,16 @@ namespace IsJustABall
 			//addLevelStars (mainWindowAux,score);
 
 			// add Resume, Restart and MainMenu button. A frame, (1 2 3)Stars display Score 
-			PauseGame = false;
+			//PauseGame = false;
 			var bounds = mainWindowAux.WindowSizeInPixels;
-			CCMoveBy SlideIn = new CCMoveBy (0f, new CCPoint (0.0f, 0.4f * bounds.Height));
 
-			//ResumeGame.RunAction (SlideIn);
-			Restart.RunAction (SlideIn);
-			MainMenu.RunAction (SlideIn);
-			SlideIn = new CCMoveBy (0f, new CCPoint (0.0f, 0.9f * bounds.Height));
+			CCMoveTo SlideIn = new CCMoveTo (0.5f, new CCPoint (0.5f*bounds.Width,0.5f * bounds.Height));
 			menuframe.RunAction (SlideIn);
+
+			SlideIn = new CCMoveTo (0.5f, new CCPoint (0.75f*bounds.Width, 0.2f * bounds.Height));
+			Restart.RunAction (SlideIn);
+			SlideIn = new CCMoveTo (0.5f, new CCPoint (0.25f*bounds.Width, 0.2f * bounds.Height));
+			MainMenu .RunAction (SlideIn);
 
 			Bluepoints.Scale = 2.5f;
 			Bluepoints.Text = "0";
@@ -1517,29 +1531,29 @@ namespace IsJustABall
 		}
 
 		void LevelClearGamePointBuzzer(CCWindow mainWindow){
-			foreach (var ballPhysicsSingle in ballPhysicsList) {
+			foreach (var ballSinglePhysics in ballPhysicsList) {
 
-				switch (ballPhysicsSingle.index) {
+				switch (ballSinglePhysics.index) {
 				case 1:
-					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
 						Bluepoints.Text = "" + (int)(80.0f*GameTime);
 						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
 					}
 					break;
 				case 2:
-					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
 						Redpoints.Text = "" + (int)(80.0f*GameTime);
 						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
 					}
 					break;
 				case 3:
-					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
 						Greenpoints.Text = "" + (int)(80.0f*GameTime);
 						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
 					}
 					break;
 				case 4:
-					if ((int)(80.0f*GameTime) <= ballPhysicsSingle.Score) {
+					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
 						Yellowpoints.Text = "" + (int)(80.0f*GameTime);
 						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
 					}
@@ -1611,7 +1625,7 @@ namespace IsJustABall
 		void addPauseButton(){
 			var bounds = mainWindowAux.WindowSizeInPixels;
 
-			float scale =0.0012f*bounds.Width;
+			float scale =0.0014f*bounds.Width;
 
 			PauseButton = new CCSprite ("PauseButton");
 			PauseButton.Scale = scale; 

@@ -28,25 +28,29 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_ctor;
 		// Metadata.xml XPath constructor reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/constructor[@name='UbService' and count(parameter)=0]"
 		[Register (".ctor", "()V", "")]
-		public UbService () : base (IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
+		public unsafe UbService ()
+			: base (IntPtr.Zero, JniHandleOwnership.DoNotTransfer)
 		{
 			if (Handle != IntPtr.Zero)
 				return;
 
-			if (GetType () != typeof (UbService)) {
-				SetHandle (
-						global::Android.Runtime.JNIEnv.StartCreateInstance (GetType (), "()V"),
-						JniHandleOwnership.TransferLocalRef);
-				global::Android.Runtime.JNIEnv.FinishCreateInstance (Handle, "()V");
-				return;
-			}
+			try {
+				if (GetType () != typeof (UbService)) {
+					SetHandle (
+							global::Android.Runtime.JNIEnv.StartCreateInstance (GetType (), "()V"),
+							JniHandleOwnership.TransferLocalRef);
+					global::Android.Runtime.JNIEnv.FinishCreateInstance (Handle, "()V");
+					return;
+				}
 
-			if (id_ctor == IntPtr.Zero)
-				id_ctor = JNIEnv.GetMethodID (class_ref, "<init>", "()V");
-			SetHandle (
-					global::Android.Runtime.JNIEnv.StartCreateInstance (class_ref, id_ctor),
-					JniHandleOwnership.TransferLocalRef);
-			JNIEnv.FinishCreateInstance (Handle, class_ref, id_ctor);
+				if (id_ctor == IntPtr.Zero)
+					id_ctor = JNIEnv.GetMethodID (class_ref, "<init>", "()V");
+				SetHandle (
+						global::Android.Runtime.JNIEnv.StartCreateInstance (class_ref, id_ctor),
+						JniHandleOwnership.TransferLocalRef);
+				JNIEnv.FinishCreateInstance (Handle, class_ref, id_ctor);
+			} finally {
+			}
 		}
 
 		static Delegate cb_noAdListener;
@@ -68,15 +72,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_noAdListener;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='noAdListener' and count(parameter)=0]"
 		[Register ("noAdListener", "()V", "GetNoAdListenerHandler")]
-		public virtual void NoAdListener ()
+		public virtual unsafe void NoAdListener ()
 		{
 			if (id_noAdListener == IntPtr.Zero)
 				id_noAdListener = JNIEnv.GetMethodID (class_ref, "noAdListener", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_noAdListener);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "noAdListener", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_noAdListener);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "noAdListener", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_;
@@ -99,15 +106,20 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdCached' and count(parameter)=1 and parameter[1][@type='com.yrkfgo.assxqx4.AdConfig.AdType']]"
 		[Register ("onAdCached", "(Lcom/yrkfgo/assxqx4/AdConfig$AdType;)V", "GetOnAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_Handler")]
-		public virtual void OnAdCached (global::Com.Yrkfgo.Assxqx4.AdConfig.AdType p0)
+		public virtual unsafe void OnAdCached (global::Com.Yrkfgo.Assxqx4.AdConfig.AdType p0)
 		{
 			if (id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_ == IntPtr.Zero)
 				id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_ = JNIEnv.GetMethodID (class_ref, "onAdCached", "(Lcom/yrkfgo/assxqx4/AdConfig$AdType;)V");
+			try {
+				JValue* __args = stackalloc JValue [1];
+				__args [0] = new JValue (p0);
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_, new JValue (p0));
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdCached", "(Lcom/yrkfgo/assxqx4/AdConfig$AdType;)V"), new JValue (p0));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdCached_Lcom_yrkfgo_assxqx4_AdConfig_AdType_, __args);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdCached", "(Lcom/yrkfgo/assxqx4/AdConfig$AdType;)V"), __args);
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdClickedListener;
@@ -129,15 +141,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdClickedListener;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdClickedListener' and count(parameter)=0]"
 		[Register ("onAdClickedListener", "()V", "GetOnAdClickedListenerHandler")]
-		public virtual void OnAdClickedListener ()
+		public virtual unsafe void OnAdClickedListener ()
 		{
 			if (id_onAdClickedListener == IntPtr.Zero)
 				id_onAdClickedListener = JNIEnv.GetMethodID (class_ref, "onAdClickedListener", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdClickedListener);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdClickedListener", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdClickedListener);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdClickedListener", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdClosed;
@@ -159,15 +174,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdClosed;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdClosed' and count(parameter)=0]"
 		[Register ("onAdClosed", "()V", "GetOnAdClosedHandler")]
-		public virtual void OnAdClosed ()
+		public virtual unsafe void OnAdClosed ()
 		{
 			if (id_onAdClosed == IntPtr.Zero)
 				id_onAdClosed = JNIEnv.GetMethodID (class_ref, "onAdClosed", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdClosed);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdClosed", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdClosed);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdClosed", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdError_Ljava_lang_String_;
@@ -190,17 +208,22 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdError_Ljava_lang_String_;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdError' and count(parameter)=1 and parameter[1][@type='java.lang.String']]"
 		[Register ("onAdError", "(Ljava/lang/String;)V", "GetOnAdError_Ljava_lang_String_Handler")]
-		public virtual void OnAdError (string p0)
+		public virtual unsafe void OnAdError (string p0)
 		{
 			if (id_onAdError_Ljava_lang_String_ == IntPtr.Zero)
 				id_onAdError_Ljava_lang_String_ = JNIEnv.GetMethodID (class_ref, "onAdError", "(Ljava/lang/String;)V");
 			IntPtr native_p0 = JNIEnv.NewString (p0);
+			try {
+				JValue* __args = stackalloc JValue [1];
+				__args [0] = new JValue (native_p0);
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdError_Ljava_lang_String_, new JValue (native_p0));
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdError", "(Ljava/lang/String;)V"), new JValue (native_p0));
-			JNIEnv.DeleteLocalRef (native_p0);
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdError_Ljava_lang_String_, __args);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdError", "(Ljava/lang/String;)V"), __args);
+			} finally {
+				JNIEnv.DeleteLocalRef (native_p0);
+			}
 		}
 
 		static Delegate cb_onAdExpandedListner;
@@ -222,15 +245,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdExpandedListner;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdExpandedListner' and count(parameter)=0]"
 		[Register ("onAdExpandedListner", "()V", "GetOnAdExpandedListnerHandler")]
-		public virtual void OnAdExpandedListner ()
+		public virtual unsafe void OnAdExpandedListner ()
 		{
 			if (id_onAdExpandedListner == IntPtr.Zero)
 				id_onAdExpandedListner = JNIEnv.GetMethodID (class_ref, "onAdExpandedListner", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdExpandedListner);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdExpandedListner", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdExpandedListner);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdExpandedListner", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdLoadedListener;
@@ -252,15 +278,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdLoadedListener;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdLoadedListener' and count(parameter)=0]"
 		[Register ("onAdLoadedListener", "()V", "GetOnAdLoadedListenerHandler")]
-		public virtual void OnAdLoadedListener ()
+		public virtual unsafe void OnAdLoadedListener ()
 		{
 			if (id_onAdLoadedListener == IntPtr.Zero)
 				id_onAdLoadedListener = JNIEnv.GetMethodID (class_ref, "onAdLoadedListener", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdLoadedListener);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdLoadedListener", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdLoadedListener);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdLoadedListener", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdLoadingListener;
@@ -282,15 +311,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdLoadingListener;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdLoadingListener' and count(parameter)=0]"
 		[Register ("onAdLoadingListener", "()V", "GetOnAdLoadingListenerHandler")]
-		public virtual void OnAdLoadingListener ()
+		public virtual unsafe void OnAdLoadingListener ()
 		{
 			if (id_onAdLoadingListener == IntPtr.Zero)
 				id_onAdLoadingListener = JNIEnv.GetMethodID (class_ref, "onAdLoadingListener", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdLoadingListener);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdLoadingListener", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdLoadingListener);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdLoadingListener", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onAdShowing;
@@ -312,15 +344,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onAdShowing;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onAdShowing' and count(parameter)=0]"
 		[Register ("onAdShowing", "()V", "GetOnAdShowingHandler")]
-		public virtual void OnAdShowing ()
+		public virtual unsafe void OnAdShowing ()
 		{
 			if (id_onAdShowing == IntPtr.Zero)
 				id_onAdShowing = JNIEnv.GetMethodID (class_ref, "onAdShowing", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onAdShowing);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdShowing", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onAdShowing);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onAdShowing", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onBind_Landroid_content_Intent_;
@@ -344,17 +379,22 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onBind_Landroid_content_Intent_;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onBind' and count(parameter)=1 and parameter[1][@type='android.content.Intent']]"
 		[Register ("onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;", "GetOnBind_Landroid_content_Intent_Handler")]
-		public override global::Android.OS.IBinder OnBind (global::Android.Content.Intent p0)
+		public override unsafe global::Android.OS.IBinder OnBind (global::Android.Content.Intent p0)
 		{
 			if (id_onBind_Landroid_content_Intent_ == IntPtr.Zero)
 				id_onBind_Landroid_content_Intent_ = JNIEnv.GetMethodID (class_ref, "onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;");
+			try {
+				JValue* __args = stackalloc JValue [1];
+				__args [0] = new JValue (p0);
 
-			global::Android.OS.IBinder __ret;
-			if (GetType () == ThresholdType)
-				__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallObjectMethod  (Handle, id_onBind_Landroid_content_Intent_, new JValue (p0)), JniHandleOwnership.TransferLocalRef);
-			else
-				__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallNonvirtualObjectMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;"), new JValue (p0)), JniHandleOwnership.TransferLocalRef);
-			return __ret;
+				global::Android.OS.IBinder __ret;
+				if (GetType () == ThresholdType)
+					__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallObjectMethod  (Handle, id_onBind_Landroid_content_Intent_, __args), JniHandleOwnership.TransferLocalRef);
+				else
+					__ret = global::Java.Lang.Object.GetObject<global::Android.OS.IBinder> (JNIEnv.CallNonvirtualObjectMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onBind", "(Landroid/content/Intent;)Landroid/os/IBinder;"), __args), JniHandleOwnership.TransferLocalRef);
+				return __ret;
+			} finally {
+			}
 		}
 
 		static Delegate cb_onCloseListener;
@@ -376,15 +416,18 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onCloseListener;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onCloseListener' and count(parameter)=0]"
 		[Register ("onCloseListener", "()V", "GetOnCloseListenerHandler")]
-		public virtual void OnCloseListener ()
+		public virtual unsafe void OnCloseListener ()
 		{
 			if (id_onCloseListener == IntPtr.Zero)
 				id_onCloseListener = JNIEnv.GetMethodID (class_ref, "onCloseListener", "()V");
+			try {
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onCloseListener);
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onCloseListener", "()V"));
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onCloseListener);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onCloseListener", "()V"));
+			} finally {
+			}
 		}
 
 		static Delegate cb_onIntegrationError_Ljava_lang_String_;
@@ -407,17 +450,22 @@ namespace Com.Yrkfgo.Assxqx4 {
 		static IntPtr id_onIntegrationError_Ljava_lang_String_;
 		// Metadata.xml XPath method reference: path="/api/package[@name='com.yrkfgo.assxqx4']/class[@name='UbService']/method[@name='onIntegrationError' and count(parameter)=1 and parameter[1][@type='java.lang.String']]"
 		[Register ("onIntegrationError", "(Ljava/lang/String;)V", "GetOnIntegrationError_Ljava_lang_String_Handler")]
-		public virtual void OnIntegrationError (string p0)
+		public virtual unsafe void OnIntegrationError (string p0)
 		{
 			if (id_onIntegrationError_Ljava_lang_String_ == IntPtr.Zero)
 				id_onIntegrationError_Ljava_lang_String_ = JNIEnv.GetMethodID (class_ref, "onIntegrationError", "(Ljava/lang/String;)V");
 			IntPtr native_p0 = JNIEnv.NewString (p0);
+			try {
+				JValue* __args = stackalloc JValue [1];
+				__args [0] = new JValue (native_p0);
 
-			if (GetType () == ThresholdType)
-				JNIEnv.CallVoidMethod  (Handle, id_onIntegrationError_Ljava_lang_String_, new JValue (native_p0));
-			else
-				JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onIntegrationError", "(Ljava/lang/String;)V"), new JValue (native_p0));
-			JNIEnv.DeleteLocalRef (native_p0);
+				if (GetType () == ThresholdType)
+					JNIEnv.CallVoidMethod  (Handle, id_onIntegrationError_Ljava_lang_String_, __args);
+				else
+					JNIEnv.CallNonvirtualVoidMethod  (Handle, ThresholdClass, JNIEnv.GetMethodID (ThresholdClass, "onIntegrationError", "(Ljava/lang/String;)V"), __args);
+			} finally {
+				JNIEnv.DeleteLocalRef (native_p0);
+			}
 		}
 
 	}
