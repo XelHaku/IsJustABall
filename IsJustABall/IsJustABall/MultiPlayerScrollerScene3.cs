@@ -55,7 +55,7 @@ namespace IsJustABall
 		int scrollerSpeed= 150;
 		int topSpeed;
 		//Declare variables for HookedParticle Method
-		double Multiplier =1.1f;
+		double Multiplier =1.0f;
 		float minRotationRadius;
 		//needed for multiple Pivots
 		/// 
@@ -198,6 +198,7 @@ namespace IsJustABall
 			}
 				if(StartBuzzingPoints == true){
 				LevelClearGamePointBuzzer (mainWindowAux);
+				if(GameTime % 0.5f == 0){CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");}
 			}
 
 			addLevelJewels (mainWindowAux,GameTime,ClassListMulti4Level1);
@@ -487,17 +488,7 @@ namespace IsJustABall
 					ballSinglePhysics.ballSprite.PositionY = (float)(ballSinglePhysics.Radius * Math.Sin (ballSinglePhysics.theta) + visiblePivots [ballSinglePhysics.indexHookPivot].PositionY);
 
 
-					///Remove gone far Pivots
-					for (int i = 0; i < visibleJewels.Count; i++) {
-
-
-						if (visibleJewels [i].PositionY < -500) {
-							visibleJewels.RemoveAt (i);
-						}
-
-
-
-					}
+				
 					drawSweptAreaLine(ballSinglePhysics);
 				}
 
@@ -571,7 +562,7 @@ namespace IsJustABall
 
 						ballSinglePhysics.wZero = ballSinglePhysics.ballSpeed / ballSinglePhysics.Radius;
 						//ballSpeedFinal = Radius * Multiplier * wZero * SinAlpha;
-						ballSinglePhysics.ballSpeedFinal = ballSinglePhysics.Radius * Multiplier * ballSinglePhysics.wZero;
+						ballSinglePhysics.ballSpeedFinal = 2.0f* ballSinglePhysics.Radius * Multiplier * ballSinglePhysics.wZero;
 
 						ballSinglePhysics.ThetaZero = Math.Acos (ballSinglePhysics.CosThetaZero);
 
@@ -1474,6 +1465,7 @@ namespace IsJustABall
 		 void LevelClearGame (CCWindow mainWindow){
 			mainLayer.RemoveChild (PauseButton);
 			mainLayer.RemoveChild (scoreLabel);
+			visibleJewels.Clear();
 			foreach (var ballSinglePhysics in ballPhysicsList) {
 				mainLayer.RemoveChild (ballSinglePhysics.ballSprite);
 			}
@@ -1535,27 +1527,27 @@ namespace IsJustABall
 
 				switch (ballSinglePhysics.index) {
 				case 1:
-					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
-						Bluepoints.Text = "" + (int)(80.0f*GameTime);
-						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					if ((int)(180.0f*GameTime) <= ballSinglePhysics.Score) {
+						Bluepoints.Text = "" + (int)(180.0f*GameTime);
+
 					}
 					break;
 				case 2:
-					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
-						Redpoints.Text = "" + (int)(80.0f*GameTime);
-						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					if ((int)(180.0f*GameTime) <= ballSinglePhysics.Score) {
+						Redpoints.Text = "" + (int)(180.0f*GameTime);
+
 					}
 					break;
 				case 3:
-					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
-						Greenpoints.Text = "" + (int)(80.0f*GameTime);
-						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					if ((int)(180.0f*GameTime) <= ballSinglePhysics.Score) {
+						Greenpoints.Text = "" + (int)(180.0f*GameTime);
+
 					}
 					break;
 				case 4:
-					if ((int)(80.0f*GameTime) <= ballSinglePhysics.Score) {
-						Yellowpoints.Text = "" + (int)(80.0f*GameTime);
-						CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/jewel2.wav");
+					if ((int)(180.0f*GameTime) <= ballSinglePhysics.Score) {
+						Yellowpoints.Text = "" + (int)(180.0f*GameTime);
+
 					}
 					break;
 

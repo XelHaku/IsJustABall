@@ -177,7 +177,7 @@ namespace IsJustABall
 			LevelItem.Name = "railgun";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
-			LevelItem.PositionY = (0.8f*bounds.Height-1*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
+			LevelItem.PositionY = (0.8f*bounds.Height-1*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
@@ -185,7 +185,7 @@ namespace IsJustABall
 			LevelItem.Name = "minefield";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
-			LevelItem.PositionY = (0.8f*bounds.Height-2*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
+			LevelItem.PositionY = (0.8f*bounds.Height-2*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
@@ -193,7 +193,7 @@ namespace IsJustABall
 			LevelItem.Name = "blackhole";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
-			LevelItem.PositionY = (0.8f*bounds.Height-3*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
+			LevelItem.PositionY = (0.8f*bounds.Height-3*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
@@ -201,7 +201,7 @@ namespace IsJustABall
 			LevelItem.Name = "testgrounds";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
-			LevelItem.PositionY = (0.8f*bounds.Height-4*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.05f*bounds.Height));
+			LevelItem.PositionY = (0.8f*bounds.Height-4*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 					}

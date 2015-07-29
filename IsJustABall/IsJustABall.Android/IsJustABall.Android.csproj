@@ -96,26 +96,20 @@
     <Folder Include="Assets\Content\fonts\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Content\galaxybackground5.png" />
     <AndroidAsset Include="Assets\Content\galaxybackground4.png" />
     <AndroidAsset Include="Assets\Content\layerbackground.png" />
     <AndroidAsset Include="Assets\Content\onestar.png" />
     <AndroidAsset Include="Assets\Content\star.png" />
     <AndroidAsset Include="Assets\Content\thirdstar.png" />
     <AndroidAsset Include="Assets\Content\twostar.png" />
-    <AndroidAsset Include="Assets\Content\blueballButton.png" />
     <AndroidAsset Include="Assets\Content\fourplayermenubutton.png" />
     <AndroidAsset Include="Assets\Content\MainMenuButton.png" />
-    <AndroidAsset Include="Assets\Content\greenballButton.png" />
     <AndroidAsset Include="Assets\Content\menutitle.png" />
     <AndroidAsset Include="Assets\Content\minefield.png" />
     <AndroidAsset Include="Assets\Content\PauseButton.png" />
-    <AndroidAsset Include="Assets\Content\playercountmenu.png" />
-    <AndroidAsset Include="Assets\Content\redballButton.png" />
     <AndroidAsset Include="Assets\Content\RestartButton.png" />
     <AndroidAsset Include="Assets\Content\ResumeButton.png" />
     <AndroidAsset Include="Assets\Content\singleplayermenubutton.png" />
-    <AndroidAsset Include="Assets\Content\yellowballButton.png" />
     <AndroidAsset Include="Assets\Content\diamond.png" />
     <AndroidAsset Include="Assets\Content\greenball.png" />
     <AndroidAsset Include="Assets\Content\pivot.png" />
@@ -132,7 +126,6 @@
     <AndroidAsset Include="Assets\Content\blueball.png" />
     <AndroidAsset Include="Assets\Content\wallbrick.png" />
     <AndroidAsset Include="Assets\Content\blackholeLevel.png" />
-    <AndroidAsset Include="Assets\Content\blackholeshadow.png" />
     <AndroidAsset Include="Assets\Content\railgun.png" />
     <AndroidAsset Include="Assets\Content\testgrounds.png" />
     <AndroidAsset Include="Assets\Content\tutorial.png" />
@@ -153,10 +146,12 @@
     <AndroidAsset Include="Assets\Content\step08.png" />
     <AndroidAsset Include="Assets\Content\nasalizationbold.ttf" />
     <AndroidAsset Include="Assets\Content\freepik03.png" />
-    <AndroidAsset Include="Assets\Content\geometricbackground.png" />
-    <AndroidAsset Include="Assets\Content\trianglesbackground.png" />
-    <AndroidAsset Include="Assets\Content\triangles2background.png" />
     <AndroidAsset Include="Assets\Content\triangles3background.png" />
     <AndroidAsset Include="Assets\Content\blackholetransparent.png" />
+    <AndroidAsset Include="Assets\Content\playerbutton1.png" />
+    <AndroidAsset Include="Assets\Content\playerbutton2.png" />
+    <AndroidAsset Include="Assets\Content\playerbutton3.png" />
+    <AndroidAsset Include="Assets\Content\playerbutton4.png" />
+    <AndroidAsset Include="Assets\Content\playerbuttonshadow.png" />
   </ItemGroup>
 </Project>

@@ -694,9 +694,9 @@ namespace IsJustABall
 		CCSprite AddSTATIC_Pivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
 		{   
 
-			pivotSprite = new CCSprite ("pivot3");
-
-			pivotSprite.Scale = scale;
+			pivotSprite = new CCSprite ("pivot");
+			CCScaleTo Resize = new CCScaleTo (0.0f, 0.06f * mainWindow.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width);
+			pivotSprite.RunAction (Resize);
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
 			float h= (float)pivotSprite.ContentSize.Height/2.0f;
@@ -717,8 +717,9 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
-			pivotSprite.Scale = scale;
+			pivotSprite = new CCSprite ("pivot");
+			CCScaleTo Resize = new CCScaleTo (0.0f, 0.06f * mainWindow.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width);
+			pivotSprite.RunAction (Resize);
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
 			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
@@ -745,8 +746,9 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
-			pivotSprite.Scale = scale;
+			pivotSprite = new CCSprite ("pivot");
+			CCScaleTo Resize = new CCScaleTo (0.0f, 0.06f * mainWindow.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width);
+			pivotSprite.RunAction (Resize);
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
 			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
@@ -769,8 +771,9 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
-			pivotSprite.Scale = scale;
+			pivotSprite = new CCSprite ("pivot");
+			CCScaleTo Resize = new CCScaleTo (0.0f, 0.06f * mainWindow.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width);
+			pivotSprite.RunAction (Resize);
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
 			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
@@ -795,8 +798,9 @@ namespace IsJustABall
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
-			pivotSprite.Scale = scale;
+			pivotSprite = new CCSprite ("pivot");
+			CCScaleTo Resize = new CCScaleTo (0.0f, 0.06f * mainWindow.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width);
+			pivotSprite.RunAction (Resize);
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
 			float h = (float)pivotSprite.ContentSize.Height / 2.0f;
@@ -1790,7 +1794,9 @@ namespace IsJustABall
 		void drawSweptAreaLine (byte R,byte G,byte B){
 			var sweptAreaLine = new CCDrawNode ();
 
-			float pivotScale=0.0002f*mainWindowAux.WindowSizeInPixels.Width;
+
+			float pivotScale=0.00025f*mainWindowAux.WindowSizeInPixels.Width;
+			//float pivotScale = 0.6f* mainWindowAux.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width;
 			float ballScale=0.00047f*mainWindowAux.WindowSizeInPixels.Width;
 			CCPoint ballTemp = new CCPoint();
 			CCPoint pivotTemp = new CCPoint();
@@ -1807,7 +1813,8 @@ namespace IsJustABall
 			CCDelayTime waitLine = new CCDelayTime(0.80f);
 			sweptAreaLine.RunActions (waitLine,removeLine);
 			visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine);
-			mainLayer.ReorderChild (sweptAreaLine, -100);
+			mainLayer.ReorderChild (sweptAreaLine, 100);
+			mainLayer.ReorderChild (visiblePivots [ballPhysicsSingle.indexHookPivot], 99);
 
 			if (ballPhysicsSingle.hookTouchBool == true) {
 				//visiblePivots [ballPhysicsSingle.indexHookPivot].RemoveAllChildren(true);//sweptAreaLine
@@ -1955,14 +1962,17 @@ namespace IsJustABall
 					Radial = Math.Pow (Radial, 0.5);
 					double SineAngle = wY / Radial;
 
-					if(ballPhysicsSingle.hookTouchBool == true){
-					if (Math.Abs (SineAngle) <= 0.707106) {
-						ballPhysicsSingle.ballXVelocity = -1.01f*ballPhysicsSingle.ballXVelocity;
-						ballPhysicsSingle.ballYVelocity = 1.01f*ballPhysicsSingle.ballYVelocity;
-					} else if (Math.Abs (SineAngle) > 0.706) {
-						ballPhysicsSingle.ballYVelocity = -1.01f*ballPhysicsSingle.ballYVelocity;
-						ballPhysicsSingle.ballXVelocity = 1.01f*ballPhysicsSingle.ballXVelocity;
-					}
+					if (ballPhysicsSingle.hookTouchBool == true) {
+						if (Math.Abs (SineAngle) <= 0.707106) {
+							ballPhysicsSingle.ballXVelocity = -1.01f * ballPhysicsSingle.ballXVelocity;
+							ballPhysicsSingle.ballYVelocity = 1.01f * ballPhysicsSingle.ballYVelocity;
+						} else if (Math.Abs (SineAngle) > 0.706) {
+							ballPhysicsSingle.ballYVelocity = -1.01f * ballPhysicsSingle.ballYVelocity;
+							ballPhysicsSingle.ballXVelocity = 1.01f * ballPhysicsSingle.ballXVelocity;
+						}
+					} else {
+						ballPhysicsSingle.ClockwiseRotation = !ballPhysicsSingle.ClockwiseRotation;
+					
 					}
 
 					visibleWalls.Remove (WallSprite);

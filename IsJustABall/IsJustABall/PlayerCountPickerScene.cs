@@ -13,20 +13,22 @@
 			
 			CCSprite LevelItem;
 			CCSprite background;
-
+		    CCSprite backbone; 
+	     	List<CCSprite> LevelItemList;
+		    CCScaleTo ZoomTouch;
 
 			CCLayer mainLayer;
 			CCWindow mainWindowAux;
 			CCEventListenerTouchAllAtOnce touchListener;
-
+		CCPoint templocation;
 
 		public PlayerCountPickerScene(CCWindow mainWindow) : base(mainWindow)
 			{
 				mainLayer = new CCLayer ();
 				AddChild (mainLayer);
 				mainWindowAux = mainWindow;
-				
-
+			CCScaleTo ZoomTouch = new CCScaleTo(0,0);
+			LevelItemList =new List<CCSprite>();
 
 				var bounds = mainWindow.WindowSizeInPixels;
 
@@ -55,7 +57,22 @@
 
 			#region HANDLE TOUCHSCREEN
 			void HandleTouchesBegan (System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
-			{		}
+
+		{
+			var locationInverted = touches [0].LocationOnScreen;
+			templocation = touches [0].LocationOnScreen;
+			CCPoint location = new CCPoint(locationInverted.X,mainWindowAux.WindowSizeInPixels.Height - locationInverted.Y);
+
+			foreach(var Levelitem in LevelItemList){	
+				
+			
+				bool hit = Levelitem.BoundingBoxTransformedToParent.ContainsPoint (location);
+				if (hit) {
+					//ballSprite.ScaleTo (new CCSize (1.1f*ballSprite.ScaledContentSize.Width,1.1f*ballSprite.ScaledContentSize.Height));
+					//CCScaleTo ZoomTouch = new CCScaleTo(0.01f,1.05f);
+
+					Levelitem.RunAction (ZoomTouch);
+				}	}	}
 
 
 			void HandleTouchesEnded(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent){
@@ -63,57 +80,75 @@
 				var locationInverted = touches [0].LocationOnScreen;
 				CCPoint location = new CCPoint(locationInverted.X,bounds.Height - locationInverted.Y);
 
-			    
-			CCPoint buttonPoint = new CCPoint (0.5f * bounds.Width, 0.75f * bounds.Height);
-			bool hit =  location.IsNear(buttonPoint, 200.0f) ;
-				if (hit)
-				{
-					//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
-				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,"multi4level1",4);
-					mainWindowAux.RunWithScene (gameScene);
+			foreach (var Levelitem in LevelItemList) {
+				bool hit = Levelitem.BoundingBoxTransformedToParent.ContainsPoint (location);
+				if(hit)	{
+					ZoomTouch = new CCScaleTo(0.0f,0.25f*mainWindowAux.WindowSizeInPixels.Width/backbone.BoundingBoxTransformedToWorld.Size.Width);
+					Levelitem.RunAction(ZoomTouch);
+					//LevelItem.RunAction (new CCMoveBy (5.0f, new CCPoint (0.2f, 900.0f)));
 
+					if (Math.Abs (templocation.Y - locationInverted.Y) <= 5.0f) {
+						MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,"multi4level1",LevelItemList.IndexOf(Levelitem)+1);
+						mainWindowAux.RunWithScene (gameScene);
+					}
 				}
+			}
 
-			buttonPoint = new CCPoint (0.75f * bounds.Width, 0.25f * bounds.Height);
-			hit =  location.IsNear(buttonPoint, 200.0f) ;
-			if (hit)
-			{
-				//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
-				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,"multi4level1",3);
-				mainWindowAux.RunWithScene (gameScene);
+
 
 			}
 
-			buttonPoint = new CCPoint (0.25f * bounds.Width, 0.25f * bounds.Height);
-			hit =  location.IsNear(buttonPoint, 200.0f) ;
-			if (hit)
-			{
-				//LevelItem.ScaleTo (new CCSize (LevelItem.ScaledContentSize.Width/1.1f,LevelItem.ScaledContentSize.Height/1.1f));
-				MultiPlayerScrollerScene gameScene = new MultiPlayerScrollerScene (mainWindowAux,"multi4level1",2);
-				mainWindowAux.RunWithScene (gameScene);
 
-			}
-				//BUG: calling walkRepeat separately as it doesn't run when called in RunActions or CCSpawn
-
-
-			}
 
 
 			#endregion
 			/// OBJECTS AND SPRITES
 			void addLevelItem(CCWindow mainWindow){
 				var bounds = mainWindow.WindowSizeInPixels;
-				LevelItem = new CCSprite ("playercountmenu");
-				LevelItem.Scale = 0.002f*bounds.Width;
-				LevelItem.PositionX = 0.5f*bounds.Width;
-				LevelItem.PositionY = 0.5f*bounds.Height;
 
-				mainLayer.AddChild (LevelItem);
+				 backbone = new CCSprite ("playerbuttonshadow");
+			CCScaleBy Resize = new CCScaleBy (0.0f,0.80f* mainWindowAux.WindowSizeInPixels.Width/backbone.BoundingBoxTransformedToWorld.Size.Width);  
+			backbone.RunAction (Resize);
+			backbone.PositionX = 0.5f*bounds.Width;
+			backbone.PositionY = 0.5f*bounds.Height;
+			mainLayer.AddChild (backbone);
+			ZoomTouch = new CCScaleTo(0.01f,0.35f*mainWindow.WindowSizeInPixels.Width/backbone.BoundingBoxTransformedToWorld.Size.Width);
+
+			Resize = new CCScaleBy (0.0f,0.30f* mainWindowAux.WindowSizeInPixels.Width/backbone.BoundingBoxTransformedToWorld.Size.Width);  
+			    
+			LevelItem = new CCSprite ("playerbutton1");
+			    LevelItem.RunAction (Resize);
+				LevelItem.PositionX = 0.27f*bounds.Width;
+				LevelItem.PositionY = 0.74f*bounds.Height;
+				LevelItemList.Add (LevelItem);
+			mainLayer.AddChild (LevelItem);
+			mainLayer.ReorderChild (LevelItem, 100);
+			 
+			LevelItem = new CCSprite ("playerbutton2");
+			LevelItem.RunAction (Resize);
+			LevelItem.PositionX = 0.72f*bounds.Width;
+			LevelItem.PositionY = 0.64f*bounds.Height;
+			LevelItemList.Add (LevelItem);
+			mainLayer.AddChild (LevelItem);
+			mainLayer.ReorderChild (LevelItem, 100);
+
+			LevelItem = new CCSprite ("playerbutton3");
+			LevelItem.RunAction (Resize);
+			LevelItem.PositionX = 0.72f*bounds.Width;
+			LevelItem.PositionY = 0.365f*bounds.Height;
+			LevelItemList.Add (LevelItem);
+			mainLayer.AddChild (LevelItem);
+			mainLayer.ReorderChild (LevelItem, 100);
+
+			LevelItem = new CCSprite ("playerbutton4");
+			LevelItem.RunAction (Resize);
+			LevelItem.PositionX = 0.28f*bounds.Width;
+			LevelItem.PositionY = 0.26f*bounds.Height;
+			LevelItemList.Add (LevelItem);
+			mainLayer.AddChild (LevelItem);
+			mainLayer.ReorderChild (LevelItem, 100);
 
 			}
-
-
-
 
 			void addBackground(CCWindow mainWindow){
 				var bounds = mainWindow.WindowSizeInPixels;

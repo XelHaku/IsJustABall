@@ -49,9 +49,10 @@ namespace IsJustABall
 			//
 			application.StartGame();
 			//air.AirBannerBottomAd ();
+
 			//air.AirBannerTopAd ();
 
-			//air.AirSmartWallAd ();
+			air.AirSmartWallAd ();
 			//air.Banner360 ();
 
 		}

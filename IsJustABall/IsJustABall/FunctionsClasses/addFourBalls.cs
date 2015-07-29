@@ -9,7 +9,7 @@ namespace IsJustABall
 	public class addFourBalls
 	{
 		public void addGameBall(int playersCount,CCWindow mainWindow, List<ballPhysics> ballPhysicsList ){
-			int speed = 90;
+			int speed = 150;
 			for (int i = 1; i <= playersCount; i++) {
 
 				ballPhysics ballPhysicsSingle = new ballPhysics ();

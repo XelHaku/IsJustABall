@@ -45,4 +45,3 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Debug\C
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Debug\MonoGame.Framework.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.pdb
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Debug\IsJustABall.csprojResolveAssemblyReference.cache
