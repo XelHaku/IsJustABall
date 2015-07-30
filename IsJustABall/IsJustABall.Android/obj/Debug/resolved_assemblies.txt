@@ -5,9 +5,11 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\IsJustABall.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\Lidgren.Network.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\Mono.Android.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\Mono.Data.Sqlite.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\MonoGame.Framework.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\mscorlib.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Core.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Data.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Xml.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Collections.Concurrent.dll
@@ -61,7 +63,10 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Xml.XmlSerializer.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Runtime.Serialization.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\OpenTK.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Transactions.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\OpenTK-1.0.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\Mono.Data.Tds.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\Mono.Security.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.ComponentModel.DataAnnotations.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.ComponentModel.Composition.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\assemblies\System.Numerics.dll

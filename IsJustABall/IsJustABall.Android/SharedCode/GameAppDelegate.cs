@@ -2,7 +2,7 @@
 using CocosSharp;
 using CocosDenshion;
 
-namespace IsJustABall
+namespace IsJustABall.Android
 {
 	public class GameAppDelegate : CCApplicationDelegate
 	{

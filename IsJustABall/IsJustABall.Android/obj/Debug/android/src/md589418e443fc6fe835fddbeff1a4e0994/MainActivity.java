@@ -1,4 +1,4 @@
-package md5297c8f0fa6e61d161d3cff8ff6902ce8;
+package md589418e443fc6fe835fddbeff1a4e0994;
 
 
 public class MainActivity
@@ -11,7 +11,7 @@ public class MainActivity
 		__md_methods = 
 			"n_onCreate:(Landroid/os/Bundle;)V:GetOnCreate_Landroid_os_Bundle_Handler\n" +
 			"";
-		mono.android.Runtime.register ("IsJustABall.MainActivity, IsJustABall.Android, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", MainActivity.class, __md_methods);
+		mono.android.Runtime.register ("IsJustABall.Android.MainActivity, IsJustABall.Android, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", MainActivity.class, __md_methods);
 	}
 
 
@@ -19,7 +19,7 @@ public class MainActivity
 	{
 		super ();
 		if (getClass () == MainActivity.class)
-			mono.android.TypeManager.Activate ("IsJustABall.MainActivity, IsJustABall.Android, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "", this, new java.lang.Object[] {  });
+			mono.android.TypeManager.Activate ("IsJustABall.Android.MainActivity, IsJustABall.Android, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "", this, new java.lang.Object[] {  });
 	}
 
 

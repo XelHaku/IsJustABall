@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using CocosSharp;
-namespace IsJustABall
+
+
+
+namespace IsJustABall.Android
 {	
 	public class MainMenuScene : CCScene 
 	{// Declare VAriables
@@ -19,6 +22,7 @@ namespace IsJustABall
 
 		public MainMenuScene(CCWindow mainWindow) : base(mainWindow)
 			{
+			//Initialize SQL Database
 
 			 
 			    mainLayer = new CCLayer ();
@@ -181,6 +185,12 @@ namespace IsJustABall
 
 			}
 			//
+
+
+
+
+
+
 
 		}
 

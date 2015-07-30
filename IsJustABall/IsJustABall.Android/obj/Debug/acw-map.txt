@@ -1,7 +1,7 @@
-IsJustABall.MainActivity, IsJustABall.Android;md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity
-IsJustABall.MainActivity, IsJustABall.Android, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity
-IsJustABall.MainActivity;md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity
-isjustaball.MainActivity;md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity
+IsJustABall.Android.MainActivity, IsJustABall.Android;md589418e443fc6fe835fddbeff1a4e0994.MainActivity
+IsJustABall.Android.MainActivity, IsJustABall.Android, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md589418e443fc6fe835fddbeff1a4e0994.MainActivity
+IsJustABall.Android.MainActivity;md589418e443fc6fe835fddbeff1a4e0994.MainActivity
+isjustaball.android.MainActivity;md589418e443fc6fe835fddbeff1a4e0994.MainActivity
 Com.Yrkfgo.Assxqx4.IAdListenerImplementor, BundleSdkLib;mono.com.yrkfgo.assxqx4.AdListenerImplementor
 Com.Yrkfgo.Assxqx4.IAdListenerImplementor, BundleSdkLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;mono.com.yrkfgo.assxqx4.AdListenerImplementor
 Com.Yrkfgo.Assxqx4.IAdListenerImplementor;mono.com.yrkfgo.assxqx4.AdListenerImplementor

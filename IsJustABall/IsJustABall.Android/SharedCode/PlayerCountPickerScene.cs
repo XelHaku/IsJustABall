@@ -3,7 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using CocosSharp;
-	namespace IsJustABall
+namespace IsJustABall.Android
 	{
 
 

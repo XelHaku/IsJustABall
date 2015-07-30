@@ -157,7 +157,6 @@ C:\Users\admin\Documents\Projects\IsJustABall\IsJustABall.Android\obj\Debug\res\
 C:\Users\admin\Documents\Projects\IsJustABall\IsJustABall.Android\obj\Debug\res\drawable-xxxhdpi\icon.png
 C:\Users\admin\Documents\Projects\IsJustABall\IsJustABall.Android\obj\Debug\R.cs.flag
 C:\Users\admin\Documents\Projects\IsJustABall\IsJustABall.Android\obj\Debug\uploadflags.txt
-C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\IsJustABall.Android.csprojResolveAssemblyReference.cache
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\IsJustABall.Android.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\IsJustABall.Android.pdb
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\IsJustABall.Android.apk
@@ -175,6 +174,7 @@ C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\CocosSharp.xml
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\Lidgren.Network.xml
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\bin\Debug\MonoGame.Framework.xml
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\IsJustABall.Android.csprojResolveAssemblyReference.cache
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\IsJustABall.Android.dll
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\IsJustABall.Android.pdb
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall.Android\obj\Debug\android\bin\IsJustABall.Android.apk

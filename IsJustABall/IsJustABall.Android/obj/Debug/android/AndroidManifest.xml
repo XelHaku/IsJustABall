@@ -26,7 +26,7 @@
         <category android:name="android.intent.category.HOME" />
       </intent-filter>
     </receiver>
-    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="IsJustABall" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="md5297c8f0fa6e61d161d3cff8ff6902ce8.MainActivity">
+    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/icon" android:label="IsJustABall" android:launchMode="singleInstance" android:screenOrientation="portrait" android:theme="@android:style/Theme.NoTitleBar" android:name="md589418e443fc6fe835fddbeff1a4e0994.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

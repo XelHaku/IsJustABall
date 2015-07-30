@@ -12,9 +12,7 @@ using Microsoft.Xna.Framework;
 using Com.Airpush.Xamarinlib;
 
 
-
-
-namespace IsJustABall
+namespace IsJustABall.Android
 {
 	[Activity(
 		Label = "IsJustABall",
@@ -55,7 +53,13 @@ namespace IsJustABall
 			air.AirSmartWallAd ();
 			//air.Banner360 ();
 
+
+		
 		}
+
+
+
+
 	}
 }
 

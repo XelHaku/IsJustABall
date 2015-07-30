@@ -56,17 +56,38 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>..\packages\CocosSharp.PCL.Shared.1.5.0.1\lib\MonoAndroid10\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="Mono.Data.Sqlite" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
+    <Compile Include="sqlMethods.cs" />
+    <Compile Include="LevelRecord.cs" />
+    <Compile Include="SharedCode\FunctionsClasses\addFourBalls.cs" />
+    <Compile Include="SharedCode\FunctionsClasses\ballPhysics.cs" />
+    <Compile Include="SharedCode\Levels\LevelBlackhole.cs" />
+    <Compile Include="SharedCode\Levels\LevelMineField.cs" />
+    <Compile Include="SharedCode\Levels\LevelRailGun.cs" />
+    <Compile Include="SharedCode\Levels\LevelTestGounds.cs" />
+    <Compile Include="SharedCode\Levels\LevelTutorial.cs" />
+    <Compile Include="SharedCode\Levels\Multi4Level1.cs" />
+    <Compile Include="SharedCode\GameAppDelegate.cs" />
+    <Compile Include="SharedCode\LevelPickerSceneSinglePlayer.cs" />
+    <Compile Include="SharedCode\MainMenuScene.cs" />
+    <Compile Include="SharedCode\MultiPlayerScrollerScene3.cs" />
+    <Compile Include="SharedCode\OnePlayerScrollerScene.cs" />
+    <Compile Include="SharedCode\PlayerCountPickerScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="packages.config" />
+    <None Include="SharedCode\packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -94,6 +115,7 @@
     <Folder Include="Assets\Content\gamesprite\" />
     <Folder Include="Assets\Content\button\" />
     <Folder Include="Assets\Content\fonts\" />
+    <Folder Include="SharedCode\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\galaxybackground4.png" />

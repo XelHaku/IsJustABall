@@ -3,7 +3,7 @@ using CocosSharp;
 using System.Collections.Generic;
 using CocosDenshion;
 using System.Linq;
-namespace IsJustABall
+namespace IsJustABall.Android
 {
 	public class OnePlayerScrollerScene : CCScene
 	{

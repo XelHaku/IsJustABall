@@ -2,18 +2,22 @@
 using System;
 using System.Collections.Generic;
 using CocosSharp;
+using System.Threading.Tasks;
+using SQLite;
 
-namespace IsJustABall
+namespace  IsJustABall.Android
 {
 
 		
 		
-	public class LevelPickerSceneSinglePlayer : CCScene 
+	public  class  LevelPickerSceneSinglePlayer : CCScene 
 				{	// Declare VAriables
 		            List<CCSprite> ItemsList;
 					CCSprite LevelItem;
-					//CCSprite Star;
-		           // CCLabel scoreLabel;
+					CCSprite Star1;
+					CCSprite Star2;
+					CCSprite Star3;
+		            CCLabel scoreLabel;
 					CCSprite background;
 
 
@@ -21,11 +25,21 @@ namespace IsJustABall
 					CCWindow mainWindowAux;
 					CCEventListenerTouchAllAtOnce touchListener;
 		            CCPoint templocation;
+		    
 
-
-			public LevelPickerSceneSinglePlayer(CCWindow mainWindow) : base(mainWindow)
+		public  LevelPickerSceneSinglePlayer(CCWindow mainWindow) : base(mainWindow)
 					{
-			
+			//SQL INITI
+
+			var docsFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+			var pathToDatabase = System.IO.Path.Combine(docsFolder, "db_sqlcompnet_LevelRecord.db");
+			sqlMethods sqlMethod = new sqlMethods ();
+			var result = sqlMethod.createDatabase(pathToDatabase);
+			 
+			//Create tables for SQL LevelRecord
+		
+
+
 						mainLayer = new CCLayer ();
 						AddChild (mainLayer);
 						mainWindowAux = mainWindow;
@@ -33,8 +47,13 @@ namespace IsJustABall
 
 
 						var bounds = mainWindow.WindowSizeInPixels;
-
-			addLevelItem(mainWindow);
+			scoreLabel = new CCLabel("000000","nasalizationbold.ttf",78);
+			scoreLabel.PositionX = mainWindowAux.WindowSizeInPixels.Width/10 ;
+			scoreLabel.PositionY = mainWindowAux.WindowSizeInPixels.Height/2;
+			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
+			mainLayer.AddChild (scoreLabel);
+			mainLayer.ReorderChild (scoreLabel, 200);
+			addLevelItem(mainWindow,pathToDatabase);
 
 						
 						addBackground (mainWindow);
@@ -161,16 +180,50 @@ namespace IsJustABall
 		}
 		#endregion
 					/// OBJECTS AND SPRITES
-	                 	void addLevelItem(CCWindow mainWindow){
+		async void  addLevelItem(CCWindow mainWindow,string pathToDatabase ){
 						var bounds = mainWindow.WindowSizeInPixels;
+			//////////////DELETE
+
+			////////////////
+
+			//Star.RunAction (ZoomStar);
+			int StarsCount = 0;
+
 
 			LevelItem = new CCSprite ("tutorial");
 			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.82f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
+			CCScaleBy ZoomStar = new CCScaleBy(0.01f,0.05f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
+
+			Star1 = new CCSprite ("star");
+			Star1.RunAction (ZoomStar);
+			Star1.PositionX = 0.83f*LevelItem.ContentSize.Width;
+			Star1.PositionY = 0.25f*LevelItem.ContentSize.Height;
+
+			Star2 = new CCSprite ("star");
+			Star2.RunAction (ZoomStar);
+			Star2.PositionX = 0.89f*LevelItem.ContentSize.Width;
+			Star2.PositionY = 0.25f*LevelItem.ContentSize.Height;
+
+			Star3 = new CCSprite ("star");
+			Star3.RunAction (ZoomStar);
+			Star3.PositionX = 0.95f*LevelItem.ContentSize.Width;
+			Star3.PositionY = 0.25f*LevelItem.ContentSize.Height;
+
 			LevelItem.Name = "tutorial";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = 0.8f*bounds.Height;
-			ItemsList.Add (LevelItem);
+			StarsCount =await SqlGetStar (1,pathToDatabase);
+			if(StarsCount>=1){
+					LevelItem.AddChild (Star1);
+				if (StarsCount >= 2) {
+					LevelItem.AddChild (Star2);
+				}
+				if (StarsCount >= 3) {
+						LevelItem.AddChild (Star3);
+				}
+			}
+				ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
 			LevelItem = new CCSprite ("railgun");
@@ -205,6 +258,40 @@ namespace IsJustABall
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 					}
+
+
+		async Task<int> SqlGetStar (int IDlevel,string pathToDatabase){
+			
+			int StarsCount = 0;
+			try
+			{
+				var db = new SQLiteAsyncConnection(pathToDatabase);
+
+				List<LevelRecord> dataList = new List<LevelRecord> ();
+				dataList = await db.QueryAsync <LevelRecord>("SELECT * FROM LevelRecord WHERE ID =0"+IDlevel);//WHERE ID=0 LIMIT 1
+				{     
+					
+					int flag_Stars=0;
+					foreach(var dataElement in dataList){
+						if(dataElement.Stars>flag_Stars && dataElement.ID==IDlevel)
+						{
+							flag_Stars=dataElement.Stars;
+						}
+
+					}
+					scoreLabel.Text= "It Has "+ flag_Stars + "Stars";
+					StarsCount = flag_Stars;
+				}
+				//return "Single data file inserted or updated";
+			}
+			catch (SQLiteException ex)
+			{
+
+			}
+
+
+			return StarsCount;
+		}
 					
 
 			
