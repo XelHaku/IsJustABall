@@ -18,7 +18,7 @@ namespace IsJustABall.Android
 				await connection.CreateTableAsync<LevelRecord>();
 				var db = new SQLiteAsyncConnection(path);
 				LevelRecord data = new LevelRecord ();
-				for(int i = 1; i<=10;i++){
+				/*for(int i = 1; i<=10;i++){
 					data.ID = i;data.Score= 10;data.Stars = 3;
 
 					switch (i) {
@@ -53,7 +53,7 @@ namespace IsJustABall.Android
 					if (await db.InsertAsync(data) != 0){
 						await db.UpdateAsync(data);}
 				}
-
+				*///endfor
 
 				return "Database created";
 			}
@@ -73,9 +73,14 @@ namespace IsJustABall.Android
 			try
 			{
 				var db = new SQLiteAsyncConnection(path);
+				await db.InsertAsync(data);
+					
+				return "Single data file inserted or updated";
+
+				/*var db = new SQLiteAsyncConnection(path);
 				if (await db.InsertAsync(data) != 0)
 					await db.UpdateAsync(data);
-				return "Single data file inserted or updated";
+				return "Single data file inserted or updated";*/
 			}
 			catch (SQLiteException ex)
 			{
@@ -90,7 +95,7 @@ namespace IsJustABall.Android
 			{
 				var db = new SQLiteAsyncConnection(path);
 				// this counts all records in the database, it can be slow depending on the size of the database
-				var count = await db.ExecuteScalarAsync<int>("SELECT Count(*) FROM Person");
+				var count = await db.ExecuteScalarAsync<int>("SELECT Count(*) FROM LevelRecord");
 
 				// for a non-parameterless query
 				// var count = db.ExecuteScalarAsync<int>("SELECT Count(*) FROM Person WHERE FirstName="Amy");
@@ -103,7 +108,64 @@ namespace IsJustABall.Android
 			}
 		}
 
-		
+		//INITIALIZE DATA
+		public async Task<string> initializeDatabase(string path)
+		{
+
+			try
+			{			
+				var db = new SQLiteAsyncConnection(path);
+				LevelRecord data = new LevelRecord ();
+				for(int i = 1; i<=10;i++){
+					
+
+					string dataLevelname;
+					switch (i) {
+					case 1:
+						dataLevelname = "tutorial";
+						break;
+
+
+					case 2:
+						dataLevelname= "railgun";
+						break;
+
+					case 3:
+						dataLevelname= "minefield";
+						break;
+
+					case 4:
+						dataLevelname= "blackhole";
+						break;
+
+					case 5:
+						dataLevelname= "testgrounds";
+						break;
+
+
+					default:
+						dataLevelname= "noname";
+						break;
+					}
+				
+					data = new LevelRecord{ ID = i, Levelname=dataLevelname, Stars = 0,Score  = 0 };
+
+
+					if (await db.InsertAsync(data) != 0){
+						await db.UpdateAsync(data);}
+				}
+				//endfor
+
+				return "Database created";
+			}
+			catch (SQLiteException ex)
+			{
+				return ex.Message;
+			}
+
+			//
+
+		}
 
 
 

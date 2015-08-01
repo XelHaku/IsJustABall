@@ -227,7 +227,7 @@ namespace IsJustABall
 			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 9.8f, JewelType = "RUBY" });
 
 
-			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 10.3f, JewelType = "DIAMOND" });
+			JewelList.Add (new Jewel { PosX = 0.5f, PosY = 1.8f, JewelType = "DIAMOND" });
 
 
 

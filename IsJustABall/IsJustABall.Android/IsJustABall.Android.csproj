@@ -81,6 +81,7 @@
     <Compile Include="SharedCode\MultiPlayerScrollerScene3.cs" />
     <Compile Include="SharedCode\OnePlayerScrollerScene.cs" />
     <Compile Include="SharedCode\PlayerCountPickerScene.cs" />
+    <Compile Include="SharedCode\FunctionsClasses\StarsLevelIndex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

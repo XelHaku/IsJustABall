@@ -8,7 +8,7 @@ public class LevelRecord
 {
 
 
-	[PrimaryKey, AutoIncrement]
+	//[PrimaryKey, AutoIncrement]
 	public int ID { get; set; }
 	public string Levelname { get; set; }
 	public int Stars { get; set; }
@@ -18,7 +18,7 @@ public class LevelRecord
 
 	public override string ToString()
 	{
-		return string.Format("[Person: LevelID={0}, Levelname={1},Stars={2}, Score={3}]", ID, Levelname, Stars, Score);
+		return string.Format("[LevelRecord: ID={0}, Levelname={1},Stars={2}, Score={3}]", ID, Levelname, Stars, Score);
 	}
 
 

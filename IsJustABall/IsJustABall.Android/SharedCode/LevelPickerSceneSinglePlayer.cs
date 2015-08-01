@@ -14,10 +14,8 @@ namespace  IsJustABall.Android
 				{	// Declare VAriables
 		            List<CCSprite> ItemsList;
 					CCSprite LevelItem;
-					CCSprite Star1;
-					CCSprite Star2;
-					CCSprite Star3;
-		            CCLabel scoreLabel;
+					
+		           
 					CCSprite background;
 
 
@@ -35,6 +33,7 @@ namespace  IsJustABall.Android
 			var pathToDatabase = System.IO.Path.Combine(docsFolder, "db_sqlcompnet_LevelRecord.db");
 			sqlMethods sqlMethod = new sqlMethods ();
 			var result = sqlMethod.createDatabase(pathToDatabase);
+			result = sqlMethod.initializeDatabase (pathToDatabase);
 			 
 			//Create tables for SQL LevelRecord
 		
@@ -47,12 +46,9 @@ namespace  IsJustABall.Android
 
 
 						var bounds = mainWindow.WindowSizeInPixels;
-			scoreLabel = new CCLabel("000000","nasalizationbold.ttf",78);
-			scoreLabel.PositionX = mainWindowAux.WindowSizeInPixels.Width/10 ;
-			scoreLabel.PositionY = mainWindowAux.WindowSizeInPixels.Height/2;
-			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
-			mainLayer.AddChild (scoreLabel);
-			mainLayer.ReorderChild (scoreLabel, 200);
+
+			//mainLayer.AddChild (scoreLabel);
+			//mainLayer.ReorderChild (scoreLabel, 200);
 			addLevelItem(mainWindow,pathToDatabase);
 
 						
@@ -192,45 +188,29 @@ namespace  IsJustABall.Android
 
 			LevelItem = new CCSprite ("tutorial");
 			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.82f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
-			CCScaleBy ZoomStar = new CCScaleBy(0.01f,0.05f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
 
-			Star1 = new CCSprite ("star");
-			Star1.RunAction (ZoomStar);
-			Star1.PositionX = 0.83f*LevelItem.ContentSize.Width;
-			Star1.PositionY = 0.25f*LevelItem.ContentSize.Height;
-
-			Star2 = new CCSprite ("star");
-			Star2.RunAction (ZoomStar);
-			Star2.PositionX = 0.89f*LevelItem.ContentSize.Width;
-			Star2.PositionY = 0.25f*LevelItem.ContentSize.Height;
-
-			Star3 = new CCSprite ("star");
-			Star3.RunAction (ZoomStar);
-			Star3.PositionX = 0.95f*LevelItem.ContentSize.Width;
-			Star3.PositionY = 0.25f*LevelItem.ContentSize.Height;
 
 			LevelItem.Name = "tutorial";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = 0.8f*bounds.Height;
 			StarsCount =await SqlGetStar (1,pathToDatabase);
-			if(StarsCount>=1){
-					LevelItem.AddChild (Star1);
-				if (StarsCount >= 2) {
-					LevelItem.AddChild (Star2);
-				}
-				if (StarsCount >= 3) {
-						LevelItem.AddChild (Star3);
-				}
-			}
-				ItemsList.Add (LevelItem);
+			LevelItem =  addStarsToLevelItem (StarsCount,LevelItem);
+			LevelItem = await addScoreFromData (1,pathToDatabase,LevelItem);
+			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
+
+
+
 
 			LevelItem = new CCSprite ("railgun");
 			LevelItem.Name = "railgun";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-1*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
+			StarsCount =await SqlGetStar (2,pathToDatabase);
+			LevelItem =  addStarsToLevelItem (StarsCount,LevelItem);
+			LevelItem = await addScoreFromData (2,pathToDatabase,LevelItem);
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
@@ -239,6 +219,9 @@ namespace  IsJustABall.Android
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-2*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
+			StarsCount =await SqlGetStar (3,pathToDatabase);
+			LevelItem =  addStarsToLevelItem (StarsCount,LevelItem);
+			LevelItem = await addScoreFromData (3,pathToDatabase,LevelItem);
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
@@ -247,6 +230,9 @@ namespace  IsJustABall.Android
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-3*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
+			StarsCount =await SqlGetStar (4,pathToDatabase);
+			LevelItem =  addStarsToLevelItem (StarsCount,LevelItem);
+			LevelItem = await addScoreFromData (4,pathToDatabase,LevelItem);
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
@@ -255,23 +241,60 @@ namespace  IsJustABall.Android
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
 			LevelItem.PositionY = (0.8f*bounds.Height-4*(LevelItem.BoundingBoxTransformedToParent.Size.Height+0.1f*bounds.Height));
+			StarsCount =await SqlGetStar (5,pathToDatabase);
+			LevelItem =  addStarsToLevelItem (StarsCount,LevelItem);
+			LevelItem = await addScoreFromData (5,pathToDatabase,LevelItem);
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 					}
 
+		CCSprite addStarsToLevelItem(int StarsCount,CCSprite LevelItem ){
+			CCSprite Star1a;
+			CCSprite Star2a;
+			CCSprite Star3a;
+			CCScaleBy ZoomStar = new CCScaleBy(0.01f,0.05f*mainWindowAux.WindowSizeInPixels.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
+
+			Star1a = new CCSprite ("star");
+			Star1a.RunAction (ZoomStar);
+			Star1a.PositionX = 0.83f*LevelItem.ContentSize.Width;
+			Star1a.PositionY = 0.25f*LevelItem.ContentSize.Height;
+
+			Star2a = new CCSprite ("star");
+			Star2a.RunAction (ZoomStar);
+			Star2a.PositionX = 0.89f*LevelItem.ContentSize.Width;
+			Star2a.PositionY = 0.25f*LevelItem.ContentSize.Height;
+
+			Star3a = new CCSprite ("star");
+			Star3a.RunAction (ZoomStar);
+			Star3a.PositionX = 0.95f*LevelItem.ContentSize.Width;
+			Star3a.PositionY = 0.25f*LevelItem.ContentSize.Height;
+
+			if(StarsCount>=1){
+				LevelItem.AddChild (Star1a);
+				if (StarsCount >= 2) {
+					LevelItem.AddChild (Star2a);
+				}
+				if (StarsCount >= 3) {
+					LevelItem.AddChild (Star3a);
+				}
+			}
+
+			return LevelItem;
+		}
 
 		async Task<int> SqlGetStar (int IDlevel,string pathToDatabase){
 			
 			int StarsCount = 0;
+			int flag_Stars=0;
 			try
 			{
 				var db = new SQLiteAsyncConnection(pathToDatabase);
 
 				List<LevelRecord> dataList = new List<LevelRecord> ();
-				dataList = await db.QueryAsync <LevelRecord>("SELECT * FROM LevelRecord WHERE ID =0"+IDlevel);//WHERE ID=0 LIMIT 1
+				dataList = await db.QueryAsync <LevelRecord>("SELECT * FROM LevelRecord");//WHERE ID=0 LIMIT 1 WHERE ID ="+IDlevel
 				{     
 					
-					int flag_Stars=0;
+
 					foreach(var dataElement in dataList){
 						if(dataElement.Stars>flag_Stars && dataElement.ID==IDlevel)
 						{
@@ -279,7 +302,7 @@ namespace  IsJustABall.Android
 						}
 
 					}
-					scoreLabel.Text= "It Has "+ flag_Stars + "Stars";
+					//scoreLabel.Text= "It Has "+ flag_Stars + "Stars";
 					StarsCount = flag_Stars;
 				}
 				//return "Single data file inserted or updated";
@@ -293,6 +316,46 @@ namespace  IsJustABall.Android
 			return StarsCount;
 		}
 					
+
+		async Task<CCSprite> addScoreFromData(int IDlevel,string pathToDatabase,CCSprite LevelItem){
+			string ScoreText = "0";
+
+			CCLabel scoreLabel = new CCLabel("","nasalizationbold.ttf",50);
+			scoreLabel.PositionX = 8.0f*LevelItem.ContentSize.Width/10 ;
+			scoreLabel.PositionY =0.6f* LevelItem.ContentSize.Height/10;
+			scoreLabel.AnchorPoint = CCPoint.AnchorLowerLeft;
+
+
+			try
+			{
+				var db = new SQLiteAsyncConnection(pathToDatabase);
+
+				List<LevelRecord> dataList = new List<LevelRecord> ();
+				dataList = await db.QueryAsync <LevelRecord>("SELECT * FROM LevelRecord");//WHERE ID=0 LIMIT 1
+				{     
+
+					int flag_Score=0;
+					foreach(var dataElement in dataList){
+						if(dataElement.Score>flag_Score && dataElement.ID==IDlevel)
+						{
+							flag_Score=dataElement.Score;
+						}
+
+					}
+					scoreLabel.Text= ""+ flag_Score ;
+					ScoreText =flag_Score.ToString();
+				}
+				//return "Single data file inserted or updated";
+			}
+			catch (SQLiteException ex)
+			{
+
+			}
+
+			LevelItem.AddChild (scoreLabel);
+
+			return LevelItem;
+		}
 
 			
 

@@ -3,6 +3,8 @@ using CocosSharp;
 using System.Collections.Generic;
 using CocosDenshion;
 using System.Linq;
+using System.Threading.Tasks;
+using SQLite;
 namespace IsJustABall.Android
 {
 	public class OnePlayerScrollerScene : CCScene
@@ -100,7 +102,7 @@ namespace IsJustABall.Android
 			addBackground (mainWindow);
 			addPauseButton ();
 			addMenuOptions ();
-			//addLevelStars ();//maybe?
+
 		
 
 			//scoreLabel = new CCLabel ("Score: 0", "arial", 78);
@@ -134,8 +136,15 @@ namespace IsJustABall.Android
 		}
 
 		#region RUN GAME LOGIC
-		void RunGameLogic(float frameTimeInSeconds)
-		{  
+		async void RunGameLogic(float frameTimeInSeconds)
+		{ /* var docsFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+			var pathToDatabase = System.IO.Path.Combine(docsFolder, "db_sqlcompnet_LevelRecord.db");
+			sqlMethods sqlMethod = new sqlMethods ();
+			int result =await	sqlMethod.findNumberRecords (pathToDatabase);
+
+			scoreLabel.Text = "" + result;
+*/
+
 			if (PauseGame) {
 				if (ballPhysicsSingle.hookTouchBool == true) {//Void free Particle
 					freeParticle (frameTimeInSeconds);
@@ -2047,7 +2056,7 @@ namespace IsJustABall.Android
 
 
 			// End game when reaching Diamond Goal and display Stars and final Score
-		void LevelClearGame (CCWindow mainWindow){
+		async void LevelClearGame (CCWindow mainWindow){
 			CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/bomb02");
 			Explode2(diamond.Position);
 			Explode (ballSprite.Position);
@@ -2072,29 +2081,111 @@ namespace IsJustABall.Android
 
 		}
 
-		void addLevelStars(CCWindow mainWindow,int score){
+		async Task<int> addLevelStars(CCWindow mainWindow,int score){
+			int score_1=0,score_2=0,score_3=0;
+			StarsLevelIndex LevelClass1 = new StarsLevelIndex ();
+			List<StarsLevelIndex.StarsLevelScore> ClassListTutorial = new List<StarsLevelIndex.StarsLevelScore> ();
+			ClassListTutorial = LevelClass1.GENERALMaker ();
+			foreach (var ScoreList in ClassListTutorial) {
+				if(ScoreList.LevelName==ThisLevelName){
+					score_1 = ScoreList.starScore1; score_2 = ScoreList.starScore2; score_3 = ScoreList.starScore3;	
+
+
+				}
+			}
+
+			var docsFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+			var pathToDatabase = System.IO.Path.Combine(docsFolder, "db_sqlcompnet_LevelRecord.db");
 
 				var bounds = mainWindow.WindowSizeInPixels;
 				float jewelScale=0.0003f*bounds.Width;
-							
-			//1 STAR
-			if (score >= 20) {
-				StarList.Add (addStar (mainWindow, 0.3f * bounds.Width, 0.4f * bounds.Height, jewelScale,"onestar"));
-				Explode2 (new CCPoint(0.3f * bounds.Width, 0.4f * bounds.Height));
+			int IDlevel = 0;		
+			int flag_Score=0;
+			switch (ThisLevelName) {
+			case "tutorial":
+				IDlevel =1;
+				break;
+			case "railgun":
+				IDlevel =2;	
+				break;
+			case "minefield":
+				IDlevel =3;	
+				break;
+			case "blackhole":
+				IDlevel =4;				
+				break;
+			case  "testgrounds":
+				IDlevel =5;		
+				break;
+			default:
+				IDlevel =0;
+				break;
 			}
-			//2 STAR
-			if (score >= 90) {
-				StarList.Add (addStar (mainWindow, 0.5f * bounds.Width, 0.42f * bounds.Height, jewelScale, "twostar"));
-				Explode2 (new CCPoint(0.5f * bounds.Width, 0.42f * bounds.Height));
-			}
-			//3 STAR
-			if (score >= 130) {
-				StarList.Add (addStar (mainWindow, 0.7f * bounds.Width, 0.4f * bounds.Height, jewelScale, "thirdstar"));
-				Explode2 (new CCPoint(0.7f * bounds.Width, 0.4f * bounds.Height));
-			}
+			//read OLD SCORE
+			try
+			{
+				var db = new SQLiteAsyncConnection(pathToDatabase);
+
+				List<LevelRecord> dataList = new List<LevelRecord> ();
+				dataList = await db.QueryAsync <LevelRecord>("SELECT * FROM LevelRecord WHERE ID ="+IDlevel);//WHERE ID=0 LIMIT 1
+				{     
+
+
+					foreach(var dataElement in dataList){
+						if(dataElement.Score>flag_Score && dataElement.ID==IDlevel)
+						{
+							flag_Score=dataElement.Score;
+						}
+
+					}
+				}
+				if(flag_Score<score ){
+					LevelRecord data = new LevelRecord();
+
+					//1 STAR
+					int dataStars= data.Stars;
+					if (score >= score_1) {dataStars=1;}
+					//2 STAR
+					if (score >= score_2) {dataStars=2;}
+					//3 STAR
+					if (score >= score_3) {dataStars=3;}
+
+					data = new LevelRecord{ ID = IDlevel, Levelname=" ", Stars = dataStars,Score  = score };
+					sqlMethods sqlMethod = new sqlMethods ();
+					var result =await	sqlMethod.insertUpdateData( data,pathToDatabase  );
+
+
+				}
 
 
 
+				//1 STAR
+				if (score >= score_1) {
+					StarList.Add (addStar (mainWindow, 0.3f * bounds.Width, 0.4f * bounds.Height, jewelScale,"onestar"));
+					Explode2 (new CCPoint(0.3f * bounds.Width, 0.4f * bounds.Height));
+				}
+				//2 STAR
+				if (score >= score_2) {
+					StarList.Add (addStar (mainWindow, 0.5f * bounds.Width, 0.42f * bounds.Height, jewelScale, "twostar"));
+					Explode2 (new CCPoint(0.5f * bounds.Width, 0.42f * bounds.Height));
+				}
+				//3 STAR
+				if (score >= score_3) {
+					StarList.Add (addStar (mainWindow, 0.7f * bounds.Width, 0.4f * bounds.Height, jewelScale, "thirdstar"));
+					Explode2 (new CCPoint(0.7f * bounds.Width, 0.4f * bounds.Height));
+				}
+
+				//return "Single data file inserted or updated";
+			}
+			catch (SQLiteException ex)
+			{
+
+			}
+
+		
+
+
+			return 0;
 		}
 			
 		
