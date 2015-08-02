@@ -186,7 +186,7 @@ namespace  IsJustABall.Android
 			int StarsCount = 0;
 
 
-			LevelItem = new CCSprite ("tutorial");
+			LevelItem = new CCSprite ("Level/tutorial");
 			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.82f*bounds.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
 
 
@@ -203,7 +203,7 @@ namespace  IsJustABall.Android
 
 
 
-			LevelItem = new CCSprite ("railgun");
+			LevelItem = new CCSprite ("Level/railgun");
 			LevelItem.Name = "railgun";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
@@ -214,7 +214,7 @@ namespace  IsJustABall.Android
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
-			LevelItem = new CCSprite ("minefield");
+			LevelItem = new CCSprite ("Level/minefield");
 			LevelItem.Name = "minefield";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
@@ -225,7 +225,7 @@ namespace  IsJustABall.Android
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
-			LevelItem = new CCSprite ("blackholeLevel");
+			LevelItem = new CCSprite ("Level/blackholeLevel");
 			LevelItem.Name = "blackhole";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
@@ -236,7 +236,7 @@ namespace  IsJustABall.Android
 			ItemsList.Add (LevelItem);
 			mainLayer.AddChild (LevelItem);
 
-			LevelItem = new CCSprite ("testgrounds");
+			LevelItem = new CCSprite ("Level/testgrounds");
 			LevelItem.Name = "testgrounds";
 			LevelItem.RunAction (ZoomTouch);
 			LevelItem.PositionX = 0.5f*bounds.Width;
@@ -254,17 +254,17 @@ namespace  IsJustABall.Android
 			CCSprite Star3a;
 			CCScaleBy ZoomStar = new CCScaleBy(0.01f,0.05f*mainWindowAux.WindowSizeInPixels.Width/LevelItem.BoundingBoxTransformedToWorld.Size.Width);
 
-			Star1a = new CCSprite ("star");
+			Star1a = new CCSprite ("gamesprite/star");
 			Star1a.RunAction (ZoomStar);
 			Star1a.PositionX = 0.83f*LevelItem.ContentSize.Width;
 			Star1a.PositionY = 0.25f*LevelItem.ContentSize.Height;
 
-			Star2a = new CCSprite ("star");
+			Star2a = new CCSprite ("gamesprite/star");
 			Star2a.RunAction (ZoomStar);
 			Star2a.PositionX = 0.89f*LevelItem.ContentSize.Width;
 			Star2a.PositionY = 0.25f*LevelItem.ContentSize.Height;
 
-			Star3a = new CCSprite ("star");
+			Star3a = new CCSprite ("gamesprite/star");
 			Star3a.RunAction (ZoomStar);
 			Star3a.PositionX = 0.95f*LevelItem.ContentSize.Width;
 			Star3a.PositionY = 0.25f*LevelItem.ContentSize.Height;
@@ -320,7 +320,7 @@ namespace  IsJustABall.Android
 		async Task<CCSprite> addScoreFromData(int IDlevel,string pathToDatabase,CCSprite LevelItem){
 			string ScoreText = "0";
 
-			CCLabel scoreLabel = new CCLabel("","nasalizationbold.ttf",50);
+			CCLabel scoreLabel = new CCLabel("","fonts/nasalizationbold.ttf",50);
 			scoreLabel.PositionX = 8.0f*LevelItem.ContentSize.Width/10 ;
 			scoreLabel.PositionY =0.6f* LevelItem.ContentSize.Height/10;
 			scoreLabel.AnchorPoint = CCPoint.AnchorLowerLeft;
@@ -362,7 +362,7 @@ namespace  IsJustABall.Android
 					void addBackground(CCWindow mainWindow){
 						var bounds = mainWindow.WindowSizeInPixels;
 
-						background = new CCSprite ("galaxybackground4");
+			background = new CCSprite ("background/galaxybackground4");
 
 						background.Scale = 1.8f;
 						background.PositionX = bounds.Width/2;

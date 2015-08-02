@@ -122,7 +122,7 @@ namespace IsJustABall.Android
 					/// OBJECTS AND SPRITES
 		void addGameTitle(CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
-			title = new CCSprite ("menutitle");
+			title = new CCSprite ("Labels/menutitle");
 			title.Scale = 0.0009f*bounds.Width;
 			title.PositionX = 0.5f*bounds.Width;
 			title.PositionY = 0.85f*bounds.Height;
@@ -134,7 +134,7 @@ namespace IsJustABall.Android
 			void addSinglePlayerOption(CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 
-				ballSprite = new CCSprite ("singleplayermenubutton");
+			ballSprite = new CCSprite ("button/singleplayermenubutton");
 			CCScaleTo ZoomTouch = new CCScaleTo(0.01f,0.80f*bounds.Width/ballSprite.BoundingBox.Size.Width);
 			ballSprite.RunAction (ZoomTouch);
 				ballSprite.PositionX = 0.5f*bounds.Width;
@@ -148,7 +148,7 @@ namespace IsJustABall.Android
 		void addMultiPlayerOption(CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 
-			MultiOption = new CCSprite ("fourplayermenubutton");
+			MultiOption = new CCSprite ("button/fourplayermenubutton");
 			CCScaleTo ZoomTouch = new CCScaleTo(0.01f,0.80f*bounds.Width/MultiOption.BoundingBox.Size.Width);
 			MultiOption.RunAction (ZoomTouch);
 
@@ -163,7 +163,7 @@ namespace IsJustABall.Android
 		void addBackground(CCWindow mainWindow){
 			var bounds = mainWindow.WindowSizeInPixels;
 
-			background = new CCSprite ("galaxybackground4");
+			background = new CCSprite ("background/galaxybackground4");
 
 			background.Scale = 1.8f;
 			background.PositionX = bounds.Width/2;

@@ -54,27 +54,27 @@ namespace IsJustABall
 			CCSprite ballSprite;
 			switch (ballColor) {
 			case 1:
-				ballSprite = new CCSprite ("blueball");
+				ballSprite = new CCSprite ("gamesprite/blueball");
 				ballSprite.PositionX =- 0.2f*bounds.Width;
 				ballSprite.PositionY = -0.2f*bounds.Height;
 				break;
 			case 2:
-				ballSprite = new CCSprite ("redball");
+				ballSprite = new CCSprite ("gamesprite/redball");
 				ballSprite.PositionX = 1.2f*bounds.Width;
 				ballSprite.PositionY = 1.2f*bounds.Height;
 				break;
 			case 3:
-				ballSprite = new CCSprite ("greenball");
+				ballSprite = new CCSprite ("gamesprite/greenball");
 				ballSprite.PositionX = 1.2f*bounds.Width;
 				ballSprite.PositionY = -0.2f*bounds.Height;
 				break;
 			case 4:
-				ballSprite = new CCSprite ("yellowball");
+				ballSprite = new CCSprite ("gamesprite/yellowball");
 				ballSprite.PositionX = -0.2f*bounds.Width;
 				ballSprite.PositionY = 1.2f*bounds.Height;
 				break;
 			default:
-				ballSprite = new CCSprite ("blueball");
+				ballSprite = new CCSprite ("gamesprite/blueball");
 				ballSprite.PositionX = -0.2f*bounds.Width;
 				ballSprite.PositionY = -0.2f*bounds.Height;
 				break;
@@ -91,7 +91,7 @@ namespace IsJustABall
 			for (int i = 1; i <= playerCount; i++) {
 				switch (i) {
 				case 1:
-					buttonSprite = new CCSprite ("blueball");
+					buttonSprite = new CCSprite ("gamesprite/blueball");
 					buttonSprite.PositionX = 0.0f * bounds.Width;
 					buttonSprite.PositionY = 0.0f * bounds.Height;
 					CCScaleTo scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
@@ -100,7 +100,7 @@ namespace IsJustABall
 
 					break;
 				case 2:
-					buttonSprite = new CCSprite ("redball");
+					buttonSprite = new CCSprite ("gamesprite/redball");
 					buttonSprite.PositionX = 1.0f * bounds.Width;
 					buttonSprite.PositionY = 1.0f * bounds.Height;
 					scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
@@ -109,7 +109,7 @@ namespace IsJustABall
 
 					break;
 				case 3:
-					buttonSprite = new CCSprite ("greenball");
+					buttonSprite = new CCSprite ("gamesprite/greenball");
 					buttonSprite.PositionX = 1.0f * bounds.Width;
 					buttonSprite.PositionY = 0.0f * bounds.Height;
 					 scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);
@@ -118,7 +118,7 @@ namespace IsJustABall
 
 					break;
 				case 4:
-					buttonSprite = new CCSprite ("yellowball");
+					buttonSprite = new CCSprite ("gamesprite/yellowball");
 					buttonSprite.PositionX = 0.0f * bounds.Width;
 					buttonSprite.PositionY = 1.0f * bounds.Height;
 					 scaleAction = new CCScaleTo(0.5f,0.45f* mainwindow.WindowSizeInPixels.Width/buttonSprite.BoundingBoxTransformedToWorld.Size.Width);

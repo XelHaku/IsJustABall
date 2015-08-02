@@ -13,7 +13,7 @@ namespace IsJustABall.Android
 		String ThisLevelName;
 		CCLayer mainLayer;
 		//ballPhysics ballSinglePhysics = new ballPhysics ();
-		CCSprite ballSprite;
+		//CCSprite ballSprite;
 		List<ballPhysics> ballPhysicsList;
 		List<CCSprite> visibleJewels;
 		List<CCSprite> visibleEmerald;
@@ -76,8 +76,8 @@ namespace IsJustABall.Android
 		public MultiPlayerScrollerScene(CCWindow mainWindow,string LevelName,int playerCounter) : base(mainWindow)
 		{   var bounds = mainWindow.WindowSizeInPixels;
 			minRotationRadius = 0.25f*bounds.Width;
-			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/backgroundmusic1");
-			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/backgroundmusic1");
+			CCSimpleAudioEngine.SharedEngine.PreloadBackgroundMusic ("Sounds/multiplayertechno");
+			CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic("Sounds/multiplayertechno");
 			playerCount = playerCounter;
 			mainWindowAux = mainWindow;
 			ThisLevelName = LevelName;
@@ -127,21 +127,21 @@ namespace IsJustABall.Android
 			addPauseButton ();
 			addMenuOptions ();
 					//scoreLabel = new CCLabel ("Score: 0", "arial", 78);
-			scoreLabel = new CCLabel("0s","nasalizationbold.ttf",90);
+			scoreLabel = new CCLabel("0s","fonts/nasalizationbold.ttf",90);
 			scoreLabel.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/(4) ;
 			scoreLabel.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY - 20;
 			scoreLabel.AnchorPoint = CCPoint.AnchorUpperLeft;
 			CCColor3B fontColor = new CCColor3B(255,0,255) ;
 			scoreLabel.UpdateDisplayedColor (fontColor);
 
-			Bluepoints = new CCLabel("","nasalizationbold.ttf",78);
+			Bluepoints = new CCLabel("","fonts/nasalizationbold.ttf",78);
 			Bluepoints.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX/3 ;
 			Bluepoints.PositionY = 0;
 			Bluepoints.AnchorPoint = CCPoint.AnchorMiddleBottom;
 			fontColor = new CCColor3B(72,118,255) ;
 			Bluepoints.UpdateDisplayedColor (fontColor);
 
-			Redpoints = new CCLabel("","nasalizationbold.ttf",78);
+			Redpoints = new CCLabel("","fonts/nasalizationbold.ttf",78);
 			Redpoints.RunAction ( new CCRotateBy (0.0f, 180.0f));
 			Redpoints.PositionX =2.0f* mainLayer.VisibleBoundsWorldspace.MaxX / 3;
 			Redpoints.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY;
@@ -149,7 +149,7 @@ namespace IsJustABall.Android
 			fontColor = new CCColor3B(255,48,48) ;
 			Redpoints.UpdateDisplayedColor (fontColor);
 
-			Greenpoints = new CCLabel("","nasalizationbold.ttf",78);
+			Greenpoints = new CCLabel("","fonts/nasalizationbold.ttf",78);
 			Greenpoints.RunAction ( new CCRotateBy (0.0f, 270.0f));
 			Greenpoints.PositionX = mainLayer.VisibleBoundsWorldspace.MaxX -30;
 			Greenpoints.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY*0.20f;
@@ -157,7 +157,7 @@ namespace IsJustABall.Android
 			fontColor = new CCColor3B(0,238,118) ;
 			Greenpoints.UpdateDisplayedColor (fontColor);
 
-			Yellowpoints = new CCLabel("","nasalizationbold.ttf",78);
+			Yellowpoints = new CCLabel("","fonts/nasalizationbold.ttf",78);
 			Yellowpoints.RunAction ( new CCRotateBy (0.0f, 90.0f));
 			Yellowpoints.PositionX =30;
 			Yellowpoints.PositionY = mainLayer.VisibleBoundsWorldspace.MaxY-mainLayer.VisibleBoundsWorldspace.MaxY*0.150f;
@@ -375,38 +375,6 @@ namespace IsJustABall.Android
 					}
 			}
 
-			/*CCPoint touchPoint = new CCPoint (0.0f*bounds.Width, 0.0f*bounds.Height);
-			// 1 FIRST PLAYER
-			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
-			if (hit)
-			{
-				CalculateHookPhysics (1);
-
-			}
-			// 2 SECOND PLAYER
-			touchPoint.X = bounds.Width;
-			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
-			if (hit)
-			{
-				CalculateHookPhysics (3);
-
-			}
-			// 3 THIRD PLAYER
-			touchPoint.X = 0.0f;touchPoint.Y = bounds.Height;
-			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
-			if (hit)
-			{
-				CalculateHookPhysics (4);
-
-			}
-			// 4 FOURTH PLAYER
-			touchPoint.X =bounds.Width;touchPoint.Y = bounds.Height;
-			hit =  location.IsNear(touchPoint, 0.4f*bounds.Width) ;
-			if (hit)
-			{
-				CalculateHookPhysics (2);
-
-			}*/
 
 		}
 
@@ -608,7 +576,7 @@ namespace IsJustABall.Android
 		CCSprite addDiamond(CCWindow mainWindow, float diamondPosX,float diamondPosY,float scale){
 			var bounds = mainWindow.WindowSizeInPixels;
 
-			diamond = new CCSprite ("diamond");
+			diamond = new CCSprite ("gamesprite/diamond");
 			//diamond.Scale = scale;
 			diamond.PositionX = diamondPosX;
 			diamond.PositionY = diamondPosY;
@@ -621,7 +589,7 @@ namespace IsJustABall.Android
 		CCSprite addRuby(CCWindow mainWindow,float rubyPosX,float rubyPosY,float scale){
 			var bounds = mainWindow.WindowSizeInPixels;
 
-			ruby = new CCSprite ("ruby");
+			ruby = new CCSprite ("gamesprite/ruby");
 			//ruby.Scale = scale;
 			ruby.PositionX = rubyPosX;
 			ruby.PositionY = rubyPosY;
@@ -635,13 +603,13 @@ namespace IsJustABall.Android
 			var bounds = mainWindow.WindowSizeInPixels;
 			switch (starType) {
 			case "onestar":
-				Star = new CCSprite ("onestar");
+				Star = new CCSprite ("gamesprite/onestar");
 				break;
 			case "twostar":
-				Star = new CCSprite ("twostar");
+				Star = new CCSprite ("gamesprite/twostar");
 				break;
 			case "thirdstar":
-				Star = new CCSprite ("thirdstar");
+				Star = new CCSprite ("gamesprite/thirdstar");
 				break;
 			}
 
@@ -654,13 +622,13 @@ namespace IsJustABall.Android
 		}
 
 		void addBackground(CCWindow mainWindow){
-			background1 = new CCSprite ("galaxybackground4");
-			background2 = new CCSprite ("galaxybackground4");
-			backgroundRotational= new CCSprite ("freepik03");
+			background1 = new CCSprite ("background/galaxybackground4");
+			background2 = new CCSprite ("background/galaxybackground4");
+			backgroundRotational= new CCSprite ("background/freepik03");
 			var bounds = mainWindow.WindowSizeInPixels;
 			switch(ThisLevelName){
-			case "multi4level1":
-				background1 = new CCSprite ("triangles3background");
+			case "multi4level1aaa":
+				background1 = new CCSprite ("background/triangles3background");
 				CCScaleBy SpriteSize = new CCScaleBy (0.0f, 1.0f * bounds.Width / background1.BoundingBoxTransformedToWorld.Size.Width);
 				background1.RunAction (SpriteSize);
 				background1.Opacity = 200;
@@ -685,7 +653,7 @@ namespace IsJustABall.Android
 		CCSprite AddSTATIC_Pivots (CCWindow mainWindow,float pivotPosX,float pivotPosY,float scale)
 		{   
 
-			pivotSprite = new CCSprite ("pivot3");
+			pivotSprite = new CCSprite ("gamesprite/pivot");
 
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
@@ -708,7 +676,7 @@ namespace IsJustABall.Android
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
+			pivotSprite = new CCSprite ("gamesprite/pivot");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -736,7 +704,7 @@ namespace IsJustABall.Android
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
+			pivotSprite = new CCSprite ("gamesprite/pivot");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -760,7 +728,7 @@ namespace IsJustABall.Android
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
+			pivotSprite = new CCSprite ("gamesprite/pivot");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -786,7 +754,7 @@ namespace IsJustABall.Android
 		{   
 
 
-			pivotSprite = new CCSprite ("pivot3");
+			pivotSprite = new CCSprite ("gamesprite/pivot");
 			pivotSprite.Scale = scale;
 			pivotSprite.PositionX = pivotPosX;
 			pivotSprite.PositionY = pivotPosY;
@@ -907,7 +875,7 @@ namespace IsJustABall.Android
 		CCSprite AddSTATIC_Spike (CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
 		{   
 
-			spikeSprite = new CCSprite ("spike");
+			spikeSprite = new CCSprite ("gamesprite/spike");
 			spikeSprite.Scale = scale;
 			spikeSprite.PositionX = spikePosX;
 			spikeSprite.PositionY = spikePosY;
@@ -922,7 +890,7 @@ namespace IsJustABall.Android
 		CCSprite AddUP_Spike(CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
 		{   
 
-			spikeSprite = new CCSprite ("spike");
+			spikeSprite = new CCSprite ("gamesprite/spike");
 			spikeSprite.Scale = scale;
 			spikeSprite.PositionX = spikePosX;
 			spikeSprite.PositionY = spikePosY;
@@ -945,7 +913,7 @@ namespace IsJustABall.Android
 
 		CCSprite AddRIGHT_Spike(CCWindow mainWindow,float spikePosX,float spikePosY,float scale)
 		{   
-			spikeSprite = new CCSprite ("spike");
+			spikeSprite = new CCSprite ("gamesprite/spike");
 			spikeSprite.Scale = scale;
 			spikeSprite.PositionX = spikePosX;
 			spikeSprite.PositionY = spikePosY;
@@ -1011,7 +979,7 @@ namespace IsJustABall.Android
 		CCSprite AddSTATIC_Wall (CCWindow mainWindow,float wallPosX,float wallPosY,float scale)
 		{   
 			var bounds = mainWindow.WindowSizeInPixels;
-			WallSprite = new CCSprite ("wallbrick");
+			WallSprite = new CCSprite ("gamesprite/wallbrick");
 			//WallSprite.Scale = scale;
 			CCSize wallSize = new CCSize();
 			wallSize.Height = bounds.Height/20;
@@ -1033,7 +1001,7 @@ namespace IsJustABall.Android
 		CCSprite AddRIGHT_Wall (CCWindow mainWindow,float wallPosX,float wallPosY,float scale)
 		{   
 			var bounds = mainWindow.WindowSizeInPixels;
-			WallSprite = new CCSprite ("wallbrick");
+			WallSprite = new CCSprite ("gamesprite/wallbrick");
 			//WallSprite.Scale = scale;
 			CCSize wallSize = new CCSize();
 			wallSize.Height = bounds.Height/20;
@@ -1058,7 +1026,7 @@ namespace IsJustABall.Android
 		CCSprite AddLEFT_Wall (CCWindow mainWindow,float wallPosX,float wallPosY,float scale)
 		{   
 			var bounds = mainWindow.WindowSizeInPixels;
-			WallSprite = new CCSprite ("wallbrick");
+			WallSprite = new CCSprite ("gamesprite/wallbrick");
 			//WallSprite.Scale = scale;
 			CCSize wallSize = new CCSize();
 			wallSize.Height = bounds.Height/20;
@@ -1125,7 +1093,7 @@ namespace IsJustABall.Android
 		CCSprite AddSTATIC_Blackhole (CCWindow mainWindow,float blackholePosX,float blackholePosY,float scale)
 		{   
 			var bounds = mainWindow.WindowSizeInPixels;
-			BlackholeSprite = new CCSprite ("blackholetransparent");
+			BlackholeSprite = new CCSprite ("gamesprite/blackholetransparent");
 			CCScaleBy SpriteSize = new CCScaleBy(0.0f,0.3f*bounds.Width/BlackholeSprite.BoundingBoxTransformedToWorld.Size.Width);
 			BlackholeSprite.RunAction(SpriteSize);
 			BlackholeSprite.PositionX = blackholePosX;
@@ -1324,7 +1292,7 @@ namespace IsJustABall.Android
 		void checkSpike(){
 			foreach (var spikeSprite in visibleTraps) {
 				foreach (var ballSinglePhysics in ballPhysicsList) {
-					bool hit = spikeSprite.BoundingBoxTransformedToParent.IntersectsRect (ballSprite.BoundingBoxTransformedToParent);
+					bool hit = spikeSprite.BoundingBoxTransformedToParent.IntersectsRect (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent);
 					if (hit) {
 
 						CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/explosion-02.wav");
@@ -1358,7 +1326,7 @@ namespace IsJustABall.Android
 		void checkWall(){
 			foreach (var WallSprite in visibleWalls) {
 				foreach (var ballSinglePhysics in ballPhysicsList) {
-					bool hit = WallSprite.BoundingBoxTransformedToParent.IntersectsRect (ballSprite.BoundingBoxTransformedToParent);
+					bool hit = WallSprite.BoundingBoxTransformedToParent.IntersectsRect (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent);
 					if (hit) {
 						CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/explosion1.wav");
 						//Explode(WallSprite.Position);
@@ -1374,8 +1342,8 @@ namespace IsJustABall.Android
 
 						//ANALYSE THE DIRECTION OF IMPACT
 
-						float wX = ballSprite.BoundingBoxTransformedToParent.Center.X - WallSprite.BoundingBoxTransformedToParent.Center.X;
-						float wY = ballSprite.BoundingBoxTransformedToParent.Center.Y - WallSprite.BoundingBoxTransformedToParent.Center.Y;				
+						float wX = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.Center.X - WallSprite.BoundingBoxTransformedToParent.Center.X;
+						float wY = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.Center.Y - WallSprite.BoundingBoxTransformedToParent.Center.Y;				
 						double Radial = Math.Pow ((double)wX, 2) + Math.Pow ((double)wY, 2);
 						Radial = Math.Pow (Radial, 0.5);
 						double SineAngle = wY / Radial;
@@ -1409,8 +1377,8 @@ namespace IsJustABall.Android
 			foreach (var BlackholeSprite in visibleBlackholes) {
 						foreach (var ballSinglePhysics in ballPhysicsList) {						
 				//change gravity
-				RvecX = ballSprite.BoundingBoxTransformedToParent.Center.X - BlackholeSprite.BoundingBoxTransformedToParent.Center.X;
-				RvecY = ballSprite.BoundingBoxTransformedToParent.Center.Y - BlackholeSprite.BoundingBoxTransformedToParent.Center.Y;
+					RvecX = ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.Center.X - BlackholeSprite.BoundingBoxTransformedToParent.Center.X;
+					RvecY =ballSinglePhysics. ballSprite.BoundingBoxTransformedToParent.Center.Y - BlackholeSprite.BoundingBoxTransformedToParent.Center.Y;
 				Radius = Math.Pow (RvecX, 2.0f) + Math.Pow (RvecY, 2.0f);
 				Radius = Math.Pow (Radius, 0.5f);
 				Radius = Math.Pow (Radius, 3f);
@@ -1418,12 +1386,12 @@ namespace IsJustABall.Android
 				ballSinglePhysics.gravityX = -alphaFactor * RvecX / Radius;
 				ballSinglePhysics.gravityY = -alphaFactor * RvecY / Radius;
 				//
-				bool hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear (ballSprite.BoundingBoxTransformedToParent.Center, 20.0f);
+					bool hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.Center, 20.0f);
 				if (hit) {
 					EndGame ();
 				}
 
-				hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear (ballSprite.BoundingBoxTransformedToParent.Center, 0.2f * mainWindowAux.WindowSizeInPixels.Width);
+					hit = BlackholeSprite.BoundingBoxTransformedToParent.Center.IsNear (ballSinglePhysics.ballSprite.BoundingBoxTransformedToParent.Center, 0.2f * mainWindowAux.WindowSizeInPixels.Width);
 				if (hit) {
 					CCRotateBy rotate = new CCRotateBy (2.0f, -2 * 360f);
 					BlackholeSprite.RunAction (rotate);
@@ -1619,7 +1587,7 @@ namespace IsJustABall.Android
 
 			float scale =0.0014f*bounds.Width;
 
-			PauseButton = new CCSprite ("PauseButton");
+			PauseButton = new CCSprite ("button/PauseButton");
 			PauseButton.Scale = scale; 
 			PauseButton.PositionX = bounds.Width-60;
 			PauseButton.PositionY = bounds.Height/2;
@@ -1630,7 +1598,7 @@ namespace IsJustABall.Android
 			var bounds = mainWindowAux.WindowSizeInPixels;
 			float scale =0.002f*bounds.Width;
 
-			ResumeGame = new CCSprite ("ResumeButton");
+			ResumeGame = new CCSprite ("button/ResumeButton");
 			CCScaleBy ZoomTouch = new CCScaleBy(0.01f,0.18f* mainWindowAux.WindowSizeInPixels.Width/ResumeGame.BoundingBoxTransformedToWorld.Size.Width);
 
 			ResumeGame.RunAction(ZoomTouch); 
@@ -1638,20 +1606,20 @@ namespace IsJustABall.Android
 			ResumeGame.PositionY = -0.2f*bounds.Height;
 			mainLayer.AddChild (ResumeGame);
 
-			Restart = new CCSprite ("RestartButton");
+			Restart = new CCSprite ("button/RestartButton");
 			Restart.RunAction(ZoomTouch); 
 			Restart.PositionX = 0.75f*bounds.Width;
 			Restart.PositionY = -0.2f*bounds.Height;
 			mainLayer.AddChild (Restart);
 
-			MainMenu = new CCSprite ("MainMenuButton");
+			MainMenu = new CCSprite ("button/MainMenuButton");
 			MainMenu.RunAction(ZoomTouch); 
 			MainMenu.PositionX = 0.25f*bounds.Width;
 			MainMenu.PositionY = -0.2f*bounds.Height;
 			mainLayer.AddChild (MainMenu);
 
 
-			menuframe = new CCSprite ("layerbackground");
+			menuframe = new CCSprite ("background/layerbackground");
 			ZoomTouch = new CCScaleBy(0.01f,0.95f* mainWindowAux.WindowSizeInPixels.Width/menuframe.BoundingBoxTransformedToWorld.Size.Width);
 			menuframe.RunAction(ZoomTouch);  
 			menuframe.PositionX = 0.5f*bounds.Width;

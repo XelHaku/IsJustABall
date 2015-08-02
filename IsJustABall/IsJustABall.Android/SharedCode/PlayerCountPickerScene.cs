@@ -106,7 +106,7 @@ namespace IsJustABall.Android
 			void addLevelItem(CCWindow mainWindow){
 				var bounds = mainWindow.WindowSizeInPixels;
 
-				 backbone = new CCSprite ("playerbuttonshadow");
+				 backbone = new CCSprite ("button/playerbuttonshadow");
 			CCScaleBy Resize = new CCScaleBy (0.0f,0.80f* mainWindowAux.WindowSizeInPixels.Width/backbone.BoundingBoxTransformedToWorld.Size.Width);  
 			backbone.RunAction (Resize);
 			backbone.PositionX = 0.5f*bounds.Width;
@@ -116,7 +116,7 @@ namespace IsJustABall.Android
 
 			Resize = new CCScaleBy (0.0f,0.30f* mainWindowAux.WindowSizeInPixels.Width/backbone.BoundingBoxTransformedToWorld.Size.Width);  
 			    
-			LevelItem = new CCSprite ("playerbutton1");
+			LevelItem = new CCSprite ("button/playerbutton1");
 			    LevelItem.RunAction (Resize);
 				LevelItem.PositionX = 0.27f*bounds.Width;
 				LevelItem.PositionY = 0.74f*bounds.Height;
@@ -124,7 +124,7 @@ namespace IsJustABall.Android
 			mainLayer.AddChild (LevelItem);
 			mainLayer.ReorderChild (LevelItem, 100);
 			 
-			LevelItem = new CCSprite ("playerbutton2");
+			LevelItem = new CCSprite ("button/playerbutton2");
 			LevelItem.RunAction (Resize);
 			LevelItem.PositionX = 0.72f*bounds.Width;
 			LevelItem.PositionY = 0.64f*bounds.Height;
@@ -132,7 +132,7 @@ namespace IsJustABall.Android
 			mainLayer.AddChild (LevelItem);
 			mainLayer.ReorderChild (LevelItem, 100);
 
-			LevelItem = new CCSprite ("playerbutton3");
+			LevelItem = new CCSprite ("button/playerbutton3");
 			LevelItem.RunAction (Resize);
 			LevelItem.PositionX = 0.72f*bounds.Width;
 			LevelItem.PositionY = 0.365f*bounds.Height;
@@ -140,7 +140,7 @@ namespace IsJustABall.Android
 			mainLayer.AddChild (LevelItem);
 			mainLayer.ReorderChild (LevelItem, 100);
 
-			LevelItem = new CCSprite ("playerbutton4");
+			LevelItem = new CCSprite ("button/playerbutton4");
 			LevelItem.RunAction (Resize);
 			LevelItem.PositionX = 0.28f*bounds.Width;
 			LevelItem.PositionY = 0.26f*bounds.Height;
@@ -153,7 +153,7 @@ namespace IsJustABall.Android
 			void addBackground(CCWindow mainWindow){
 				var bounds = mainWindow.WindowSizeInPixels;
 
-				background = new CCSprite ("galaxybackground4");
+				background = new CCSprite ("background/galaxybackground4");
 
 				background.Scale = 1.8f;
 				background.PositionX = bounds.Width/2;

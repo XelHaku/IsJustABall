@@ -50,7 +50,7 @@ namespace IsJustABall.Android
 
 			//air.AirBannerTopAd ();
 
-			air.AirSmartWallAd ();
+			//air.AirSmartWallAd ();
 			//air.Banner360 ();
 
 

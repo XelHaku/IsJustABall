@@ -29,3 +29,4 @@ S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\bin\Release\
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.dll
 S:\Projects\Xamarin\IsJustABall\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.pdb
 C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\bin\Release\box2d.dll
+C:\Users\admin\Documents\Xamarin\IsJustABall\IsJustABall\IsJustABall\obj\Release\IsJustABall.csprojResolveAssemblyReference.cache
