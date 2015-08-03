@@ -22,8 +22,8 @@ namespace IsJustABall.Android
 		List<CCSprite> StarList;
 		CCSprite ruby;
 		CCSprite diamond;
-		CCSprite background1;
-		CCSprite background2;
+		CCLayer background1;
+		CCLayer background2;
 		CCSprite backgroundRotational;
 		CCSprite PauseButton;
 		CCSprite ResumeGame,Restart,MainMenu,menuframe,Star;
@@ -38,8 +38,14 @@ namespace IsJustABall.Android
 		List<CCSprite> visibleTutorialSteps;
 		CCSprite WallSprite;
 		CCSprite BlackholeSprite;
-
-		 
+		float GameTime=0;
+		float GameTimeflag=0;
+		CCLayer RedLayer ;
+		CCLayer BlueLayer;
+		CCLayer PurpleLayer ;
+		List<CCDrawNode> triRedList; 
+		List<CCDrawNode> triBlueList;
+		List<CCDrawNode> triPurpleList;
 		CCLabel scoreLabel;
 		CCLabel pointsLabel;
 		byte R,G,B;
@@ -106,6 +112,10 @@ namespace IsJustABall.Android
 			visibleBlackholes = new List<CCSprite> ();
 			visibleTutorialSteps = new List<CCSprite> ();
 
+			triRedList= new List<CCDrawNode>(); 
+			triBlueList= new List<CCDrawNode>();
+			triPurpleList = new List<CCDrawNode>();
+
 			hitJewels = new List<CCSprite> ();
 			visibleTraps = new List<CCSprite>();
 			StarList = new List<CCSprite> ();
@@ -124,7 +134,7 @@ namespace IsJustABall.Android
 			addLevelBlackholes (mainWindow);
 			addLevelTutorialSteps (mainWindow);
 
-			addBackground (mainWindow);
+			//addBackground (mainWindow);
 			addTriangleBackground (mainWindow);
 			addPauseButton ();
 			addMenuOptions ();
@@ -170,6 +180,8 @@ namespace IsJustABall.Android
 
 			scoreLabel.Text = "" + result;
 */
+
+			GameTime += frameTimeInSeconds;
 
 			if (PauseGame) {
 				if (ballPhysicsSingle.hookTouchBool == true) {//Void free Particle
@@ -235,12 +247,16 @@ namespace IsJustABall.Android
 				background1.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
 				background2.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
 
-				if (background1.PositionY + background1.ContentSize.Height == 0) {
-					background1.PositionY = background2.PositionY + background1.ContentSize.Height;
+				//RedLayer.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
+				//BlueLayer.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
+				//PurpleLayer.PositionY += -scrollerSpeed * frameTimeInSeconds / 10.0f;
+
+				if (background1.PositionY + 2*background1.ContentSize.Height < 0) {
+					background1.PositionY = background2.PositionY +2* background1.ContentSize.Height-background1.BoundingBoxTransformedToWorld.Size.Height/5;
 				}
 
-				if (background2.PositionY + background2.ContentSize.Height == 0) {
-					background2.PositionY = background1.PositionY + background2.ContentSize.Height;
+				if (background2.PositionY + 2*background2.ContentSize.Height <0) {
+					background2.PositionY = background1.PositionY +2* background2.ContentSize.Height -background2.BoundingBoxTransformedToWorld.Size.Height/5;
 
 				}
 
@@ -401,13 +417,13 @@ namespace IsJustABall.Android
 				CCSimpleAudioEngine.SharedEngine.StopAllEffects ();
 				//CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/electronics011.wav");
 				//scoreLabel.Text = "temp:" + temp.ToString () + " \nCircleRadius: " + minRotationRadius.ToString () + " \nball: " + ballSprite.Position.ToString () + " \npivot: " + pivotSprite.Position.ToString ();
-				BlueBallGlow();
+				BlueBallGlow(ballPhysicsSingle.indexHookPivot);
 			} else if (ballPhysicsSingle.hookTouchBool == false) {
 				ballPhysicsSingle.hookTouchBool = true;
 				CCSimpleAudioEngine.SharedEngine.StopAllEffects ();
 				CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/lasersound.wav");
 				ballSprite.RemoveAllChildren ();
-
+				visiblePivots [ballPhysicsSingle.indexHookPivot].RemoveAllChildren ();
 				//scoreLabel.Text = "Free";
 			}
 
@@ -574,8 +590,10 @@ namespace IsJustABall.Android
 				}
 
 				//////////TESTING SWEPT AREA LINE drawSweptAreaLine ()
-
+				if(GameTime>= GameTimeflag+0.05f){
 			drawSweptAreaLine (R,G,B);
+					GameTimeflag = GameTime;
+				}
 			}
 
 
@@ -670,7 +688,7 @@ namespace IsJustABall.Android
 			return Star;
 		}
 
-		void addBackground(CCWindow mainWindow){
+		/*void addBackground(CCWindow mainWindow){
 			background1 = new CCSprite ("background/galaxybackground4");
 			background2 = new CCSprite ("background/galaxybackground4");
 			backgroundRotational= new CCSprite ("background/freepik03");
@@ -688,7 +706,7 @@ namespace IsJustABall.Android
 				backgroundRotational.PositionY = 0;
 				backgroundRotational.AnchorPoint = CCPoint.AnchorMiddle;
 				mainLayer.AddChild (backgroundRotational);
-				mainLayer.ReorderChild (backgroundRotational, -100);
+				mainLayer.ReorderChild (backgroundRotational, -201);
 				CCRotateBy rotateBG = new CCRotateBy (200.0f, 360.0f);
 				backgroundRotational.RepeatForever (rotateBG);
 				break;
@@ -701,7 +719,7 @@ namespace IsJustABall.Android
 				background1.PositionY = 0;
 				background1.AnchorPoint = CCPoint.AnchorMiddleBottom;
 				mainLayer.AddChild (background1);
-				mainLayer.ReorderChild (background1,- 100);
+				mainLayer.ReorderChild (background1,- 201);
 				CCMoveBy moveBG = new CCMoveBy (25.0f, new CCPoint (0.0f,background1.BoundingBoxTransformedToWorld.Size.Height));
 				backgroundRotational.RepeatForever (moveBG);
 				break;
@@ -712,31 +730,48 @@ namespace IsJustABall.Android
 			background1.PositionX = bounds.Width/2;
 			background1.PositionY = background1.ContentSize.Height-500.0f;
 		    mainLayer.AddChild (background1);
-			mainLayer.ReorderChild (background1,- 100);
+			mainLayer.ReorderChild (background1,- 201);
 			
 			
 			background2.RunAction(SpriteSize);
 			background2.PositionX = bounds.Width/2;
 			background2.PositionY = 2*background2.ContentSize.Height;
 			mainLayer.AddChild (background2);
-			mainLayer.ReorderChild (background2,- 99);
+			mainLayer.ReorderChild (background2,- 201);
 					
 				break;
 			default:
 				break;
 
 			}
-			}
+			}*/
 
 		void addTriangleBackground(CCWindow mainWindow){
 			float W = mainWindow.WindowSizeInPixels.Width;
 			float H = mainWindow.WindowSizeInPixels.Height;
-			CCLayer RedLayer = new CCLayer ();
+			byte LayerOpacity= 255;
+			float borderWidth = 3.0f;
+			 RedLayer = new CCLayer ();
+			 BlueLayer = new CCLayer ();
+			 PurpleLayer = new CCLayer ();
+			CCLayer RedLayer2 = new CCLayer ();
+			CCLayer BlueLayer2 = new CCLayer ();
+			CCLayer PurpleLayer2 = new CCLayer ();
+			background1 =new CCLayer ();
+			background2 =new CCLayer ();
+
 			CCDrawNode triRed = new CCDrawNode ();
-			CCLayer BlueLayer = new CCLayer ();
 			CCDrawNode triBlue = new CCDrawNode ();
-			CCLayer PurpleLayer = new CCLayer ();
 			CCDrawNode triPurple = new CCDrawNode ();
+
+			CCLayer BlackLayer = new CCLayer ();
+			CCDrawNode SquareBlack = new CCDrawNode ();
+			CCDrawNode SquareBlack2 = new CCDrawNode ();
+
+			triRed.BlendFunc = CCBlendFunc.NonPremultiplied;
+			triBlue.BlendFunc = CCBlendFunc.NonPremultiplied;
+			triPurple.BlendFunc = CCBlendFunc.NonPremultiplied;
+			SquareBlack.BlendFunc = CCBlendFunc.NonPremultiplied;
 
 			TriangleClass triClass = new TriangleClass ();
 			List<TriangleClass.TriangleCoordinates> ClassListRed = new List<TriangleClass.TriangleCoordinates> ();
@@ -745,49 +780,174 @@ namespace IsJustABall.Android
 			ClassListBlue = triClass.BlueTriangleMaker ();
 			List<TriangleClass.TriangleCoordinates> ClassListPurple = new List<TriangleClass.TriangleCoordinates> ();
 			ClassListPurple = triClass.PurpleTriangleMaker ();
-
-			CCColor4B triColor = new CCColor4B (255,0,0);
+			var randomColor = new Random();
+			R = Convert.ToByte(randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+			CCColor4B triColor = new CCColor4B (R,G,B,LayerOpacity);
 			foreach(var tC in ClassListRed){//tC = TriangleCoordinates
 				triRed = new CCDrawNode ();
 				List<CCPoint> vertexs = new List<CCPoint>();
 				vertexs.Add (new CCPoint(tC.V1X*W,tC.V1Y*W));
 				vertexs.Add (new CCPoint(tC.V2X*W,tC.V2Y*W));
 				vertexs.Add (new CCPoint(tC.V3X*W,tC.V3Y*W));
-
-				triRed.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, 0.0f, new CCColor4B(255,255,255), true);
+				R = Convert.ToByte(randomColor.Next (50,255));
+				G = Convert.ToByte(randomColor.Next (50,255));
+				B = Convert.ToByte(randomColor.Next (50,255));
+				triRed.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, borderWidth, new CCColor4B(R,G,B), true);
+				//triRed.Opacity = LayerOpacity;
 				RedLayer.AddChild (triRed);
+				triRedList.Add (triRed);
 
 			}
-			 triColor = new CCColor4B (0,255,0);
+			R = Convert.ToByte(randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
 			foreach(var tC in ClassListBlue){//tC = TriangleCoordinates
 				triBlue = new CCDrawNode ();
 				List<CCPoint> vertexs = new List<CCPoint>();
 				vertexs.Add (new CCPoint(tC.V1X*W,tC.V1Y*W));
 				vertexs.Add (new CCPoint(tC.V2X*W,tC.V2Y*W));
 				vertexs.Add (new CCPoint(tC.V3X*W,tC.V3Y*W));
-
-				triBlue.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, 0.0f, new CCColor4B(255,255,255), true);
+				R = Convert.ToByte(randomColor.Next (50,255));
+				G = Convert.ToByte(randomColor.Next (50,255));
+				B = Convert.ToByte(randomColor.Next (50,255));
+				triBlue.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, borderWidth, new CCColor4B(R,G,B), true);
+				//triBlue.Opacity = LayerOpacity;
 				BlueLayer.AddChild (triBlue);
+				triBlueList.Add (triBlue);
 
 			}
-			triColor = new CCColor4B (0,0,255);
+			R = Convert.ToByte(randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
 			foreach(var tC in ClassListPurple){//tC = TriangleCoordinates
 				triPurple = new CCDrawNode ();
 				List<CCPoint> vertexs = new List<CCPoint>();
 				vertexs.Add (new CCPoint(tC.V1X*W,tC.V1Y*W));
 				vertexs.Add (new CCPoint(tC.V2X*W,tC.V2Y*W));
 				vertexs.Add (new CCPoint(tC.V3X*W,tC.V3Y*W));
-
-				triPurple.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, 0.0f, new CCColor4B(255,255,255), true);
+				R = Convert.ToByte(randomColor.Next (50,255));
+				G = Convert.ToByte(randomColor.Next (50,255));
+				B = Convert.ToByte(randomColor.Next (50,255));
+				triPurple.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, borderWidth, new CCColor4B(R,G,B), true);
+				//triPurple.Opacity = LayerOpacity;
 				PurpleLayer.AddChild (triPurple);
+				triPurpleList.Add (triPurple);
 
 			}
-			//RedLayer.AnchorPoint = CCPoint.AnchorUpperRight;
-			//RedLayer.PositionX = 0;
-			//RedLayer.PositionY = 0;
-			mainLayer.AddChild (RedLayer);
-			mainLayer.AddChild (BlueLayer);
-			mainLayer.AddChild (PurpleLayer);
+
+			////SECOND SET OF POINTS
+			R = Convert.ToByte(randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
+			foreach(var tC in ClassListRed){//tC = TriangleCoordinates
+				triRed = new CCDrawNode ();
+				List<CCPoint> vertexs = new List<CCPoint>();
+				vertexs.Add (new CCPoint(tC.V1X*W,tC.V1Y*W));
+				vertexs.Add (new CCPoint(tC.V2X*W,tC.V2Y*W));
+				vertexs.Add (new CCPoint(tC.V3X*W,tC.V3Y*W));
+				R = Convert.ToByte(randomColor.Next (50,255));
+				G = Convert.ToByte(randomColor.Next (50,255));
+				B = Convert.ToByte(randomColor.Next (50,255));
+				triRed.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, borderWidth, new CCColor4B(R,G,B), true);
+				//triRed.Opacity = LayerOpacity;
+				RedLayer2.AddChild (triRed);
+				triRedList.Add (triRed);
+
+			}
+			R = Convert.ToByte(randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
+			foreach(var tC in ClassListBlue){//tC = TriangleCoordinates
+				triBlue = new CCDrawNode ();
+				List<CCPoint> vertexs = new List<CCPoint>();
+				vertexs.Add (new CCPoint(tC.V1X*W,tC.V1Y*W));
+				vertexs.Add (new CCPoint(tC.V2X*W,tC.V2Y*W));
+				vertexs.Add (new CCPoint(tC.V3X*W,tC.V3Y*W));
+				R = Convert.ToByte(randomColor.Next (50,255));
+				G = Convert.ToByte(randomColor.Next (50,255));
+				B = Convert.ToByte(randomColor.Next (50,255));
+				triBlue.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, borderWidth, new CCColor4B(R,G,B), true);
+				//triBlue.Opacity = LayerOpacity;
+				BlueLayer2.AddChild (triBlue);
+				triBlueList.Add (triBlue);
+
+			}
+			R = Convert.ToByte(randomColor.Next (50,255));
+			G = Convert.ToByte(randomColor.Next (50,255));
+			B = Convert.ToByte(randomColor.Next (50,255));
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
+			foreach(var tC in ClassListPurple){//tC = TriangleCoordinates
+				triPurple = new CCDrawNode ();
+				List<CCPoint> vertexs = new List<CCPoint>();
+				vertexs.Add (new CCPoint(tC.V1X*W,tC.V1Y*W));
+				vertexs.Add (new CCPoint(tC.V2X*W,tC.V2Y*W));
+				vertexs.Add (new CCPoint(tC.V3X*W,tC.V3Y*W));
+				R = Convert.ToByte(randomColor.Next (50,255));
+				G = Convert.ToByte(randomColor.Next (50,255));
+				B = Convert.ToByte(randomColor.Next (50,255));
+				triPurple.DrawPolygon (vertexs.ToArray(), vertexs.Count, triColor, borderWidth, new CCColor4B(R,G,B), true);
+				//triPurple.Opacity = LayerOpacity;
+				PurpleLayer2.AddChild (triPurple);
+				triPurpleList.Add (triPurple);
+
+			}
+			/// ///////////////////////
+			List<CCPoint> vertex = new List<CCPoint>();
+			vertex.Add (new CCPoint(0.0f,0.0f));
+			vertex.Add (new CCPoint(W,0.0f));
+			vertex.Add (new CCPoint(W,H));
+			vertex.Add (new CCPoint(0.0f,H));
+			R = Convert.ToByte(randomColor.Next (0,50));
+			G = Convert.ToByte(randomColor.Next (0,25));
+			B = Convert.ToByte(randomColor.Next (0,50));
+			LayerOpacity = 200;
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
+			SquareBlack.DrawPolygon (vertex.ToArray (), vertex.Count, triColor, 0.0f, new CCColor4B (255, 255, 255), true);
+
+			R = Convert.ToByte(randomColor.Next (0,100));
+			G = Convert.ToByte(randomColor.Next (0,100));
+			B = Convert.ToByte(randomColor.Next (0,255));
+			LayerOpacity = 255;
+			triColor = new CCColor4B (R,G,B,LayerOpacity);
+			SquareBlack2.DrawPolygon (vertex.ToArray (), vertex.Count, triColor, 0.0f, new CCColor4B (255, 255, 255), true);
+
+
+			background1.AddChild (RedLayer);
+			background1.AddChild (BlueLayer);
+			background1.AddChild (PurpleLayer);
+
+
+			background2.AddChild (RedLayer2);
+			background2.AddChild (BlueLayer2);
+			background2.AddChild (PurpleLayer2);
+
+
+
+
+
+
+
+
+			mainLayer.AddChild (background1, -200);
+			mainLayer.AddChild (background2, -199);
+			mainLayer.AddChild (SquareBlack,-198);
+			mainLayer.AddChild (SquareBlack2,-210);
+
+			background1.ContentSize = RedLayer.ContentSize;
+			background1.PositionX = 0;
+			background1.PositionY = 0;
+			//background1.AnchorPoint = CCPoint.AnchorLowerLeft;
+
+			background2.ContentSize = RedLayer2.ContentSize;
+			background2.PositionX = 0;
+			background2.PositionY = background1.PositionY+2*background1.BoundingBoxTransformedToWorld.Size.Height-background1.BoundingBoxTransformedToWorld.Size.Height/5;
+
 		}
 	
 
@@ -1895,7 +2055,8 @@ namespace IsJustABall.Android
 		// 
 		void drawSweptAreaLine (byte R,byte G,byte B){
 			var sweptAreaLine = new CCDrawNode ();
-
+			sweptAreaLine.BlendFunc = CCBlendFunc.NonPremultiplied;
+			sweptAreaLine.Opacity = 1;
 
 			float pivotScale=0.00025f*mainWindowAux.WindowSizeInPixels.Width;
 			//float pivotScale = 0.6f* mainWindowAux.WindowSizeInPixels.Width / pivotSprite.BoundingBoxTransformedToParent.Size.Width;
@@ -1910,13 +2071,15 @@ namespace IsJustABall.Android
 			var purpleColor = new CCColor4F (tempColor);
 
 			sweptAreaLine.Scale = 1 / pivotScale;
-			sweptAreaLine.DrawSegment( pivotTemp,ballTemp,1.0f, purpleColor);
+			sweptAreaLine.DrawSegment( pivotTemp,ballTemp,4.0f, purpleColor);
 			CCRemoveSelf removeLine = new CCRemoveSelf ();
-			CCDelayTime waitLine = new CCDelayTime(0.80f);
+			CCDelayTime waitLine = new CCDelayTime(3.0f);
 			sweptAreaLine.RunActions (waitLine,removeLine);
-			visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine);
-			mainLayer.ReorderChild (sweptAreaLine, 100);
+			visiblePivots [ballPhysicsSingle.indexHookPivot].AddChild (sweptAreaLine,-1);
+			mainLayer.ReorderChild (sweptAreaLine, 98);
 			mainLayer.ReorderChild (visiblePivots [ballPhysicsSingle.indexHookPivot], 99);
+			visiblePivots [ballPhysicsSingle.indexHookPivot].ReorderChild (visiblePivots [ballPhysicsSingle.indexHookPivot], 0);
+			visiblePivots [ballPhysicsSingle.indexHookPivot].ReorderChild (sweptAreaLine, -1);
 
 			if (ballPhysicsSingle.hookTouchBool == true) {
 				//visiblePivots [ballPhysicsSingle.indexHookPivot].RemoveAllChildren(true);//sweptAreaLine
@@ -1924,16 +2087,26 @@ namespace IsJustABall.Android
 
 		}
 
-		void BlueBallGlow(){
+		void BlueBallGlow(int indexHookPivot){
 			CCSprite glow = new CCSprite ("gamesprite/glow");
 			glow.PositionX = ballSprite.ContentSize.Width / 2;
 			glow.PositionY = ballSprite.ContentSize.Width / 2;
 			CCScaleTo resize = new CCScaleTo (0.2f, 1.2f * ballSprite.ContentSize.Width / glow.ContentSize.Width);
-
 			glow.RunAction (resize);
 			glow.Opacity = 150;
 			glow.VertexZ = -1;
 			ballSprite.AddChild (glow,-1000);
+
+
+
+			CCSprite glowpivot = new CCSprite ("gamesprite/glow");
+			glowpivot.PositionX =  visiblePivots[indexHookPivot].ContentSize.Width/ 2;
+			glowpivot.PositionY =  visiblePivots[indexHookPivot].ContentSize.Width / 2;
+			resize = new CCScaleTo (0.2f, 1.2f * visiblePivots[indexHookPivot].ContentSize.Width / glowpivot.ContentSize.Width);
+			glowpivot.RunAction (resize);
+			glowpivot.Opacity = 150;
+			glowpivot.VertexZ = -1;
+			visiblePivots[indexHookPivot].AddChild(glowpivot);
 
 
 		}
