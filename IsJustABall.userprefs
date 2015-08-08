@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="IsJustABall.Android\IsJustABall.Android.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.5e353f50" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="IsJustABall.Android\SharedCode\OnePlayerScrollerScene.cs">
+    <Files>
+      <File FileName="IsJustABall.Android\SharedCode\OnePlayerScrollerScene.cs" Line="311" Column="22" />
+      <File FileName="IsJustABall.Android\SharedCode\Levels\LevelRailGun.cs" Line="230" Column="4" />
+      <File FileName="IsJustABall.Android\SharedCode\MainMenuScene.cs" Line="60" Column="11" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
